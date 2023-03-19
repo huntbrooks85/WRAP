@@ -1,0 +1,7 @@
+ 67.829193 -45.862118   * Faint
+211.320620  55.572896   * High motion
+270.786398 -36.225224   * Multi VVV detections
+253.779958 -42.298750   * Bleeding eyeballs
+326.119875  14.768333   * CPM binary
+
+
