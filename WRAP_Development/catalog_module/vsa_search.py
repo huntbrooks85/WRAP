@@ -45,12 +45,12 @@ def vsa_image(ra, dec, radius):
    j, h, k = np.nan, np.nan, np.nan
    return j, h, k
   
-  #Obtains the ra, dec, photometry, and astrometry from the catalog
+  #Obtains the photometry and astrometry from the catalog
   object_ra = table['ra'].tolist()
   object_dec = table['dec'].tolist()
-  J_list = table['jAperMag3'].tolist()
-  H_list = table['hAperMag3'].tolist()
-  Ks_list = table['ksAperMag3'].tolist()
+  J_list, J_list_e = table['jAperMag3'].tolist(), table['jAperMag3Err'].tolist()
+  H_list, H_list_e = table['hAperMag3'].tolist(), table['hAperMag3Err'].tolist()
+  Ks_list, Ks_list_e = table['ksAperMag3'].tolist(), table['ksAperMag3Err'].tolist()
 
   #Reads in the header from the image
   hdu_j, hdu_h, hdu_k = fits.open(file_vsa_J)[1], fits.open(file_vsa_H)[1], fits.open(file_vsa_Ks)[1]
@@ -103,7 +103,7 @@ def vsa_image(ra, dec, radius):
              + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 0.97)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
-  plt.gca().invert_yaxis()
+  plt.ylim(len(total_data[0]), 0)
   figure.set_size_inches(4.75, 6.95)
   figure.canvas.set_window_title('VSA Search')
 
@@ -201,28 +201,28 @@ def vsa_image(ra, dec, radius):
      for i in range(len(object_ra)):
       distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
      list_location = distance.index(np.min(distance))
-     j = J_list[list_location]
-     h = H_list[list_location]
-     ks = Ks_list[list_location]
-     return j, h, ks, text_list[text_max]
+     j, j_e = J_list[list_location], J_list_e[list_location]
+     h, h_e = H_list[list_location], H_list_e[list_location]
+     ks, ks_e = Ks_list[list_location], Ks_list_e[list_location]
+     return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
     
     #Checks if the Object not Found button was clicked
     elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
-     j, h, ks = np.nan, np.nan, np.nan
+     j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
      plt.close('all')
      plt.figure().clear()
-     return j, h, ks, text_list[text_max]
+     return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
     elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
      scatter.remove()
      scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
 
    #Checks if the window was closed
    elif press is None:
-    j, h, ks = np.nan, np.nan, np.nan
+    j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     plt.close('all')
     plt.figure().clear()
-    return j, h, ks, text_list[text_max]
+    return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
    
  else: 
-  j, h, ks = np.nan, np.nan, np.nan
-  return j, h, ks, text_list[text_max]
+  j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+  return j, j_e, h, h_e, ks, ks_e, text_list[text_max]

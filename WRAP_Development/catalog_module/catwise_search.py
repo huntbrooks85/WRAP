@@ -54,7 +54,7 @@ def catwise_image(ra, dec, radius):
  enablePrint()
 
  #Obtains the dates for each image
- date_w1, date_w2 = hdu_w1.header[27].split('MIDOBS', 2)[0], hdu_w2.header[27].split('MIDOBS', 2)[0]
+ date_w1, date_w2 = hdu_w1.header['MIDOBS'].split('T', 2)[0], hdu_w2.header['MIDOBS'].split('T', 2)[0]
 
  #Defining a mouse click as an event on the plot
  location = []
