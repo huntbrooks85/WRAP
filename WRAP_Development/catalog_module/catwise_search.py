@@ -2,11 +2,11 @@ from catalog_module.importmodule import *
 
 #Makes a function that blocks the printing function
 def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
+ sys.stdout = open(os.devnull, 'w')
 
 #Makes a function that allows the printing function
 def enablePrint():
-    sys.stdout = sys.__stdout__
+ sys.stdout = sys.__stdout__
 
 #Does the CatWISE search
 def catwise_image(ra, dec, radius): 
