@@ -1,3 +1,4 @@
+#Import all of the packages
 from catalog_module.importmodule import *
 
 #Makes a function that blocks the printing function
@@ -128,6 +129,8 @@ def catwise_image(ra, dec, radius):
     elif default[index] == True: 
      default[index] = False
   for d in range(len(default)):
+   if default == [False, False]: 
+    total_data = real_data[0]*0
    if default[d] == True: 
     total_data = total_data + real_data[d]
    else: 

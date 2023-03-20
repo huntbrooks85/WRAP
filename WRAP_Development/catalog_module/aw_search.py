@@ -1,3 +1,4 @@
+#Import all of the packages
 from catalog_module.importmodule import *
 
 #Makes a function that blocks the printing function

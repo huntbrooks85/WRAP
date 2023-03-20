@@ -1,3 +1,4 @@
+#Import all of the packages
 from catalog_module.importmodule import *
 
 #Makes a function that blocks the printing function
@@ -27,12 +28,8 @@ def vsa_image(ra, dec, radius):
  if len(url_J) > 0 and len(url_H) > 0 and len(url_Ks) > 0: 
   
   #Downloading the fits images
-  file_vsa_J = download_file(url_J[0], cache=True)
-  data_vsa_J = fits.getdata(file_vsa_J)
-  file_vsa_H = download_file(url_H[0], cache=True)
-  data_vsa_H = fits.getdata(file_vsa_H)
-  file_vsa_Ks = download_file(url_Ks[0], cache=True)
-  data_vsa_Ks = fits.getdata(file_vsa_Ks)
+  file_vsa_J, file_vsa_H, file_vsa_Ks = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_Ks[0], cache=True)
+  data_vsa_J, data_vsa_H, data_vsa_Ks = fits.getdata(file_vsa_J), fits.getdata(file_vsa_H), fits.getdata(file_vsa_Ks)
 
   #Find the location of all the object found in VSA in the radius choosen by the user
   catalog_list = ['VHS', 'VVV', 'VMC', 'VIKING', 'VIDEO', 'UltraVISTA']
@@ -48,17 +45,18 @@ def vsa_image(ra, dec, radius):
    j, h, k = np.nan, np.nan, np.nan
    return j, h, k
   
+  #Obtains the ra, dec, photometry, and astrometry from the catalog
   object_ra = table['ra'].tolist()
   object_dec = table['dec'].tolist()
   J_list = table['jAperMag3'].tolist()
   H_list = table['hAperMag3'].tolist()
   Ks_list = table['ksAperMag3'].tolist()
 
-  #Make a cutout from the coadd image for the RA and DEC put in
-  hdu_j = fits.open(file_vsa_J)[1]
-  hdu_h = fits.open(file_vsa_H)[1]
-  hdu_k = fits.open(file_vsa_Ks)[1]
+  #Reads in the header from the image
+  hdu_j, hdu_h, hdu_k = fits.open(file_vsa_J)[1], fits.open(file_vsa_H)[1], fits.open(file_vsa_Ks)[1]
   wcs1_j = WCS(hdu_j.header)
+
+  #Make a cutout from the coadd image for the RA and DEC put in
   position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
   size = u.Quantity([radius, radius], u.arcsec)
   cutout_j = Cutout2D(data_vsa_J, position, size, wcs = wcs1_j.celestial)
@@ -67,12 +65,8 @@ def vsa_image(ra, dec, radius):
   wcs_cropped = cutout_j.wcs
   enablePrint()
 
-  date_j = hdu_j.header[19].split('T', 2)[0]
-  time_j = hdu_j.header[19].split('T', 2)[1]
-  date_h = hdu_h.header[19].split('T', 2)[0]
-  time_h = hdu_h.header[19].split('T', 2)[1]
-  date_k = hdu_k.header[19].split('T', 2)[0]
-  time_k = hdu_k.header[19].split('T', 2)[1]
+  #Finds the dates the images were taken
+  date_j, date_h, date_k = hdu_j.header[19].split('T', 2)[0], hdu_h.header[19].split('T', 2)[0], hdu_k.header[19].split('T', 2)[0]
 
   #Defining a mouse click as an event on the plot
   location = []
@@ -103,12 +97,10 @@ def vsa_image(ra, dec, radius):
   plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
   plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
   fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
+  plt.suptitle('VISTA Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
   ax.set_title('Dates: \n'
              + 'J Date: ' + str(date_j) + ' (Y/M/D)  ' + '  H Date: ' + str(date_h) + ' (Y/M/D)\n'
-             + 'K Date: ' + str(date_k) + ' (Y/M/D) \n'
-             + 'Times: \n'
-             + 'J Time: ' + str(time_j) + ' (UT)  ' + '  H Time: ' + str(time_h) + ' (UT)\n'
-             + 'K Time: ' + str(time_k) + ' (UT) \n', fontdict = fontdict_1, y = 1)
+             + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 0.97)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
   plt.gca().invert_yaxis()
@@ -152,13 +144,14 @@ def vsa_image(ra, dec, radius):
      elif default[index] == True: 
       default[index] = False
    for d in range(len(default)):
+    if default == [False, False, False]:
+     total_data = real_data[0]*0
     if default[d] == True: 
      total_data = total_data + real_data[d]
     else: 
      pass
    norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
    ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
-   plt.gca().invert_yaxis()
 
   #Updates the scaling when the slider is changed
   def update_slider_stretch(val):
@@ -170,7 +163,6 @@ def vsa_image(ra, dec, radius):
      pass
    norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
    ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
-   plt.gca().invert_yaxis()
 
   #Updates the notes added by the user when there is an input
   text_list = [text]
