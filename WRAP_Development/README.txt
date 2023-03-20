@@ -1,6 +1,16 @@
 Purpose: 
 To gather photometry and astrometry using images to trace high proper motion objects. 
 
+Catalog Full Names and References: 
+ CatWISE2020 & AllWISE -> Wide-Field Infrared Survey Explorer, https://irsa.ipac.caltech.edu/Missions/wise.html
+ Gaia -> GAIA ESA, https://gea.esac.esa.int/archive/
+ VISTA -> Visible and Infrared Survey Telescope for Astronomy, http://horus.roe.ac.uk/vsa/index.html
+ WFCAM -> Wide Field Camera, http://wsa.roe.ac.uk/index.html
+ 2MASS -> Two Micron All Sky Survey, https://irsa.ipac.caltech.edu/Missions/2mass.html
+ PanSTARRS -> Panoramic Survey Telescope and Rapid Response System, https://outerspace.stsci.edu/display/PANSTARRS/
+ NSC -> NOIRLab Source Catalog, https://datalab.noirlab.edu/nscdr2/index.php
+ GALEX -> Galaxy Evolution Explorer, http://www.galex.caltech.edu
+
 Python: 
 -> Python 3.8.8 is needed for WRAP
 -> Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
