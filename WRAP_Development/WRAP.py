@@ -161,7 +161,7 @@ while True:
     value_names = [['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes'], 
                    ['aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
                    ['gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes'], 
-                   ['vsa_j', 'vsa_h', 'vsa_ks', 'vsa_notes'], 
+                   ['vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes'], 
                    ['uks_j', 'uks_h', 'uks_k', 'uks_notes'], 
                    ['2mass_j', '2mass_h', '2mass_ks', '2mass_notes'], 
                    ['ps_g', 'ps_r', 'ps_i', 'ps_z', 'ps_y', 'ps_notes'], 
