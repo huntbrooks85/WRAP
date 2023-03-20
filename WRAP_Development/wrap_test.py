@@ -14,7 +14,7 @@ print('')
 # dec = raw_file['dec'].tolist()
 radius = 150
 
-from catalog_module.vsa_search import vsa_image
+from catalog_module.ps_search import ps_image
 
 # for i in range(len(ra)):
 #     print(ra[i])
@@ -23,7 +23,7 @@ from catalog_module.vsa_search import vsa_image
 # print(nsc_image(164.410559533, -28.9760034474, radius))
 # print(ra[0])
 # print(dec[0])
-print(vsa_image(1, 1, radius))
+print(ps_image(1, 1, radius))
 
 print('------------------------------------------------')
 print('Finished WRAP TEST')

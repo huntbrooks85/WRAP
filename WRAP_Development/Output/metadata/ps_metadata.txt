@@ -96,7 +96,7 @@ function clearForm() {
   <div id="search">
 
 <form method="get" name="positionForm" action="/cgi-bin/ps1cutouts">
-<input name="pos" id="pos" size="43" maxlength="200" value="1.0 1.0" type="text" />
+<input name="pos" id="pos" size="43" maxlength="200" value="1 1" type="text" />
 <input type="submit" class="submit" id="submit" value="Submit" />
 &nbsp;&nbsp;<input type="reset" class="reset" id="reset" value="Reset" title="Restore last submitted values" />
 <input type="button" class="clear" id="clear" onclick="clearForm();" value="Clear" title="Set all parameters to original default values" />
@@ -140,7 +140,7 @@ JPEG display size: <select name="output_size" id="output_size">
 </form>
 </div>
 </div>
-<h2>1.0 1.0 (ra = 1.000000, dec = 1.000000)</h2>
+<h2>1 1 (ra = 1.000000, dec = 1.000000)</h2>
 <table>
 <tr>
 <th>stack 1322.022 y/i/g<br /><a target="_display" title="Interactive image display" href="//ps1images.stsci.edu/cgi-bin/display?image=/rings.v3.skycell/1322/022/rings.v3.skycell.1322.022.stk.y.unconv.fits%2C/rings.v3.skycell/1322/022/rings.v3.skycell.1322.022.stk.z.unconv.fits%2C/rings.v3.skycell/1322/022/rings.v3.skycell.1322.022.stk.i.unconv.fits%2C/rings.v3.skycell/1322/022/rings.v3.skycell.1322.022.stk.r.unconv.fits%2C/rings.v3.skycell/1322/022/rings.v3.skycell.1322.022.stk.g.unconv.fits&amp;autoscale=99.900000&amp;title=skycell.1322.022.stack.y%2Cskycell.1322.022.stack.z%2Cskycell.1322.022.stack.i%2Cskycell.1322.022.stack.r%2Cskycell.1322.022.stack.g">Display</a></th>

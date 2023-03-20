@@ -1,5 +1,5 @@
 Purpose: 
-To gather photometry and astrometry using images to trace high proper motion objects. 
+Gathers photometry and astrometry from various ultra-violet, optical, and near-infrared catalogs given a RA, DEC, and Radius by the user.
 
 Catalog Full Names and References: 
  CatWISE2020 & AllWISE -> Wide-Field Infrared Survey Explorer, https://irsa.ipac.caltech.edu/Missions/wise.html

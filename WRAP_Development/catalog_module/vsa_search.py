@@ -46,8 +46,7 @@ def vsa_image(ra, dec, radius):
    return j, h, k
   
   #Obtains the photometry and astrometry from the catalog
-  object_ra = table['ra'].tolist()
-  object_dec = table['dec'].tolist()
+  object_ra, object_dec = table['ra'].tolist(), table['dec'].tolist()
   J_list, J_list_e = table['jAperMag3'].tolist(), table['jAperMag3Err'].tolist()
   H_list, H_list_e = table['hAperMag3'].tolist(), table['hAperMag3Err'].tolist()
   Ks_list, Ks_list_e = table['ksAperMag3'].tolist(), table['ksAperMag3Err'].tolist()
@@ -201,17 +200,21 @@ def vsa_image(ra, dec, radius):
      for i in range(len(object_ra)):
       distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
      list_location = distance.index(np.min(distance))
+     ra_vsa, dec_vsa = object_ra[list_location], object_dec[list_location]
      j, j_e = J_list[list_location], J_list_e[list_location]
      h, h_e = H_list[list_location], H_list_e[list_location]
      ks, ks_e = Ks_list[list_location], Ks_list_e[list_location]
-     return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+     return ra_vsa, dec_vsa, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
     
     #Checks if the Object not Found button was clicked
     elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
      j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+     ra_vsa, dec_vsa = ra, dec
      plt.close('all')
      plt.figure().clear()
-     return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+     return ra_vsa, dec_vsa, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+    
+    #Allows updates for the circle size slider bar
     elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
      scatter.remove()
      scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
@@ -219,10 +222,12 @@ def vsa_image(ra, dec, radius):
    #Checks if the window was closed
    elif press is None:
     j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_vsa, dec_vsa = ra, dec
     plt.close('all')
     plt.figure().clear()
-    return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+    return ra_vsa, dec_vsa, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
    
  else: 
   j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-  return j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+  ra_vsa, dec_vsa = ra, dec
+  return ra_vsa, dec_vsa, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
