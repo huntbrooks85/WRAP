@@ -165,7 +165,7 @@ while True:
                    ['uks_j', 'uks_h', 'uks_k', 'uks_notes'], 
                    ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
                    ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
-                   ['nsc_g', 'nsc_r', 'nsc_i', 'nsc_z', 'nsc_notes'],  
+                   ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
                    ['galex_nuv', 'galex_fuv', 'galex_notes']]
     
     #Creates fake list for the data and data names
@@ -284,7 +284,7 @@ while True:
               'uks_j', 'uks_h', 'uks_k', 'uks_notes', 
               '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes', 
               'ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes', 
-              'nsc_g', 'nsc_r', 'nsc_i', 'nsc_z', 'nsc_notes',  
+              'nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes',  
               'galex_nuv', 'galex_fuv', 'galex_notes']
     
     #Makes the output file name
@@ -316,7 +316,7 @@ while True:
                    ['uks_j', 'uks_h', 'uks_k', 'uks_notes'], 
                    ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
                    ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
-                   ['nsc_g', 'nsc_r', 'nsc_i', 'nsc_z', 'nsc_notes'],  
+                   ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
                    ['galex_nuv', 'galex_fuv', 'galex_notes']]
     
     #Starts searching each object

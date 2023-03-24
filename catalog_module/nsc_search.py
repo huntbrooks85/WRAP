@@ -1,15 +1,18 @@
 from catalog_module.importmodule import *
 
-#Makes a function that blocks the printing function
 def blockPrint():
+    '''Makes a function that blocks the printing function'''
     sys.stdout = open(os.devnull, 'w')
 
-#Makes a function that allows the printing function
 def enablePrint():
+    '''Makes a function that allows the printing function'''
     sys.stdout = sys.__stdout__
 
-#Does the NSC search
 def nsc_image(ra, dec, radius): 
+    '''Does the NSC search by obtaining the image and table catalogs and 
+    overplots these points to allow the user to click their object'''
+    
+    #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
     blockPrint()
@@ -25,12 +28,15 @@ def nsc_image(ra, dec, radius):
     if len(imgTable) > 0:
         #Runs the table function to obtain the g, r, i, and z bands
         location_data = nsc_table(ra, dec, radius)
-        object_ra = location_data['ra'].tolist()
-        object_dec = location_data['dec'].tolist()
-        g_list = location_data['gmag'].tolist()
-        r_list = location_data['rmag'].tolist()
-        i_list = location_data['imag'].tolist()
-        z_list = location_data['zmag'].tolist()
+        object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
+        g_list, g_list_e = location_data['gmag'].tolist(), location_data['gerr'].tolist()
+        r_list, r_list_e = location_data['rmag'].tolist(), location_data['rerr'].tolist()
+        i_list, i_list_e = location_data['imag'].tolist(), location_data['ierr'].tolist()
+        z_list, z_list_e = location_data['zmag'].tolist(), location_data['zerr'].tolist()
+        u_list, u_list_e = location_data['umag'].tolist(), location_data['uerr'].tolist()
+        y_list, y_list_e = location_data['ymag'].tolist(), location_data['yerr'].tolist()
+        pmra_list, pmra_list_e = location_data['pmra'].tolist(), location_data['pmraerr'].tolist()
+        pmdec_list, pmdec_list_e = location_data['pmdec'].tolist(), location_data['pmdecerr'].tolist()
 
         #Obtains all of the image url, bands, and types from the table
         image_urls = imgTable['access_url']
@@ -67,47 +73,32 @@ def nsc_image(ra, dec, radius):
                 image_url_Y = image_urls[p]
                 break
 
-        #Downloads the i, z, and r bands images
-        file_allwise_g = download_file(image_url_g, cache=True)
-        data_allwise_g = fits.getdata(file_allwise_g)
-        file_allwise_r = download_file(image_url_r, cache=True)
-        data_allwise_r = fits.getdata(file_allwise_r)
-        file_allwise_i = download_file(image_url_i, cache=True)
-        data_allwise_i = fits.getdata(file_allwise_i)
-        file_allwise_z = download_file(image_url_z, cache=True)
-        data_allwise_z = fits.getdata(file_allwise_z)
-        file_allwise_Y = download_file(image_url_Y, cache=True)
-        data_allwise_Y = fits.getdata(file_allwise_Y)
+        #Downloads the images
+        file_allwise_g, file_allwise_r, file_allwise_i = download_file(image_url_g, cache=True), download_file(image_url_r, cache=True), download_file(image_url_i, cache=True)
+        file_allwise_z, file_allwise_Y = download_file(image_url_z, cache=True), download_file(image_url_Y, cache=True)
+        data_allwise_g, data_allwise_r, data_allwise_i = fits.getdata(file_allwise_g), fits.getdata(file_allwise_r), fits.getdata(file_allwise_i)
+        data_allwise_z, data_allwise_Y = fits.getdata(file_allwise_z), fits.getdata(file_allwise_Y)
 
         #Loads the WCS from the i band image
-        hdu_g = fits.open(file_allwise_g)[0]
-        wcs1_g = WCS(hdu_g.header)
-        hdu_r = fits.open(file_allwise_r)[0]
-        hdu_i = fits.open(file_allwise_i)[0]
-        hdu_z = fits.open(file_allwise_z)[0]
-        hdu_Y = fits.open(file_allwise_Y)[0]
+        hdu_g, hdu_r, hdu_i = fits.open(file_allwise_r)[0], fits.open(file_allwise_i)[0], fits.open(file_allwise_g)[0]
+        hdu_z, hdu_Y = fits.open(file_allwise_z)[0], fits.open(file_allwise_Y)[0]
+        wcs = WCS(hdu_g.header)
 
         #Makes the cutouts
         position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
         size = u.Quantity([radius, radius], u.arcsec)
-        cutout_g = Cutout2D(data_allwise_g, position, size, fill_value = np.nan, wcs = wcs1_g.celestial)
-        cutout_r = Cutout2D(data_allwise_r, position, size, fill_value = np.nan, wcs = wcs1_g.celestial)
-        cutout_i = Cutout2D(data_allwise_i, position, size, fill_value = np.nan, wcs = wcs1_g.celestial)
-        cutout_z = Cutout2D(data_allwise_z, position, size, fill_value = np.nan, wcs = wcs1_g.celestial)
-        cutout_Y = Cutout2D(data_allwise_Y, position, size, fill_value = np.nan, wcs = wcs1_g.celestial)
+        cutout_g = Cutout2D(data_allwise_g, position, size, fill_value = np.nan, wcs = wcs.celestial)
+        cutout_r = Cutout2D(data_allwise_r, position, size, fill_value = np.nan, wcs = wcs.celestial)
+        cutout_i = Cutout2D(data_allwise_i, position, size, fill_value = np.nan, wcs = wcs.celestial)
+        cutout_z = Cutout2D(data_allwise_z, position, size, fill_value = np.nan, wcs = wcs.celestial)
+        cutout_Y = Cutout2D(data_allwise_Y, position, size, fill_value = np.nan, wcs = wcs.celestial)
         wcs_cropped_i = cutout_i.wcs
-
         enablePrint()
-        date_g = hdu_g.header[36].split('T', 2)[0]
-        time_g = hdu_g.header[36].split('T', 2)[1]
-        date_r = hdu_r.header[36].split('T', 2)[0]
-        time_r = hdu_r.header[36].split('T', 2)[1]
-        date_i = hdu_i.header[36].split('T', 2)[0]
-        time_i = hdu_i.header[36].split('T', 2)[1]
-        date_z = hdu_z.header[36].split('T', 2)[0]
-        time_z = hdu_z.header[36].split('T', 2)[1]
-        date_Y = hdu_Y.header[36].split('T', 2)[0]
-        time_Y = hdu_Y.header[36].split('T', 2)[1]
+
+        #Obtains the dates for each image
+        date_g, date_r, date_i = hdu_g.header[36].split('T', 2)[0], hdu_r.header[36].split('T', 2)[0], hdu_i.header[36].split('T', 2)[0]
+        date_z, date_Y = hdu_z.header[36].split('T', 2)[0], hdu_Y.header[36].split('T', 2)[0]
+
         #Allows the user to click the image to find the object
         location = []
         plt.rcParams["figure.figsize"] = [8, 8]
@@ -128,8 +119,7 @@ def nsc_image(ra, dec, radius):
         scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
         #Normalize the image and plots it
-        init_top = 95
-        init_bot = 45
+        init_bot, init_top = 45, 95
         norm1_total = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_total)
 
@@ -137,14 +127,11 @@ def nsc_image(ra, dec, radius):
         plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
         plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
         fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
-        ax.set_title(     'Dates: \n'
-                        + 'g Date: ' + str(date_g) + ' (Y/M/D)  ' + '  r Date: ' + str(date_r) + ' (Y/M/D)\n'
-                        + 'i Date: ' + str(date_i) + ' (Y/M/D)  '+ '  z Date: ' + str(date_z) + ' (Y/M/D)\n'
-                        + 'Y Date: ' + str(date_Y) + ' (Y/M/D)\n'
-                        + 'Times: \n'
-                        + 'g Time: ' + str(time_g) + ' (UT)  ' + '  r Time: ' + str(time_r) + ' (UT)\n'
-                        + 'i Time: ' + str(time_i) + ' (UT)  '+ '  z Time: ' + str(time_z) + ' (UT)\n'
-                        + 'Y Time: ' + str(time_Y), fontdict = fontdict_1, y = 1)
+        plt.suptitle('NSC Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
+        ax.set_title('Dates: \n'
+                   + 'g Date: ' + str(date_g) + ' (Y/M/D)  ' + '  r Date: ' + str(date_r) + ' (Y/M/D)\n'
+                   + 'i Date: ' + str(date_i) + ' (Y/M/D)  '+ '  z Date: ' + str(date_z) + ' (Y/M/D)\n'
+                   + 'Y Date: ' + str(date_Y) + ' (Y/M/D)\n', fontdict = fontdict_1, y = 0.97)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
         figure.set_size_inches(4.75, 6.95)
@@ -176,8 +163,8 @@ def nsc_image(ra, dec, radius):
     axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
     close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
-    #Update the image depending on what the user chooses
     def update_button(label):
+        '''Update the image depending on what the user chooses'''
         total_data = 0
         for lab in labels:
             if lab == label:
@@ -187,6 +174,8 @@ def nsc_image(ra, dec, radius):
                 elif default[index] == True: 
                     default[index] = False
         for d in range(len(default)):
+            if default == [False, False, False, False, False]: 
+                total_data = real_data[0]*0
             if default[d] == True: 
                 total_data = total_data + real_data[d]
             else: 
@@ -194,8 +183,8 @@ def nsc_image(ra, dec, radius):
         norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
-    #Updates the scaling when the slider is changed
     def update_slider_stretch(val):
+        '''Updates the scaling when the slider is changed'''
         total_data = 0
         for d in range(len(default)):
             if default[d] == True: 
@@ -241,36 +230,46 @@ def nsc_image(ra, dec, radius):
                 for i in range(len(object_ra)):
                     distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
                 list_location = distance.index(np.min(distance))
-                g = g_list[list_location]
-                r = r_list[list_location]
-                i = i_list[list_location]
-                z = z_list[list_location]
-                return g, r, i, z, text_list[text_max]
+                ra_nsc, dec_nsc = object_ra[list_location], object_dec[list_location]
+                g, g_e = g_list[list_location], g_list_e[list_location]
+                r, r_e = r_list[list_location], r_list_e[list_location]
+                i, i_e = i_list[list_location], i_list_e[list_location]
+                z, z_e = z_list[list_location], z_list_e[list_location]
+                u_mag, u_mag_e = u_list[list_location], u_list_e[list_location]
+                y, y_e = y_list[list_location], y_list_e[list_location]
+                pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
+                pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
+                return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
             
             #Checks if the Object not Found button was clicked
             elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
-                g, r, i, z = np.nan, np.nan, np.nan, np.nan
+                g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                ra_nsc, dec_nsc = ra, dec
                 plt.close('all')
                 plt.figure().clear()
-                return g, r, i, z, text_list[text_max]
+                return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
             
+            #Changes the circle size if the slider is changed
             elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
                 scatter.remove()
                 scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
             
         #Checks if the window was closed
         elif press is None:
-            g, r, i, z = np.nan, np.nan, np.nan, np.nan
+            g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+            ra_nsc, dec_nsc = ra, dec
             plt.close('all')
             plt.figure().clear()
-            return g, r, i, z, text_list[text_max]
+            ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
 
 def nsc_table(ra, dec, radius): 
+    '''Queries the NSC table using AstroQuery SQL search feature'''
     blockPrint()
+
     #Makes a SQL query using the ra, dec, and radius
     query = " \
-    SELECT ra, dec, gmag, rmag, imag, zmag \
-    FROM nsc_dr1.object \
+    SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr  \
+    FROM nsc_dr2.object \
     WHERE ra > " + str((ra - (radius/7200))) + " and ra < " + str((ra + (radius/7200))) + " " \
     "AND dec > " + str((dec - (radius/7200))) + " and dec < " + str((dec + (radius/7200))) + " " \
     ""
