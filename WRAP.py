@@ -27,29 +27,29 @@ ML_KEY_MULTI  = '-ML2-' + sg.WRITE_ONLY_KEY
 
 #Prints when the catalog search is started
 def wrap_start(catalog, tab):
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
- sg.cprint('Started ' + str(catalog) + ' Search                                                                                                                            ', c='wheat4', end='', key = tab)
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('Started ' + str(catalog) + ' Search                                                                                                                            ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Prints when a catalog search has finished and found an object
-def found(catalog, tab):
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
- sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+def wrap_found(catalog, tab):
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Prints when a catalog search has finished and did not find an object
-def not_found(catalog, tab):
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
- sg.cprint('Object Not Found                                                                                                                                               ', c='wheat4', end='', key = tab)
- sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+def wrap_not_found(catalog, tab):
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('Object Not Found                                                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Prints when the catalog search has finished
 def wrap_end(tab):
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
- sg.cprint('All Catalogs Have Been Searched                                                                                                                                ', c='wheat4', end='', key = tab)
- sg.cprint('Finished Running WRAP                                                                                                                                          ', c='wheat4', end='', key = tab)
- sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
+  sg.cprint('All Catalogs Have Been Searched                                                                                                                                ', c='wheat4', end='', key = tab)
+  sg.cprint('Finished Running WRAP                                                                                                                                          ', c='wheat4', end='', key = tab)
+  sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Sets the theme for WRAP
 sg.theme('LightGrey4')
@@ -184,9 +184,9 @@ while True:
 
       #Tells the user if the object was found or not
       if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
-       found(catalog_names[q], ML_KEY_SINGLE)
+       wrap_found(catalog_names[q], ML_KEY_SINGLE)
       else: 
-       not_found(catalog_names[q], ML_KEY_SINGLE)
+       wrap_not_found(catalog_names[q], ML_KEY_SINGLE)
 
      #Puts in null data if catalog is not called
      elif values[catalogs[q]] == False:
@@ -336,29 +336,29 @@ while True:
       
       #Calls the catalog and records the data down
       if values[catalogs[q]] == True: 
-       wrap_start(catalog_names[q], ML_KEY_MULTI)
-       search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
-       photometry.append(search_catalog)
+        wrap_start(catalog_names[q], ML_KEY_MULTI)
+        search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
+        photometry.append(search_catalog)  
 
-       #Tells the user if the object was found or not
-       if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
-        found(catalog_names[q], ML_KEY_SINGLE)
-       else: 
-        not_found(catalog_names[q], ML_KEY_SINGLE)
+        #Tells the user if the object was found or not
+        if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
+          wrap_found(catalog_names[q], ML_KEY_SINGLE)
+        else: 
+          wrap_not_found(catalog_names[q], ML_KEY_SINGLE)  
 
       #Puts in null data if catalog is not called
       elif values[catalogs[q]] == False:
-       empty = [np.nan] * len(value_names[q])
-       photometry.append(empty)
-       photometry_name.append(value_names[q])
-
+        empty = [np.nan] * len(value_names[q])
+        photometry.append(empty)
+        photometry_name.append(value_names[q])   
+        
       #Writes all of the data gathered into a csv file
       if q == (len(catalogs) - 1):
-       wrap_end(ML_KEY_MULTI)
+        wrap_end(ML_KEY_MULTI)   
 
-       #Writes a new list for the objects photometry and astrometry
-       flat_photometry_list = [item for sublist in photometry for item in sublist]
-       writer.writerow(flat_photometry_list)
+        #Writes a new list for the objects photometry and astrometry
+        flat_photometry_list = [item for sublist in photometry for item in sublist]
+        writer.writerow(flat_photometry_list)
     
      #Finishes the file once every object is searched
      if index == len(ra_list) - 1:
@@ -366,14 +366,14 @@ while True:
 
   #Provides the user with the authors information if the 'Help' button is pressed
   if event in (None, 'Help2'):
-   sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
-   sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
-   sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
-   sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
 
   #Closes WRAP if the 'Close WRAP' button is pressed
   if event in (None, 'Close WRAP3'):
-   break
+    break
  
 #Closes the window
 window.close()
