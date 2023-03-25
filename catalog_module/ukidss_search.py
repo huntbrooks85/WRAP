@@ -18,14 +18,10 @@ def ukidss_image(ra, dec, radius):
     url_K = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'K', database = 'UKIDSSDR11PLUS')
 
     #Checking to see if the images exist
-    if len(url_J) > 0: 
+    if len(url_J) > 0 and len(url_H) > 0 and len(url_K) > 0: 
         #Downloading the fits images
-        file_ukidss_J = download_file(url_J[0], cache=True)
-        data_ukidss_J = fits.getdata(file_ukidss_J)
-        file_ukidss_H = download_file(url_H[0], cache=True)
-        data_ukidss_H = fits.getdata(file_ukidss_H)
-        file_ukidss_K = download_file(url_K[0], cache=True)
-        data_ukidss_K = fits.getdata(file_ukidss_K)
+        file_ukidss_J, file_ukidss_H, file_ukidss_K = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_K[0], cache=True)
+        data_ukidss_J, data_ukidss_H, data_ukidss_K = fits.getdata(file_ukidss_J), fits.getdata(file_ukidss_H), fits.getdata(file_ukidss_K)
 
         #Find the location of all the object found in UKIDSS in the radius choosen by the user
         catalog_list = ['LAS', 'GPS', 'GCS', 'DXS']
@@ -46,26 +42,22 @@ def ukidss_image(ra, dec, radius):
         H_list = table['hAperMag3'].tolist()
         K_list = table['kAperMag3'].tolist()
 
-        #Make a cutout from the coadd image for the RA and DEC put in
-        hdu_j = fits.open(file_ukidss_J)[1]
-        hdu_h = fits.open(file_ukidss_H)[1]
-        hdu_k = fits.open(file_ukidss_K)[1]
-        wcs1_j = WCS(hdu_j.header)
+        #Obtains the headers from the images
+        hdu_j, hdu_h, hdu_k = fits.open(file_ukidss_J)[1], fits.open(file_ukidss_H)[1], fits.open(file_ukidss_K)[1]
+        wcs = WCS(hdu_j.header)
 
+        #Make a cutout from the coadd image for the RA and DEC put in
         position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
         size = u.Quantity([radius, radius], u.arcsec)
-        cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs1_j.celestial)
-        cutout_h = Cutout2D(data_ukidss_H, position, size, wcs = wcs1_j.celestial)
-        cutout_k = Cutout2D(data_ukidss_K, position, size, wcs = wcs1_j.celestial)
+        cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs.celestial)
+        cutout_h = Cutout2D(data_ukidss_H, position, size, wcs = wcs.celestial)
+        cutout_k = Cutout2D(data_ukidss_K, position, size, wcs = wcs.celestial)
         wcs_cropped = cutout_j.wcs
-
         enablePrint()
-        date_j = hdu_j.header[73].split(' ', 2)[0]
-        time_j = hdu_j.header[73].split(' ', 2)[1]
-        date_h = hdu_h.header[73].split(' ', 2)[0]
-        time_h = hdu_h.header[73].split(' ', 2)[1]
-        date_k = hdu_k.header[73].split(' ', 2)[0]
-        time_k = hdu_k.header[73].split(' ', 2)[1]
+
+        #Obtains the dates for each image
+        date_j, date_h, date_k = hdu_j.header[73].split(' ', 2)[0], hdu_h.header[73].split(' ', 2)[0], hdu_k.header[73].split(' ', 2)[0]
+
         #Defining a mouse click as an event on the plot
         location = []
         plt.rcParams["figure.figsize"] = [8, 8]
@@ -100,10 +92,7 @@ def ukidss_image(ra, dec, radius):
         fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
         ax.set_title(     'Dates: \n'
                         + 'J Date: ' + str(date_j) + ' (Y/M/D)  ' + '  H Date: ' + str(date_h) + ' (Y/M/D)\n'
-                        + 'K Date: ' + str(date_k) + ' (Y/M/D) \n'
-                        + 'Times: \n'
-                        + 'J Time: ' + str(time_j) + ' (UT)  ' + '  H Time: ' + str(time_h) + ' (UT)\n'
-                        + 'K Time: ' + str(time_k) + ' (UT)    \n', fontdict = fontdict_1, y = 1)
+                        + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
         figure.set_size_inches(4.75, 6.95)
