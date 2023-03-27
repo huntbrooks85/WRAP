@@ -1,5 +1,6 @@
 # Import all needed packages.
 # ------------------------------------------------------------- #
+import cv2
 import csv
 import math
 import time
