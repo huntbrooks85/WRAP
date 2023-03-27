@@ -23,7 +23,7 @@ def ukidss_image(ra, dec, radius):
     url_Y = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'Y', database = 'UKIDSSDR11PLUS')
 
     #Checking to see if the images exist
-    if len(url_J) > 0 and len(url_H) > 0 and len(url_K) > 0: 
+    if len(url_Y) > 0 and len(url_J) > 0 and len(url_H) > 0 and len(url_K) > 0: 
         
         #Downloading the fits images
         file_ukidss_J, file_ukidss_H, file_ukidss_K, file_ukidss_Y = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_K[0], cache=True), download_file(url_Y[0], cache=True)
