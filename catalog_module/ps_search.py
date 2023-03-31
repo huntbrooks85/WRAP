@@ -59,7 +59,7 @@ def ps_image(ra, dec, radius):
   for elem in list(ra_list):
    if elem == -999.0:
     ra_location = ra_list.index(elem)
-    ra_list.remove(ra_location)
+    ra_list.remove(elem)
     dec_list.pop(ra_location)
     g_list.pop(ra_location)
     g_list_e.pop(ra_location)
