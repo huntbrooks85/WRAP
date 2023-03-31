@@ -12,6 +12,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 from pyvo.dal import sia
+from tabulate import tabulate
 import PySimpleGUI as sg
 from astropy.wcs import WCS
 from astropy.io import fits

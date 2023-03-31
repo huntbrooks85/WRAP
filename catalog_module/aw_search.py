@@ -89,8 +89,7 @@ def allwise_image(ra, dec, radius):
  scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
  #Normalize the image and plots it
- init_top = 95
- init_bot = 45
+ init_top, init_bot = 95, 45
  norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
  ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
