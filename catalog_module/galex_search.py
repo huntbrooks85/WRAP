@@ -14,7 +14,7 @@ def galex_image(ra, dec, radius_use):
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
 
-    #blockPrint()
+    blockPrint()
     #Obtains all of the observations from MAST
     obs_table = Observations.query_region(str(ra) + ' ' + str(dec), radius=(radius_use/1800))
     obs_table = pd.DataFrame(data = np.array(obs_table))
@@ -175,7 +175,7 @@ def galex_image(ra, dec, radius_use):
                     ra_galex, dec_galex = object_ra[list_location], object_dec[list_location]
                     fuv, fuv_e = fuv_list[list_location], fuv_list_e[list_location]
                     nuv, nuv_e = nuv_list[list_location], nuv_list_e[list_location]
-                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e
+                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
                 
                 #Checks if the "Object Not Found" button was clicked
                 elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
@@ -183,7 +183,7 @@ def galex_image(ra, dec, radius_use):
                     ra_galex, dec_galex = ra, dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e
+                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
@@ -196,16 +196,17 @@ def galex_image(ra, dec, radius_use):
                 ra_galex, dec_galex = ra, dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e
+                return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
                 
     #Returns null values if the images are not found    
     else: 
         fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
         ra_galex, dec_galex = ra, dec
-        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e
+        text_list = ''
+        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list
 
 def galex_table(ra, dec, radius): 
-    #blockPrint()
+    blockPrint()
     #Gets the table of all of the data in the radius from the user
     catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius=(radius/7200), catalog="Galex", table="mean")
     return catalog_data
