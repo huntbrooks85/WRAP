@@ -150,8 +150,10 @@ Variable Names:
 	-> nsc_notes: The notes written in the NSC by the user
 
  GALEX:
-	-> galex_nuv: The NUV band from GALEX and its uncertainties
-	-> galex_fuv: The FUV band from GALEX and its uncertainties
+	-> galex_ra: The Right Accenceion (RA) from GALEX
+	-> galex_dec: The Declination (DEC) from GALEX
+	-> galex_fuv & galex_fuv_e: The FUV band from GALEX and its uncertainties
+	-> galex_nuv & galex_nuv_e: The NUV band from GALEX and its uncertainties
 	-> galex_notes: The notes written in the GALEX by the user
 
 Author Contact: 
