@@ -15,14 +15,14 @@
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. Python Installation</p>
+<p>1. Python </p>
 
 ```
 -> Python 3.8.8 is needed for WRAP 
 -> Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 ```
 
-<p>2. Packages Installation</p>
+<p>2. Packages </p>
 
 ```
 -> pyvo == 1.4 
@@ -50,28 +50,28 @@ Note that the window close button has been disabled, to close WRAP please click 
 3) Type "python WRAP.py" into the terminal
 
 <p> 2. How to Use </p>
-1) Select if you are find photometry and astrometry for a single object or multiple objects.
+Select if you are find photometry and astrometry for a single object or multiple objects.
 
-	For Single Object Search
-2) Input the RA and DEC (in degrees) of the object being searched for
-3) Input the radius (in arcsecs) around the RA and DEC that is being searched for
-4) Put in the output file name that you want, do not put a file type at the end (it always saves to a csv file)
+<pp> For Single Object Search </pp>
+1) Input the RA and DEC (in degrees) of the object being searched for
+2) Input the radius (in arcsecs) around the RA and DEC that is being searched for
+3) Put in the output file name that you want, do not put a file type at the end (it always saves to a csv file)
+4) Select the catalogs that will be searched through
+5) Click the green "Run Wrap" button
+6) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
+7) Repeat until every catalog image is shown
+8) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
+
+<pp> For Multi-Object Search </pp>
+1) Click the "Browse" button and click on you file with a list of RA ("ra") and DEC's ("dec") (in degrees)
+2) Input the radius (in arcsecs) around the RA and DEC that is being searched for
+3) Click the "Filetype" browser and select the file type being used
+4) Put in the output file name that you want, do not put a file type at the end
 5) Select the catalogs that will be searched through
 6) Click the green "Run Wrap" button
 7) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
-8) Repeat until every catalog image is shown
+8) Repeat until every catalog image is shown and every object has been run though
 9) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
-
-	For Multi-Object Search
-2) Click the "Browse" button and click on you file with a list of RA ("ra") and DEC's ("dec") (in degrees)
-3) Input the radius (in arcsecs) around the RA and DEC that is being searched for
-4) Click the "Filetype" browser and select the file type being used
-5) Put in the output file name that you want, do not put a file type at the end
-6) Select the catalogs that will be searched through
-7) Click the green "Run Wrap" button
-8) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
-9) Repeat until every catalog image is shown and every object has been run though
-10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
 <h2>📞 Support </h2>
 
