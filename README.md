@@ -77,7 +77,8 @@
 *   Photometry Filter Profiles: http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse
 
  <p> CatWISE2020: </p>
- ```
+
+```
 	-> cw_ra: The Right Accenceion (RA) from CatWISE2020
 	-> cw_dec: The Declination (DEC) from CatWISE2020
 	-> cw_w1 & cw_w1_e: The W1 band from CatWISE2020 and its uncertainties
@@ -85,6 +86,7 @@
 	-> cw_pmra & cw_pmra_e: The proper motion in RA from CatWISE2020 and its uncertainties
 	-> cw_pmdec & cw_pmdec_e: The proper motion in DEC from CatWISE2020 and its uncertainties
 	-> cw_notes: The notes written in the CatWISE2020 by the user
+
 ```
  <p> AllWISE: </p>
  ```
