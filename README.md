@@ -1,4 +1,4 @@
-<h1 align="center" id="title">WRAP</h1>
+<h1 align="center" id="title">✨ WRAP ✨</h1>
 
 <p id="description">Gathers photometry and astrometry from various ultra-violet optical and near-infrared catalogs given a RA DEC and Radius by the user. Done by the user clicking their object and gathering all of the photometry and astrometry from those various catalogs.</p>
   
@@ -39,7 +39,7 @@
 -> beautifulsoup4 == 4.11.1
 ```
 
-<h2> Opening Application: </h2>
+<h2> 🏆 Opening Application: </h2>
 Only tested on MacOS Ventura 13.2.1, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
 Note that the window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the buttom. 
 
@@ -50,7 +50,6 @@ Note that the window close button has been disabled, to close WRAP please click 
 3) Type "python WRAP.py" into the terminal
 
 <p> 2. How to Use </p>
-Select if you are find photometry and astrometry for a single object or multiple objects.
 
 <pp> For Single Object Search </pp>
 1) Input the RA and DEC (in degrees) of the object being searched for
