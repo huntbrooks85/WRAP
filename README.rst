@@ -12,22 +12,22 @@ Catalog Full Names and References:
  GALEX -> Galaxy Evolution Explorer, http://www.galex.caltech.edu
 
 Python: 
--> Python 3.8.8 is needed for WRAP
--> Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
+- Python 3.8.8 is needed for WRAP
+- Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 
 Packages Needed: 
--> pyvo == 1.4
--> numpy = 1.22.0
--> pandas == 1.5.3
--> astropy == 5.2.1
--> truncate == 0.11
--> requests == 2.28.1
--> astroquery == 0.4.6
--> matplotlib == 3.5.0
--> PySimpleGUI == 4.60.4
--> OpenCV-python == 1.22.0
--> astro-datalab == 2.20.1
--> beautifulsoup4 == 4.11.1
+- pyvo == 1.4
+- numpy = 1.22.0
+- pandas == 1.5.3
+- astropy == 5.2.1
+- truncate == 0.11
+- requests == 2.28.1
+- astroquery == 0.4.6
+- matplotlib == 3.5.0
+- PySimpleGUI == 4.60.4
+- OpenCV-python == 1.22.0
+- astro-datalab == 2.20.1
+- beautifulsoup4 == 4.11.1
 
 How to Start Program:
 -> Only tested on MacOS Ventura 13.2.1, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
