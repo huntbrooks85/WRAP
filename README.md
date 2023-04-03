@@ -77,6 +77,7 @@
 *   Photometry Filter Profiles: http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse
 
  <p> CatWISE2020: </p>
+ ```
 	-> cw_ra: The Right Accenceion (RA) from CatWISE2020
 	-> cw_dec: The Declination (DEC) from CatWISE2020
 	-> cw_w1 & cw_w1_e: The W1 band from CatWISE2020 and its uncertainties
@@ -84,8 +85,9 @@
 	-> cw_pmra & cw_pmra_e: The proper motion in RA from CatWISE2020 and its uncertainties
 	-> cw_pmdec & cw_pmdec_e: The proper motion in DEC from CatWISE2020 and its uncertainties
 	-> cw_notes: The notes written in the CatWISE2020 by the user
-
+```
  <p> AllWISE: </p>
+ ```
 	-> aw_ra: The Right Accenceion (RA) from AllWISE
 	-> aw_dec: The Declination (DEC) from AllWISE
 	-> aw_w1 & aw_w1_e: The W1 band from AllWISE and its uncertainties
@@ -95,8 +97,9 @@
 	-> aw_pmra & aw_pmra_e: The proper motion in RA from AllWISE and its uncertainties
 	-> aw_pmdec & aw_pmdec_e: The proper motion in DEC from AllWISE and its uncertainties
 	-> aw_notes: The notes written in the AllWISE by the user
-
+```
  <p> Gaia: </p>
+ ```
 	-> gaia_ra: The Right Accenceion (RA) from Gaia
 	-> gaia_dec: The Declination (DEC) from Gaia
 	-> gaia_parallax & gaia_parallax_e: The parallax from Gaia and its uncertainties
@@ -107,8 +110,9 @@
 	-> gaia_bp: The bp band from Gaia and its uncertainties
 	-> gaia_rp: The rp band from Gaia and its uncertainties
 	-> gaia_notes: The notes written in the Gaia by the user
-
+```
  <p> VISTA: </p>
+ ```
 	-> vsa_ra: The Right Accenceion (RA) from VISTA
 	-> vsa_dec: The Declination (DEC) from VISTA
 	-> vsa_y & vsa_y_e: The Y band from VISTA and its uncertainties
@@ -116,8 +120,9 @@
 	-> vsa_h & vsa_h_e: The H band from VISTA and its uncertainties
 	-> vsa_ks & vsa_ks_e: The Ks band from VISTA and its uncertainties
 	-> vsa_notes: The notes written in the VISTA by the user
-
+```
  <p> WFCAM: </p>
+ ```
 	-> wfcam_ra: The Right Accenceion (RA) from WFCAM
 	-> wfcam_dec: The Declination (DEC) from WFCAM
 	-> wfcam_y & wfcam_y_e: The Y band from WFCAM and its uncertainties
@@ -127,16 +132,18 @@
 	-> wfcam_pmra & wfcam_pmra_e: The proper motion in RA from WFCAM and its uncertainties
 	-> wfcam_pmdec & wfcam_pmdec_e: The proper motion in DEC from WFCAM and its uncertainties
 	-> wfcam_notes: The notes written in the WFCAM by the user
-
+```
  <p> 2MASS: </p>
+ ```
 	-> 2mass_ra: The Right Accenceion (RA) from 2MASS
 	-> 2mass_dec: The Declination (DEC) from 2MASS
 	-> 2mass_j & 2mass_j_e: The J band from 2MASS and its uncertainties
 	-> 2mass_h & 2mass_h_e: The J band from 2MASS and its uncertainties
 	-> 2mass_ks & 2mass_ks_e: The Ks band from 2MASS and its uncertainties
 	-> 2mass_notes: The notes written in the 2MASS by the user
-
+```
  <p> PanSTARRS: </p>
+ ```
 	-> ps_ra: The Right Accenceion (RA) from PanSTARRS
 	-> ps_dec: The Declination (DEC) from PanSTARRS
 	-> ps_g & ps_g_e: The g band from PanSTARRS and its uncertainties
@@ -145,8 +152,9 @@
 	-> ps_z & ps_z_e: The z band from PanSTARRS and its uncertainties
 	-> ps_y & ps_y_e: The y band from PanSTARRS and its uncertainties
 	-> ps_notes: The notes written in the PanSTARRS by the user
-
+```
  <p> NSC: </p>
+ ```
 	-> nsc_ra: The Right Accenceion (RA) from NSC
 	-> nsc_dec: The Declination (DEC) from NSC
 	-> nsc_g & nsc_g_e: The g band from NSC and its uncertainties
@@ -157,14 +165,15 @@
 	-> nsc_pmra & nsc_pmra_e: The proper motion in RA from NSC and its uncertainties
 	-> nsc_pmedc & nsc_pmdec_e: The proper motion in DEC from NSC and its uncertainties
 	-> nsc_notes: The notes written in the NSC by the user
-
+```
  <p> GALEX: </p>
+ ```
 	-> galex_ra: The Right Accenceion (RA) from GALEX
 	-> galex_dec: The Declination (DEC) from GALEX
 	-> galex_fuv & galex_fuv_e: The FUV band from GALEX and its uncertainties
 	-> galex_nuv & galex_nuv_e: The NUV band from GALEX and its uncertainties
 	-> galex_notes: The notes written in the GALEX by the user
-
+```
 <h2> 📞 Support </h2>
 
 Hunter Brooks -> hcb98@nau.edu
