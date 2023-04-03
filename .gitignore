@@ -3,3 +3,5 @@
 *.csv
 test_objects_for_WRAP.txt
 wrap_test.py
+tot_goodstuff.csv
+.gitignore

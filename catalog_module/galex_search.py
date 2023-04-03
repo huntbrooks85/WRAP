@@ -16,7 +16,7 @@ def galex_image(ra, dec, radius_use):
 
     blockPrint()
     #Obtains all of the observations from MAST
-    obs_table = Observations.query_region(str(ra) + ' ' + str(dec), radius=(radius_use/1800))
+    obs_table = Observations.query_region(str(ra) + ' ' + str(dec), radius = (radius_use/1800))
     obs_table = pd.DataFrame(data = np.array(obs_table))
 
     #Finds only the GALEX images

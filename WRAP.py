@@ -21,6 +21,188 @@ from catalog_module.catwise_search import catwise_image
 from catalog_module.nsc_search import nsc_image
 from catalog_module.galex_search import galex_image
 
+#Makes lists for: catalog names, catalog functions, and fake variables
+catalogs = ['catwise', 'AW', 'gaia', 
+            'VSA', 'UKIDSS', '2MASS', 
+            'ps', 'nsc', 'galex']
+catalogs_multi = ['catwise_multi', 'AW_multi', 'gaia_multi', 
+                  'VSA_multi', 'UKIDSS_multi', '2MASS_multi', 
+                  'ps_multi', 'nsc_multi', 'galex_multi']
+catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
+                 'VSA', 'UKIDSS', '2MASS', 
+                 'PanSTARRS', 'NSC', 'GALEX']
+catalog_functions = [catwise_image, allwise_image, gaia_image, 
+                     vsa_image, ukidss_image, twomass_image, 
+                     ps_image, nsc_image, galex_image]
+
+#Defines all of the variable names
+value_names = [['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes'], 
+               ['aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
+               ['gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes'], 
+               ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes'], 
+               ['wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes'], 
+               ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
+               ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
+               ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
+               ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']]
+
+#Defines the header for the CSV file
+header = ['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes', 
+                  'aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes', 
+                  'gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes', 
+                  'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes', 
+                  'wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes', 
+                  '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes', 
+                  'ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes', 
+                  'nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes',  
+                  'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']
+
+def single_object_search(): 
+  #Starts searching through each catalog
+  for q in range(len(catalogs)): 
+
+    #Calls the catalog and records the data down
+    if values[catalogs[q]] == True: 
+      wrap_start(catalog_names[q], ML_KEY_SINGLE)
+      search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
+      photometry.append(search_catalog)
+      photometry_name.append(value_names[q])
+
+      #Tells the user if the object was found or not
+      if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
+        wrap_found(catalog_names[q], ML_KEY_SINGLE)
+      else: 
+        wrap_not_found(catalog_names[q], ML_KEY_SINGLE)
+
+    #Puts in null data if catalog is not called
+    elif values[catalogs[q]] == False:
+      empty = [np.nan] * len(value_names[q])
+      photometry.append(empty)
+      photometry_name.append(value_names[q])
+
+    #Writes all of the data gathered into a csv file 
+    if q == (len(catalogs) - 1):
+      wrap_end(ML_KEY_SINGLE)
+
+      #Makes the output file name
+      if values['output'] == '':
+        output = 'WRAP_output'
+      else: 
+        output = values['output']
+
+      #Writes the CSV file with the photometry and astrometry gathered
+      myFile = open('Output/' + str(output) + '.csv', 'w')
+      writer = csv.writer(myFile)
+      flat_photometry_list = [item for sublist in photometry for item in sublist]
+      flat_photometry_name_list = [item for sublist in photometry_name for item in sublist]
+      writer.writerow(flat_photometry_name_list)
+      writer.writerow(flat_photometry_list)
+      myFile.close()
+
+def single_tab_check(): 
+  #Checks if the RA tab is entered with a number
+  if values['RA'].isnumeric() == False:
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    sg.cprint('Please enter a Correct RA!                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+
+  #Checks if the DEC tab is entered with a number
+  if values['DEC'].isnumeric() == False:
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    sg.cprint('Please enter a Correct DEC!                                                                                       ', c='wheat4', end='', key = ML_KEY_SINGLE)
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+
+  #Checks if the RADIUS tab is entered with a number
+  if values['RADIUS'].isnumeric() == False:
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    sg.cprint('Please enter a Correct radius!                                                                                    ', c='wheat4', end='', key = ML_KEY_SINGLE)
+    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+
+def multi_object_search():
+  #Starts searching each object
+  for index in range(len(ra_list)): 
+
+    #Make variables for the RA, DEC, and RADIUS used
+    ra_use = ra_list[index]
+    dec_use = dec_list[index]
+    radius_use = int(values['RADIUS_multi'])
+
+    #Creates fake list for the data and data names
+    photometry = []
+    photometry_name = []
+
+    #Starts searching through each catalog
+    for q in range(len(catalogs)): 
+
+      #Calls the catalog and records the data down
+      if values[catalogs_multi[q]] == True: 
+        wrap_start(catalog_names[q], ML_KEY_MULTI)
+        search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
+        photometry.append(search_catalog)  
+
+        #Tells the user if the object was found or not
+        if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
+          wrap_found(catalog_names[q], ML_KEY_SINGLE)
+        else: 
+          wrap_not_found(catalog_names[q], ML_KEY_SINGLE)  
+
+      #Puts in null data if catalog is not called
+      elif values[catalogs_multi[q]] == False:
+        empty = [np.nan] * len(value_names[q])
+        photometry.append(empty)
+        photometry_name.append(value_names[q])   
+
+      #Writes all of the data gathered into a csv file
+      if q == (len(catalogs) - 1):
+        wrap_end(ML_KEY_MULTI)   
+
+        #Writes a new list for the objects photometry and astrometry
+        flat_photometry_list = [item for sublist in photometry for item in sublist]
+        writer.writerow(flat_photometry_list)
+
+    #Finishes the file once every object is searched
+    if index == len(ra_list) - 1:
+      myFile.close()
+
+def multi_tab_check():
+  #Checks if the FILE tab is entered
+  if values['file'] == '': 
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('Please enter a correct file directory!                                                               ', c='wheat4', end='', key = ML_KEY_MULTI)
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+
+  #Checks if the RADIUS tab is entered
+  if values['RADIUS_multi'].isnumeric() == False:
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('Please enter a correct radius value!                                                                 ', c='wheat4', end='', key = ML_KEY_MULTI)
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+
+  #Checks if the FILETYPE tab is entered 
+  if values['type'] == '': 
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+    sg.cprint('Please enter a correct file type!                                                                    ', c='wheat4', end='', key = ML_KEY_MULTI)
+    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
+
+def multi_tab_table(): 
+  #Reads in the file depending on the filetype
+  if values['type'] == 'CSV':
+    csv_table = pd.read_csv(values['file'])
+    ra_list = csv_table['ra'].tolist()
+    dec_list = csv_table['dec'].tolist()
+  if values['type'] == 'FITS':
+    fits_table = fits.open(values['file'])
+    fits_data = fits_table[1].data
+    ra_list = fits_data['ra'].tolist()
+    dec_list = fits_data['dec'].tolist()
+  if values['type'] == 'ASCII':
+    ascii_table = ascii.read(values['file'])
+    ra_list = ascii_table['ra'].tolist()
+    dec_list = ascii_table['dec'].tolist()
+  if values['type'] == 'IPAC':
+    ipac_table = ascii.read(values['file'], format = 'ipac')
+    ra_list = ipac_table['ra'].tolist()
+    dec_list = ipac_table['dec'].tolist()
+  return ra_list, dec_list
 #Sets the different outputs for the 2 different tabs
 ML_KEY_SINGLE = '-ML-'  + sg.WRITE_ONLY_KEY
 ML_KEY_MULTI  = '-ML2-' + sg.WRITE_ONLY_KEY
@@ -106,274 +288,95 @@ window = sg.Window('WRAP', tab_layout, size = (550, 610), grab_anywhere=False, f
 
 #Keeps the window open
 while True:
- 
- #Reads all of the events and values, then reads which tab is currently in
- event, values = window.read()
- group = values['tab_group']
 
- #Runs the program if the user is in 'Single Object' tab
- if group == 'Single Obect Search':   
-   
-  #Checks if the 'Run WRAP' button is clicked
-  if event in (None, 'Run WRAP'):
-   
-   #Checks if the RA tab is entered with a number
-   if values['RA'].isnumeric() == False:
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
-    sg.cprint('Please enter a Correct RA!                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+  #Reads all of the events and values, then reads which tab is currently in
+  event, values = window.read()
+  group = values['tab_group']
 
-   #Checks if the DEC tab is entered with a number
-   if values['DEC'].isnumeric() == False:
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
-    sg.cprint('Please enter a Correct DEC!                                                                                       ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+  #Runs the program if the user is in 'Single Object' tab
+  if group == 'Single Obect Search':   
 
-   #Checks if the RADIUS tab is entered with a number
-   if values['RADIUS'].isnumeric() == False:
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
-    sg.cprint('Please enter a Correct radius!                                                                                    ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
-    
-   #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
-   if values['RA'].isnumeric() == True and values['DEC'].isnumeric() == True and values['RADIUS'].isnumeric() == True:
-    sg.cprint('------------------------------------------------                                                                                                                             ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('Running Search on RA (deg): ' + str(values['RA']) + '                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('DEC (deg): ' + str(values['DEC']) + '                                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('RADIUS (arcsec): ' + str(values['RADIUS']) + '                                                                                                                               ', c='wheat4', end='', key = ML_KEY_SINGLE)
-    sg.cprint('------------------------------------------------                                                                                                                             ', c='wheat4', end='', key = ML_KEY_SINGLE)
+    #Checks if the 'Run WRAP' button is clicked
+    if event in (None, 'Run WRAP'):
 
-    #Make variables for the RA, DEC, and RADIUS used
-    ra_use = float(values['RA'])
-    dec_use = float(values['DEC'])
-    radius_use = int(values['RADIUS'])
-
-    #Makes lists for: catalog names, catalog functions, and fake variables
-    catalogs = ['catwise', 'AW', 'gaia', 
-                'VSA', 'UKIDSS', '2MASS', 
-                'ps', 'nsc', 'galex']
-    catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
-                     'VSA', 'UKIDSS', '2MASS', 
-                     'PanSTARRS', 'NSC', 'GALEX']
-    catalog_functions = [catwise_image, allwise_image, gaia_image, 
-                         vsa_image, ukidss_image, twomass_image, 
-                         ps_image, nsc_image, galex_image]
-    value_names = [['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes'], 
-                   ['aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
-                   ['gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes'], 
-                   ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes'], 
-                   ['wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes'], 
-                   ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
-                   ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
-                   ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
-                   ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']]
-    
-    #Creates fake list for the data and data names
-    photometry = []
-    photometry_name = []
-
-    #Starts searching through each catalog
-    for q in range(len(catalogs)): 
-     
-     #Calls the catalog and records the data down
-     if values[catalogs[q]] == True: 
-      wrap_start(catalog_names[q], ML_KEY_SINGLE)
-      search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
-      photometry.append(search_catalog)
-      photometry_name.append(value_names[q])
-
-      #Tells the user if the object was found or not
-      if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
-       wrap_found(catalog_names[q], ML_KEY_SINGLE)
-      else: 
-       wrap_not_found(catalog_names[q], ML_KEY_SINGLE)
-
-     #Puts in null data if catalog is not called
-     elif values[catalogs[q]] == False:
-      empty = [np.nan] * len(value_names[q])
-      photometry.append(empty)
-      photometry_name.append(value_names[q])
-
-     #Writes all of the data gathered into a csv file 
-     if q == (len(catalogs) - 1):
-      wrap_end(ML_KEY_SINGLE)
-
-      #Makes the output file name
-      if values['output'] == '':
-       output = 'WRAP_output'
-      else: 
-       output = values['output']
-       
-      #Writes the CSV file with the photometry and astrometry gathered
-      myFile = open('Output/' + str(output) + '.csv', 'w')
-      writer = csv.writer(myFile)
-      flat_photometry_list = [item for sublist in photometry for item in sublist]
-      flat_photometry_name_list = [item for sublist in photometry_name for item in sublist]
-      writer.writerow(flat_photometry_name_list)
-      writer.writerow(flat_photometry_list)
-      myFile.close()
-
-  #Provides the user with the authors information if the 'Help' button is pressed
-  if event in (None, 'Help'):
-   sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
-   sg.cprint('     Thank you for using WRAP!                                                                                                      ', c='wheat4', end='', key = ML_KEY_SINGLE)
-   sg.cprint('   Authors Contact: hcb98@nau.edu                                                                                                   ', c='wheat4', end='', key = ML_KEY_SINGLE)
-   sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
-   
-  #Closes WRAP if the 'Close WRAP' button is pressed
-  if event in (None, 'Close WRAP'):
-   break
-  
- #Runs the program if the user is in 'Multi-Object' tab
- if group == 'Multi-Object Search':
-  
-  #Checks if the 'Run WRAP' button is clicked
-  if event in (None, 'Run WRAP1'):
-   
-   #Checks if the FILE tab is entered
-   if values['file'] == '': 
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('Please enter a correct file directory!                                                               ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-
-   #Checks if the RADIUS tab is entered
-   if values['RADIUS_multi'].isnumeric() == False:
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('Please enter a correct radius value!                                                                 ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-
-   #Checks if the FILETYPE tab is entered 
-   if values['type'] == '': 
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('Please enter a correct file type!                                                                    ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
-
-   #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
-   if values['file'] != '' and values['RADIUS_multi'].isnumeric() == True and (values['type'] == 'CSV' or values['type'] == 'FITS' or values['type'] == 'ASCII' or values['type'] == 'IPAC'):
-    sg.cprint('------------------------------------------------                                                                                                                                   ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('Directory: ' + str(values['file']) + '                                                                                                                                             ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('File Type: ' + str(values['type']) + '                                                                                                                                             ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('RADIUS (arcsec): ' + str(values['RADIUS_multi']) + '                                                                                                                               ', c='wheat4', end='', key = ML_KEY_MULTI)
-    sg.cprint('------------------------------------------------                                                                                                                                   ', c='wheat4', end='', key = ML_KEY_MULTI)
-
-    #Reads in the file depending on the filetype
-    if values['type'] == 'CSV':
-     csv_table = pd.read_csv(values['file'])
-     ra_list = csv_table['ra'].tolist()
-     dec_list = csv_table['dec'].tolist()
-    if values['type'] == 'FITS':
-     fits_table = fits.open(values['file'])
-     fits_data = fits_table[1].data
-     ra_list = fits_data['ra'].tolist()
-     dec_list = fits_data['dec'].tolist()
-    if values['type'] == 'ASCII':
-     ascii_table = ascii.read(values['file'])
-     ra_list = ascii_table['ra'].tolist()
-     dec_list = ascii_table['dec'].tolist()
-    if values['type'] == 'IPAC':
-     ipac_table = ascii.read(values['file'], format = 'ipac')
-     ra_list = ipac_table['ra'].tolist()
-     dec_list = ipac_table['dec'].tolist()
-
-    #Makes a csv file and writes the header
-    output = values['output']
-    header = ['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes', 
-              'aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes', 
-              'gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes', 
-              'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes', 
-              'wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes', 
-              '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes', 
-              'ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes', 
-              'nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes',  
-              'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']
-    
-    #Makes the output file name
-    if values['output'] == '':
-     output = 'WRAP_output'
-    else: 
-     output = values['output']
-
-    #Makes the CSV file and writes the header
-    myFile = open('Output/' + str(output) + '.csv', 'w')
-    writer = csv.writer(myFile)
-    writer.writerow(header)
-
-    #Makes lists for: catalog names, catalog functions, and fake variables
-    #Makes lists for: catalog names, catalog functions, and fake variables
-    catalogs = ['catwise', 'AW', 'gaia', 
-                'VSA', 'UKIDSS', '2MASS', 
-                'ps', 'nsc', 'galex']
-    catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
-                     'VSA', 'UKIDSS', '2MASS', 
-                     'PanSTARRS', 'NSC', 'GALEX']
-    catalog_functions = [catwise_image, allwise_image, gaia_image, 
-                         vsa_image, ukidss_image, twomass_image, 
-                         ps_image, nsc_image, galex_image]
-    value_names = [['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes'], 
-                   ['aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
-                   ['gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes'], 
-                   ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes'], 
-                   ['wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes'], 
-                   ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
-                   ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
-                   ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
-                   ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']]
-    
-    #Starts searching each object
-    for index in range(len(ra_list)): 
-     
-     #Make variables for the RA, DEC, and RADIUS used
-     ra_use = ra_list[index]
-     dec_use = dec_list[index]
-     radius_use = int(values['RADIUS_multi'])
-
-     #Creates fake list for the data and data names
-     photometry = []
-     photometry_name = []
-
-     #Starts searching through each catalog
-     for q in range(len(catalogs)): 
-      
-      #Calls the catalog and records the data down
-      if values[catalogs[q]] == True: 
-        wrap_start(catalog_names[q], ML_KEY_MULTI)
-        search_catalog = catalog_functions[q](ra_use, dec_use, radius_use)
-        photometry.append(search_catalog)  
-
-        #Tells the user if the object was found or not
-        if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
-          wrap_found(catalog_names[q], ML_KEY_SINGLE)
-        else: 
-          wrap_not_found(catalog_names[q], ML_KEY_SINGLE)  
-
-      #Puts in null data if catalog is not called
-      elif values[catalogs[q]] == False:
-        empty = [np.nan] * len(value_names[q])
-        photometry.append(empty)
-        photometry_name.append(value_names[q])   
+      #Calls the "single_tab_check" function
+      single_tab_check()
         
-      #Writes all of the data gathered into a csv file
-      if q == (len(catalogs) - 1):
-        wrap_end(ML_KEY_MULTI)   
+      #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
+      if values['RA'].isnumeric() == True and values['DEC'].isnumeric() == True and values['RADIUS'].isnumeric() == True:
+        sg.cprint('------------------------------------------------                                                                                                                             ', c='wheat4', end='', key = ML_KEY_SINGLE)
+        sg.cprint('Running Search on RA (deg): ' + str(values['RA']) + '                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
+        sg.cprint('DEC (deg): ' + str(values['DEC']) + '                                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
+        sg.cprint('RADIUS (arcsec): ' + str(values['RADIUS']) + '                                                                                                                               ', c='wheat4', end='', key = ML_KEY_SINGLE)
+        sg.cprint('------------------------------------------------                                                                                                                             ', c='wheat4', end='', key = ML_KEY_SINGLE)
 
-        #Writes a new list for the objects photometry and astrometry
-        flat_photometry_list = [item for sublist in photometry for item in sublist]
-        writer.writerow(flat_photometry_list)
-    
-     #Finishes the file once every object is searched
-     if index == len(ra_list) - 1:
-      myFile.close()
+        #Make variables for the RA, DEC, and RADIUS used
+        ra_use, dec_use, radius_use = float(values['RA']), float(values['DEC']), int(values['RADIUS'])
+        
+        #Creates fake list for the data and data names
+        photometry, photometry_name = [], []
 
-  #Provides the user with the authors information if the 'Help' button is pressed
-  if event in (None, 'Help2'):
-    sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
-    sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+        #Calls the "single_object_search" function
+        single_object_search()
 
-  #Closes WRAP if the 'Close WRAP' button is pressed
-  if event in (None, 'Close WRAP3'):
-    break
- 
+    #Provides the user with the authors information if the 'Help' button is pressed
+    if event in (None, 'Help'):
+      sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
+      sg.cprint('     Thank you for using WRAP!                                                                                                      ', c='wheat4', end='', key = ML_KEY_SINGLE)
+      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                                                   ', c='wheat4', end='', key = ML_KEY_SINGLE)
+      sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
+
+    #Closes WRAP if the 'Close WRAP' button is pressed
+    if event in (None, 'Close WRAP'):
+      break
+
+  #Runs the program if the user is in 'Multi-Object' tab
+  if group == 'Multi-Object Search':
+
+    #Checks if the 'Run WRAP' button is clicked
+    if event in (None, 'Run WRAP1'):
+
+      #Calls the "multi_tab_check" function
+      multi_tab_check()
+
+      #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
+      if values['file'] != '' and values['RADIUS_multi'].isnumeric() == True and (values['type'] == 'CSV' or values['type'] == 'FITS' or values['type'] == 'ASCII' or values['type'] == 'IPAC'):
+        sg.cprint('------------------------------------------------                                                                                                                                   ', c='wheat4', end='', key = ML_KEY_MULTI)
+        sg.cprint('Directory: ' + str(values['file']) + '                                                                                                                                             ', c='wheat4', end='', key = ML_KEY_MULTI)
+        sg.cprint('File Type: ' + str(values['type']) + '                                                                                                                                             ', c='wheat4', end='', key = ML_KEY_MULTI)
+        sg.cprint('RADIUS (arcsec): ' + str(values['RADIUS_multi']) + '                                                                                                                               ', c='wheat4', end='', key = ML_KEY_MULTI)
+        sg.cprint('------------------------------------------------                                                                                                                                   ', c='wheat4', end='', key = ML_KEY_MULTI)
+
+        #Calls the "multi_tab_table" function
+        ra_list, dec_list = multi_tab_table()
+
+        #Makes a csv file and writes the header
+        output = values['output']
+        
+        #Makes the output file name
+        if values['output'] == '':
+          output = 'WRAP_output'
+        else: 
+          output = values['output']
+
+        #Makes the CSV file and writes the header
+        myFile = open('Output/' + str(output) + '.csv', 'w')
+        writer = csv.writer(myFile)
+        writer.writerow(header)
+        
+        #Calls the "multi_object_search" function
+        multi_object_search()
+
+    #Provides the user with the authors information if the 'Help' button is pressed
+    if event in (None, 'Help2'):
+      sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+
+    #Closes WRAP if the 'Close WRAP' button is pressed
+    if event in (None, 'Close WRAP3'):
+      break
+
 #Closes the window
 window.close()
