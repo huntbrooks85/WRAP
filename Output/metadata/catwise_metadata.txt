@@ -127,61 +127,15 @@ is returned (rather than all images containing the center).</DESCRIPTION>
       <DATA>
         <TABLEDATA>
           <TR>
-            <TD> W3 Coadd 0000p318_ac51</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w3-int-3.fits</TD>
+            <TD> W1 Coadd 0015p015_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w1-int-3.fits</TD>
             <TD>2</TD>
             <TD>image/fits</TD>
-            <TD>0</TD>
-            <TD>31.803332999999999</TD>
+            <TD>1.5126109999999999</TD>
+            <TD>1.5144439999999999</TD>
             <TD>4095 4095</TD>
             <TD>2048 2048</TD>
-            <TD>0 31.803332999999999</TD>
-            <TD>SIN</TD>
-            <TD>-0.0003819444391411 0.0003819444391411</TD>
-            <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
-            <TD>W3</TD>
-            <TD>1.1559999999999999e-05</TD>
-            <TD>1.6269999999999998e-05</TD>
-            <TD>7.6000000000000001e-06</TD>
-            <TD>18</TD>
-            <TD>0.012</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w3-unc-3.fits.gz</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w3-cov-3.fits.gz</TD>
-            <TD>0000p318_ac51</TD>
-          </TR>
-          <TR>
-            <TD> W4 Coadd 0000p318_ac51</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w4-int-3.fits</TD>
-            <TD>2</TD>
-            <TD>image/fits</TD>
-            <TD>0</TD>
-            <TD>31.803332999999999</TD>
-            <TD>4095 4095</TD>
-            <TD>2048 2048</TD>
-            <TD>0 31.803332999999999</TD>
-            <TD>SIN</TD>
-            <TD>-0.0003819444391411 0.0003819444391411</TD>
-            <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
-            <TD>W4</TD>
-            <TD>2.209e-05</TD>
-            <TD>2.336e-05</TD>
-            <TD>1.984e-05</TD>
-            <TD>13</TD>
-            <TD>0.012</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w4-unc-3.fits.gz</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w4-cov-3.fits.gz</TD>
-            <TD>0000p318_ac51</TD>
-          </TR>
-          <TR>
-            <TD> W1 Coadd 0000p318_ac51</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w1-int-3.fits</TD>
-            <TD>2</TD>
-            <TD>image/fits</TD>
-            <TD>0</TD>
-            <TD>31.803332999999999</TD>
-            <TD>4095 4095</TD>
-            <TD>2048 2048</TD>
-            <TD>0 31.803332999999999</TD>
+            <TD>1.5126109999999999 1.5144439999999999</TD>
             <TD>SIN</TD>
             <TD>-0.0003819444391411 0.0003819444391411</TD>
             <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
@@ -191,20 +145,66 @@ is returned (rather than all images containing the center).</DESCRIPTION>
             <TD>3.1300000000000001e-06</TD>
             <TD>20.5</TD>
             <TD>0.0060000000000000001</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w1-unc-3.fits.gz</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w1-cov-3.fits.gz</TD>
-            <TD>0000p318_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w1-unc-3.fits.gz</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w1-cov-3.fits.gz</TD>
+            <TD>0015p015_ac51</TD>
           </TR>
           <TR>
-            <TD> W2 Coadd 0000p318_ac51</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w2-int-3.fits</TD>
+            <TD> W3 Coadd 0015p015_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w3-int-3.fits</TD>
             <TD>2</TD>
             <TD>image/fits</TD>
-            <TD>0</TD>
-            <TD>31.803332999999999</TD>
+            <TD>1.5126109999999999</TD>
+            <TD>1.5144439999999999</TD>
             <TD>4095 4095</TD>
             <TD>2048 2048</TD>
-            <TD>0 31.803332999999999</TD>
+            <TD>1.5126109999999999 1.5144439999999999</TD>
+            <TD>SIN</TD>
+            <TD>-0.0003819444391411 0.0003819444391411</TD>
+            <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
+            <TD>W3</TD>
+            <TD>1.1559999999999999e-05</TD>
+            <TD>1.6269999999999998e-05</TD>
+            <TD>7.6000000000000001e-06</TD>
+            <TD>18</TD>
+            <TD>0.012</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w3-unc-3.fits.gz</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w3-cov-3.fits.gz</TD>
+            <TD>0015p015_ac51</TD>
+          </TR>
+          <TR>
+            <TD> W4 Coadd 0015p015_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w4-int-3.fits</TD>
+            <TD>2</TD>
+            <TD>image/fits</TD>
+            <TD>1.5126109999999999</TD>
+            <TD>1.5144439999999999</TD>
+            <TD>4095 4095</TD>
+            <TD>2048 2048</TD>
+            <TD>1.5126109999999999 1.5144439999999999</TD>
+            <TD>SIN</TD>
+            <TD>-0.0003819444391411 0.0003819444391411</TD>
+            <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
+            <TD>W4</TD>
+            <TD>2.209e-05</TD>
+            <TD>2.336e-05</TD>
+            <TD>1.984e-05</TD>
+            <TD>13</TD>
+            <TD>0.012</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w4-unc-3.fits.gz</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w4-cov-3.fits.gz</TD>
+            <TD>0015p015_ac51</TD>
+          </TR>
+          <TR>
+            <TD> W2 Coadd 0015p015_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w2-int-3.fits</TD>
+            <TD>2</TD>
+            <TD>image/fits</TD>
+            <TD>1.5126109999999999</TD>
+            <TD>1.5144439999999999</TD>
+            <TD>4095 4095</TD>
+            <TD>2048 2048</TD>
+            <TD>1.5126109999999999 1.5144439999999999</TD>
             <TD>SIN</TD>
             <TD>-0.0003819444391411 0.0003819444391411</TD>
             <TD>-0.0003819444391411 -0 -0 0.0003819444391411</TD>
@@ -214,9 +214,9 @@ is returned (rather than all images containing the center).</DESCRIPTION>
             <TD>4.0199999999999996e-06</TD>
             <TD>19.5</TD>
             <TD>0.0070000000000000001</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w2-unc-3.fits.gz</TD>
-            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0000/0000p318_ac51/0000p318_ac51-w2-cov-3.fits.gz</TD>
-            <TD>0000p318_ac51</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w2-unc-3.fits.gz</TD>
+            <TD>https://irsa.ipac.caltech.edu/ibe/data/wise/allwise/p3am_cdd/00/0015/0015p015_ac51/0015p015_ac51-w2-cov-3.fits.gz</TD>
+            <TD>0015p015_ac51</TD>
           </TR>
         </TABLEDATA>
       </DATA>
