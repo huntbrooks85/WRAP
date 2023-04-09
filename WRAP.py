@@ -101,13 +101,15 @@ def single_object_search():
 
 def single_tab_check(): 
   #Checks if the RA tab is entered with a number
-  if values['RA'].isnumeric() == False:
+  new_ra = is_float(values['RA'])
+  new_dec = is_float(values['DEC'])
+  if isinstance(new_ra, float) != True:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct RA!                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
 
   #Checks if the DEC tab is entered with a number
-  if values['DEC'].isnumeric() == False:
+  if isinstance(new_dec, float) != True:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct DEC!                                                                                       ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
@@ -300,6 +302,12 @@ while True:
     if event in (None, 'Run WRAP'):
 
       #Calls the "single_tab_check" function
+      def is_float(string):
+        try:
+          float(string)
+          return float(string)
+        except ValueError:
+          return str(string)
       single_tab_check()
         
       #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
