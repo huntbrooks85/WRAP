@@ -100,25 +100,32 @@ def single_object_search():
       myFile.close()
 
 def single_tab_check(): 
+  fake_list = []
   #Checks if the RA tab is entered with a number
-  new_ra = is_float(values['RA'])
-  new_dec = is_float(values['DEC'])
-  if isinstance(new_ra, float) != True:
+  try: 
+    float(values['RA'])
+  except ValueError:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct RA!                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    fake_list.append(1)
 
   #Checks if the DEC tab is entered with a number
-  if isinstance(new_dec, float) != True:
+  try: 
+    float(values['DEC'])
+  except ValueError:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct DEC!                                                                                       ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    fake_list.append(2)
 
   #Checks if the RADIUS tab is entered with a number
   if values['RADIUS'].isnumeric() == False:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct radius!                                                                                    ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
+    fake_list.append(3)
+  return fake_list
 
 def multi_object_search():
   #Starts searching each object
@@ -302,16 +309,10 @@ while True:
     if event in (None, 'Run WRAP'):
 
       #Calls the "single_tab_check" function
-      def is_float(string):
-        try:
-          float(string)
-          return float(string)
-        except ValueError:
-          return str(string)
-      single_tab_check()
+      fake_list = single_tab_check()
         
       #If the RA, DEC, and RADIUS tabs are filled then runs the search on the catalogs used
-      if values['RA'].isnumeric() == True and values['DEC'].isnumeric() == True and values['RADIUS'].isnumeric() == True:
+      if len(fake_list) == 0: 
         sg.cprint('------------------------------------------------                                                                                                                             ', c='wheat4', end='', key = ML_KEY_SINGLE)
         sg.cprint('Running Search on RA (deg): ' + str(values['RA']) + '                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
         sg.cprint('DEC (deg): ' + str(values['DEC']) + '                                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
