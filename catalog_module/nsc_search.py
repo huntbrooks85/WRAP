@@ -122,6 +122,7 @@ def nsc_image(ra, dec, radius):
         init_bot, init_top = 45, 95
         norm1_total = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_total)
+        ax.invert_xaxis()
 
         #Makes the figure look pretty
         plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
@@ -182,6 +183,7 @@ def nsc_image(ra, dec, radius):
                 pass
         norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+        ax.invert_xaxis()
 
     def update_slider_stretch(val):
         '''Updates the scaling when the slider is changed'''
@@ -211,6 +213,7 @@ def nsc_image(ra, dec, radius):
     while True:
         press = plt.waitforbuttonpress()
         text_max = len(text_list) - 1
+
         #Checks that it was a mouse click
         if press == False:
             n += 3
@@ -260,7 +263,7 @@ def nsc_image(ra, dec, radius):
             ra_nsc, dec_nsc = ra, dec
             plt.close('all')
             plt.figure().clear()
-            ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
+            return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
 
 def nsc_table(ra, dec, radius): 
     '''Queries the NSC table using AstroQuery SQL search feature'''

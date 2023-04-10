@@ -240,4 +240,5 @@ def ukidss_image(ra, dec, radius):
         Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_wfcam = ra
         dec_wfcam = dec
-        return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max] 
+        text_list = 'Image Not Found'
+        return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list
