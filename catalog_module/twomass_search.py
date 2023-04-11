@@ -204,7 +204,7 @@ def twomass_image(ra, dec, radius):
         ra_2mass, dec_2mass = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
       
       #Adds the functionality of the circle slider bar
       elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

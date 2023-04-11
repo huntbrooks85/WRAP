@@ -106,6 +106,7 @@ def ukidss_image(ra, dec, radius):
                    + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 0.97)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
+        plt.xlim(len(total_data[0]), 0)
         figure.set_size_inches(4.75, 6.95)
         figure.canvas.set_window_title('WFCAM Search')
 
@@ -219,7 +220,7 @@ def ukidss_image(ra, dec, radius):
                     dec_wfcam = dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max] 
+                    return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

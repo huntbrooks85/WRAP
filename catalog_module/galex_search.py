@@ -183,7 +183,7 @@ def galex_image(ra, dec, radius_use):
                     ra_galex, dec_galex = ra, dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
+                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
@@ -207,6 +207,7 @@ def galex_image(ra, dec, radius_use):
 
 def galex_table(ra, dec, radius): 
     blockPrint()
+
     #Gets the table of all of the data in the radius from the user
-    catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius=(radius/7200), catalog="Galex", table="mean")
+    catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius=(radius/7200), catalog = "Galex", table = "mean")
     return catalog_data

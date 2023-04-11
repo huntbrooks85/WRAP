@@ -209,7 +209,7 @@ def gaia_image(ra, dec, radius):
         dec_gaia = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_gaia, dec_gaia, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp, text_list[text_max]
+        return ra_gaia, dec_gaia, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

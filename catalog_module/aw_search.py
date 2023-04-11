@@ -218,7 +218,7 @@ def allwise_image(ra, dec, radius):
         dec_allwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
+        return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

@@ -200,7 +200,7 @@ def catwise_image(ra, dec, radius):
         dec_catwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max] 
+        return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

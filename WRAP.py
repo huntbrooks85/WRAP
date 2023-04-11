@@ -69,10 +69,13 @@ def single_object_search():
       photometry_name.append(value_names[q])
 
       #Tells the user if the object was found or not
-      if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
-        wrap_found(catalog_names[q], ML_KEY_SINGLE)
+      if search_catalog is None: 
+        wrap_end(catalog_names[q], ML_KEY_SINGLE)
       else: 
-        wrap_not_found(catalog_names[q], ML_KEY_SINGLE)
+        if isinstance(sum(filter(None, search_catalog[0:len(search_catalog) - 1])), float) == True:
+          wrap_found(catalog_names[q], ML_KEY_SINGLE)
+        else: 
+          wrap_not_found(catalog_names[q], ML_KEY_SINGLE)
 
     #Puts in null data if catalog is not called
     elif values[catalogs[q]] == False:

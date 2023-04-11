@@ -40,15 +40,12 @@ def ps_image(ra, dec, radius):
 
     #Obtains the data table for panstarrs and then gets all of the relatvent data from the table
     panstarr_data = ps_table(ra, dec, radius)
-    ra_list, dec_list = panstarr_data['raMean'].tolist(), panstarr_data['decMean'].tolist()
-    g_list, g_list_e = panstarr_data['gMeanApMag'].tolist(), panstarr_data['gMeanApMagErr'].tolist()
-    r_list, r_list_e = panstarr_data['rMeanApMag'].tolist(), panstarr_data['rMeanApMagErr'].tolist()
-    i_list, i_list_e = panstarr_data['iMeanApMag'].tolist(), panstarr_data['iMeanApMagErr'].tolist()
-    z_list, z_list_e = panstarr_data['zMeanApMag'].tolist(), panstarr_data['zMeanApMagErr'].tolist()
-    y_list, y_list_e = panstarr_data['yMeanApMag'].tolist(), panstarr_data['yMeanApMagErr'].tolist()
-
-    print(ra_list)
-    print(dec_list)
+    ra_list, dec_list = panstarr_data['raStack'].tolist(), panstarr_data['decStack'].tolist()
+    g_list, g_list_e = panstarr_data['gApMag'].tolist(), panstarr_data['gApMagErr'].tolist()
+    r_list, r_list_e = panstarr_data['rApMag'].tolist(), panstarr_data['rApMagErr'].tolist()
+    i_list, i_list_e = panstarr_data['iApMag'].tolist(), panstarr_data['iApMagErr'].tolist()
+    z_list, z_list_e = panstarr_data['zApMag'].tolist(), panstarr_data['zApMagErr'].tolist()
+    y_list, y_list_e = panstarr_data['yApMag'].tolist(), panstarr_data['yApMagErr'].tolist()
 
     #Gets all of the image urls
     r_link = ('http:' + (r_finder_list[2]).split('href="', 3)[3].split('"', 1)[0]).replace('amp;', '', 6)
@@ -61,21 +58,21 @@ def ps_image(ra, dec, radius):
     data_ps_r, data_ps_i, data_ps_z, data_ps_y = fits.getdata(file_ps_r), fits.getdata(file_ps_i), fits.getdata(file_ps_z), fits.getdata(file_ps_y)
 
     #Removes the null RA and DEC values that PanSTARRS return
-    # for elem in list(ra_list):
-    #   if elem == -999.0:
-    #     ra_location = ra_list.index(elem)
-    #     ra_list.remove(elem)
-    #     dec_list.pop(ra_location)
-    #     g_list.pop(ra_location)
-    #     g_list_e.pop(ra_location)
-    #     r_list.pop(ra_location)
-    #     r_list_e.pop(ra_location)
-    #     i_list.pop(ra_location)
-    #     i_list_e.pop(ra_location)
-    #     z_list.pop(ra_location)
-    #     z_list_e.pop(ra_location)
-    #     y_list.pop(ra_location)
-    #     y_list_e.pop(ra_location)
+    for elem in list(ra_list):
+      if elem == -999.0:
+        ra_location = ra_list.index(elem)
+        ra_list.remove(elem)
+        dec_list.pop(ra_location)
+        g_list.pop(ra_location)
+        g_list_e.pop(ra_location)
+        r_list.pop(ra_location)
+        r_list_e.pop(ra_location)
+        i_list.pop(ra_location)
+        i_list_e.pop(ra_location)
+        z_list.pop(ra_location)
+        z_list_e.pop(ra_location)
+        y_list.pop(ra_location)
+        y_list_e.pop(ra_location)
 
     #Gets the headers from the images
     hdu_r, hdu_i, hdu_z, hdu_y = fits.open(file_ps_r)[0], fits.open(file_ps_i)[0], fits.open(file_ps_z)[0], fits.open(file_ps_y)[0]
@@ -241,7 +238,7 @@ def ps_image(ra, dec, radius):
           ps_ra, ps_dec = ra, dec
           plt.close('all')
           plt.figure().clear()
-          return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, text_list[text_max]
+          return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, 'Object Not Found was Pressed'
         
         #Updates the circle size when slider is moved
         elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
@@ -266,12 +263,6 @@ def ps_image(ra, dec, radius):
 def ps_table(ra, dec, radius): 
   # blockPrint()
 
-  #Finds the table for the Panstarrs data around the ra and dec given by the user
-  url_panstarr = 'https://archive.stsci.edu/panstarrs/search.php?action=Search&ra=' + str(ra) + '&dec=' + str(dec) + '&radius=' + str(radius/60) + '&max_records=50001&outputformat=CSV&coordformat=dec&nDetections=%3E1'
-  print(url_panstarr)
-  test_url_panstarr = requests.get(url_panstarr)
- 
-  #Checks to see if the table exists and then obtains all of the relavent data to the search
-  if test_url_panstarr.status_code == 200:
-    panstarr_data = pd.read_csv(url_panstarr)
-  return panstarr_data
+  # #Finds the table for the Panstarrs data around the ra and dec given by the user
+  catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius = (radius/7200), catalog = "Panstarrs", table = "stack")
+  return catalog_data

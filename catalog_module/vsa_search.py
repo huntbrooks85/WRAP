@@ -214,7 +214,7 @@ def vsa_image(ra, dec, radius):
           ra_vsa, dec_vsa = ra, dec
           plt.close('all')
           plt.figure().clear()
-          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
         
         #Allows updates for the circle size slider bar
         elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':

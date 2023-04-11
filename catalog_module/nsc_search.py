@@ -122,7 +122,6 @@ def nsc_image(ra, dec, radius):
         init_bot, init_top = 45, 95
         norm1_total = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_total)
-        ax.invert_xaxis()
 
         #Makes the figure look pretty
         plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
@@ -135,135 +134,135 @@ def nsc_image(ra, dec, radius):
                    + 'Y Date: ' + str(date_Y) + ' (Y/M/D)\n', fontdict = fontdict_1, y = 0.97)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
+        plt.xlim(len(total_data[0]), 0)
         figure.set_size_inches(4.75, 6.95)
         figure.canvas.set_window_title('NSC Search')
 
-    #Make checkbuttons with all of the different image bands
-    rax = plt.axes([0.045, 0.4, 0.105, 0.12])
-    labels = ['g', 'r', 'i', 'z', 'Y']
-    real_data = [cutout_g.data, cutout_r.data, cutout_i.data, cutout_z.data, cutout_Y.data]
-    default = [False, True, True, True, False]
-    check = CheckButtons(rax, labels, default)
+        #Make checkbuttons with all of the different image bands
+        rax = plt.axes([0.045, 0.4, 0.105, 0.12])
+        labels = ['g', 'r', 'i', 'z', 'Y']
+        real_data = [cutout_g.data, cutout_r.data, cutout_i.data, cutout_z.data, cutout_Y.data]
+        default = [False, True, True, True, False]
+        check = CheckButtons(rax, labels, default)
 
-    #Adds a slider for the scaling of the image
-    freq_top = plt.axes([0.25, 0.155, 0.65, 0.03])
-    slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
-    freq_bottom = plt.axes([0.25, 0.125, 0.65, 0.03])
-    slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
+        #Adds a slider for the scaling of the image
+        freq_top = plt.axes([0.25, 0.155, 0.65, 0.03])
+        slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
+        freq_bottom = plt.axes([0.25, 0.125, 0.65, 0.03])
+        slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
 
-    #Adds a slider for the circle size
-    circle_slid_location = plt.axes([0.25, 0.095, 0.65, 0.03])
-    circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
+        #Adds a slider for the circle size
+        circle_slid_location = plt.axes([0.25, 0.095, 0.65, 0.03])
+        circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
 
-    #Adds a notes section that the user can add notes about their data
-    axbox = plt.axes([0.25, 0.06, 0.65, 0.03])
-    text = ''
-    text_box = TextBox(axbox, 'Notes:', initial = text, textalignment="center")
+        #Adds a notes section that the user can add notes about their data
+        axbox = plt.axes([0.25, 0.06, 0.65, 0.03])
+        text = ''
+        text_box = TextBox(axbox, 'Notes:', initial = text, textalignment="center")
 
-    #Make a button that can be clicked if no object is found
-    axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
-    close = Button(axes_button, 'Object Not Found', color = '#E48671')
+        #Make a button that can be clicked if no object is found
+        axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
+        close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
-    def update_button(label):
-        '''Update the image depending on what the user chooses'''
-        total_data = 0
-        for lab in labels:
-            if lab == label:
-                index = labels.index(lab)
-                if default[index] == False:
-                    default[index] = True
-                elif default[index] == True: 
-                    default[index] = False
-        for d in range(len(default)):
-            if default == [False, False, False, False, False]: 
-                total_data = real_data[0]*0
-            if default[d] == True: 
-                total_data = total_data + real_data[d]
-            else: 
-                pass
-        norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
-        ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
-        ax.invert_xaxis()
+        def update_button(label):
+            '''Update the image depending on what the user chooses'''
+            total_data = 0
+            for lab in labels:
+                if lab == label:
+                    index = labels.index(lab)
+                    if default[index] == False:
+                        default[index] = True
+                    elif default[index] == True: 
+                        default[index] = False
+            for d in range(len(default)):
+                if default == [False, False, False, False, False]: 
+                    total_data = real_data[0]*0
+                if default[d] == True: 
+                    total_data = total_data + real_data[d]
+                else: 
+                    pass
+            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+            ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
-    def update_slider_stretch(val):
-        '''Updates the scaling when the slider is changed'''
-        total_data = 0
-        for d in range(len(default)):
-            if default[d] == True: 
-                total_data = total_data + real_data[d]
-            else: 
-                pass
-        norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
-        ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+        def update_slider_stretch(val):
+            '''Updates the scaling when the slider is changed'''
+            total_data = 0
+            for d in range(len(default)):
+                if default[d] == True: 
+                    total_data = total_data + real_data[d]
+                else: 
+                    pass
+            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+            ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
-    #Updates the notes added by the user when there is an input
-    text_list = [text]
-    def submit(expression):
-        text = expression
-        text_list.append(text)
-            
-    #Allows the sliders and buttons to be pressed
-    check.on_clicked(update_button)
-    slider_top.on_changed(update_slider_stretch)
-    slider_bottom.on_changed(update_slider_stretch)
-    text_box.on_text_change(submit)
+        #Updates the notes added by the user when there is an input
+        text_list = [text]
+        def submit(expression):
+            text = expression
+            text_list.append(text)
+                
+        #Allows the sliders and buttons to be pressed
+        check.on_clicked(update_button)
+        slider_top.on_changed(update_slider_stretch)
+        slider_bottom.on_changed(update_slider_stretch)
+        text_box.on_text_change(submit)
 
-    #Display image until it is clicked to find the object
-    n = -1
-    while True:
-        press = plt.waitforbuttonpress()
-        text_max = len(text_list) - 1
+        #Display image until it is clicked to find the object
+        n = -1
+        while True:
+            press = plt.waitforbuttonpress()
+            text_max = len(text_list) - 1
 
-        #Checks that it was a mouse click
-        if press == False:
-            n += 3
-            
-            #Finds which axes was clicked
-            click_axes = str(location[n])
-            click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+            #Checks that it was a mouse click
+            if press == False:
+                n += 3
+                
+                #Finds which axes was clicked
+                click_axes = str(location[n])
+                click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
-            #Checks if the image was clicked
-            if click_axes == '':
-                plt.close('all')
-                plt.figure().clear()
+                #Checks if the image was clicked
+                if click_axes == '':
+                    plt.close('all')
+                    plt.figure().clear()
 
-                #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-                coord = wcs_cropped_i.pixel_to_world_values(location[n-5],location[n-4])
-                distance = []
-                for i in range(len(object_ra)):
-                    distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
-                list_location = distance.index(np.min(distance))
-                ra_nsc, dec_nsc = object_ra[list_location], object_dec[list_location]
-                g, g_e = g_list[list_location], g_list_e[list_location]
-                r, r_e = r_list[list_location], r_list_e[list_location]
-                i, i_e = i_list[list_location], i_list_e[list_location]
-                z, z_e = z_list[list_location], z_list_e[list_location]
-                u_mag, u_mag_e = u_list[list_location], u_list_e[list_location]
-                y, y_e = y_list[list_location], y_list_e[list_location]
-                pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
-                pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
-                return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
-            
-            #Checks if the Object not Found button was clicked
-            elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
+                    #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
+                    coord = wcs_cropped_i.pixel_to_world_values(location[n-5],location[n-4])
+                    distance = []
+                    for i in range(len(object_ra)):
+                        distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                    list_location = distance.index(np.min(distance))
+                    ra_nsc, dec_nsc = object_ra[list_location], object_dec[list_location]
+                    g, g_e = g_list[list_location], g_list_e[list_location]
+                    r, r_e = r_list[list_location], r_list_e[list_location]
+                    i, i_e = i_list[list_location], i_list_e[list_location]
+                    z, z_e = z_list[list_location], z_list_e[list_location]
+                    u_mag, u_mag_e = u_list[list_location], u_list_e[list_location]
+                    y, y_e = y_list[list_location], y_list_e[list_location]
+                    pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
+                    pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
+                    return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
+                
+                #Checks if the Object not Found button was clicked
+                elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
+                    g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                    ra_nsc, dec_nsc = ra, dec
+                    plt.close('all')
+                    plt.figure().clear()
+                    return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Object Not Found was Pressed'
+                
+                #Changes the circle size if the slider is changed
+                elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
+                    scatter.remove()
+                    scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
+                
+            #Checks if the window was closed
+            elif press is None:
                 g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                 ra_nsc, dec_nsc = ra, dec
                 plt.close('all')
                 plt.figure().clear()
                 return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
-            
-            #Changes the circle size if the slider is changed
-            elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
-                scatter.remove()
-                scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
-            
-        #Checks if the window was closed
-        elif press is None:
-            g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-            ra_nsc, dec_nsc = ra, dec
-            plt.close('all')
-            plt.figure().clear()
-            return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
 
 def nsc_table(ra, dec, radius): 
     '''Queries the NSC table using AstroQuery SQL search feature'''
