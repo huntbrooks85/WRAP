@@ -162,6 +162,7 @@
 * nsc_i & nsc_i_e: The i band from NSC and its uncertainties
 * nsc_z & nsc_z_e: The z band from NSC and its uncertainties
 * nsc_u & nsc_u_e: The u band from NSC and its uncertainties
+* nsc_y & nsc_y_e: The y band from NSC and its uncertainties
 * nsc_pmra & nsc_pmra_e: The proper motion in RA from NSC and its uncertainties
 * nsc_pmedc & nsc_pmdec_e: The proper motion in DEC from NSC and its uncertainties
 * nsc_notes: The notes written in the NSC by the user

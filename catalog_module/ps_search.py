@@ -13,7 +13,7 @@ def enablePrint():
 def ps_image(ra, dec, radius):
   plt.rcParams['toolbar'] = 'None'
   plt.style.use('Solarize_Light2')
-  # blockPrint()
+  blockPrint()
 
   #Makes the dec usable for the image url API
   if dec > 0: 
@@ -59,7 +59,7 @@ def ps_image(ra, dec, radius):
 
     #Removes the null RA and DEC values that PanSTARRS return
     for elem in list(ra_list):
-      if elem == -999.0:
+      if elem == -999.0 or elem is None:
         ra_location = ra_list.index(elem)
         ra_list.remove(elem)
         dec_list.pop(ra_location)
@@ -261,7 +261,7 @@ def ps_image(ra, dec, radius):
 
 #Find all the objects in the radius defined by the user
 def ps_table(ra, dec, radius): 
-  # blockPrint()
+  blockPrint()
 
   # #Finds the table for the Panstarrs data around the ra and dec given by the user
   catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius = (radius/7200), catalog = "Panstarrs", table = "stack")

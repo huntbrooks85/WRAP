@@ -263,6 +263,12 @@ def nsc_image(ra, dec, radius):
                 plt.close('all')
                 plt.figure().clear()
                 return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
+            
+    #Returns null values if image is not found
+    else: 
+        g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ra_nsc, dec_nsc = ra, dec
+        return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Image Not Found'
 
 def nsc_table(ra, dec, radius): 
     '''Queries the NSC table using AstroQuery SQL search feature'''

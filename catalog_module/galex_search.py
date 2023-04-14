@@ -202,8 +202,7 @@ def galex_image(ra, dec, radius_use):
     else: 
         fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
         ra_galex, dec_galex = ra, dec
-        text_list = ''
-        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list
+        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Image Not Found'
 
 def galex_table(ra, dec, radius): 
     blockPrint()
