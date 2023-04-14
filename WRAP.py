@@ -264,7 +264,7 @@ def wrap_end(tab):
 sg.theme('LightGrey4')
 
 #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-layout_single = [ [sg.Image(filename = ('image_module/temp_logo_1_50.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
+layout_single = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
         
                   [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
                   [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
@@ -286,7 +286,7 @@ layout_single = [ [sg.Image(filename = ('image_module/temp_logo_1_50.png'), size
 #Makes the drop down window for types of file in the multi-object search
 filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
 #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-layout_multi = [ [sg.Image(filename = ('image_module/temp_logo_1_50.png'), size = (135, 95)),                      sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                       sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
+layout_multi = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                      sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                       sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
         
                  [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
                  [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
