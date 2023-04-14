@@ -1,16 +1,22 @@
 #Import all of the packages
 from catalog_module.importmodule import *
 
-#Makes a function that blocks the printing function
 def blockPrint():
+  '''Makes a function that blocks the printing function'''
   sys.stdout = open(os.devnull, 'w')
 
-#Makes a function that allows the printing function
 def enablePrint():
+  '''Makes a function that allows the printing function'''
   sys.stdout = sys.__stdout__
 
-#Does an PanSTARRS search
 def ps_image(ra, dec, radius):
+  ''' First, it gets the images from the PanSTARRS API from MAST and downloads the images. 
+  Second, crops the images, around the RA and DEC from the user and grabs relavent data to the image. 
+  Third, calls the table function to get all the objects from the PanSTARRS source catalog. 
+  Fourth, makes the window for the user to click the object with all settings. 
+  Finally, finds the closest object to the click and records the data. '''
+  
+  #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
   plt.style.use('Solarize_Light2')
   blockPrint()
@@ -98,6 +104,8 @@ def ps_image(ra, dec, radius):
     plt.rcParams["figure.figsize"] = [8, 8]
     plt.rcParams["figure.autolayout"] = True
     def mouse_event(event):
+      '''Makes a list of the x, y, and axes the mouse click is.'''
+
       location.append(event.ydata)
       location.append(event.xdata)
       location.append(event.inaxes)
@@ -158,6 +166,8 @@ def ps_image(ra, dec, radius):
 
     #Update the image depending on what the user chooses
     def update_button(label):
+      '''Updates the list of activated images and updates the image the user can see.'''
+
       total_data = 0
       for lab in labels:
         if lab == label:
@@ -178,6 +188,8 @@ def ps_image(ra, dec, radius):
 
     #Updates the scaling when the slider is changed
     def update_slider_stretch(val):
+      '''Updates the stretch the user can see, based in percentiles'''
+
       total_data = 0
       for d in range(len(default)):
         if default[d] == True: 
@@ -190,6 +202,8 @@ def ps_image(ra, dec, radius):
     #Updates the notes added by the user when there is an input
     text_list = [text]
     def submit(expression):
+      '''Updates the list of types in the 'Notes' setting'''
+
       text = expression
       text_list.append(text)
 
@@ -261,6 +275,8 @@ def ps_image(ra, dec, radius):
 
 #Find all the objects in the radius defined by the user
 def ps_table(ra, dec, radius): 
+  '''Find all the objects in the radius defined by the user'''
+  
   blockPrint()
 
   # #Finds the table for the Panstarrs data around the ra and dec given by the user

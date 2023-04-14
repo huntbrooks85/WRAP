@@ -1,16 +1,22 @@
 #Import all of the packages
 from catalog_module.importmodule import *
 
-#Makes a function that blocks the printing function
 def blockPrint():
+    '''Makes a function that blocks the printing function'''
     sys.stdout = open(os.devnull, 'w')
 
-#Makes a function that allows the printing function
 def enablePrint():
+    '''Makes a function that allows the printing function'''
     sys.stdout = sys.__stdout__
 
-#Does the GALEX search
 def galex_image(ra, dec, radius_use): 
+    ''' First, it gets the images from the GALEX API from MAST and downloads the images. 
+    Second, crops the images, around the RA and DEC from the user and grabs relavent data to the image. 
+    Third, calls the table function to get all the objects from the GALEX source catalog. 
+    Fourth, makes the window for the user to click the object with all settings. 
+    Finally, finds the closest object to the click and records the data. '''
+
+    #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
 
@@ -84,6 +90,8 @@ def galex_image(ra, dec, radius_use):
         plt.rcParams["figure.figsize"] = [8, 8]
         plt.rcParams["figure.autolayout"] = True
         def mouse_event(event):
+            '''Makes a list of the x, y, and axes the mouse click is.'''
+
             location.append(event.ydata)
             location.append(event.xdata)
             location.append(event.inaxes)
@@ -134,12 +142,16 @@ def galex_image(ra, dec, radius_use):
 
         #Updates the scaling when the slider is changed
         def update_slider_stretch(val):
+            '''Updates the stretch the user can see, based in percentiles'''
+
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
             ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
         #Updates the notes added by the user when there is an input
         text_list = [text]
         def submit(expression):
+            '''Updates the list of types in the 'Notes' setting'''
+
             text = expression
             text_list.append(text)
 
@@ -205,6 +217,8 @@ def galex_image(ra, dec, radius_use):
         return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Image Not Found'
 
 def galex_table(ra, dec, radius): 
+    '''Find all the objects in the radius defined by the user'''
+    
     blockPrint()
 
     #Gets the table of all of the data in the radius from the user

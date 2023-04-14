@@ -1,16 +1,21 @@
 #Import all of the packages
 from catalog_module.importmodule import *
 
-#Makes a function that blocks the printing function
 def blockPrint():
+  '''Makes a function that blocks the printing function'''
   sys.stdout = open(os.devnull, 'w')
 
-#Makes a function that allows the printing function
 def enablePrint():
+  '''Makes a function that allows the printing function'''
   sys.stdout = sys.__stdout__
 
-#Does an 2MASS search
 def twomass_image(ra, dec, radius): 
+  ''' First, it gets the images from the 2MASS API from the IRSA Archive and downloads the images. 
+  Second, crops the images, around the RA and DEC from the user and grabs relavent data to the image. 
+  Third, calls the table function to get all the objects from the 2MASS source catalog. 
+  Fourth, makes the window for the user to click the object with all settings. 
+  Finally, finds the closest object to the click and records the data. '''
+    
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
   plt.style.use('Solarize_Light2')
@@ -33,6 +38,7 @@ def twomass_image(ra, dec, radius):
       elif line.find(k_finder) != -1:
         k_twomass_image_url = ((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0]
 
+  print(j_twomass_image_url)
   #Download the W1 and W2 images
   file_allwise_j, file_allwise_h, file_allwise_k = download_file(j_twomass_image_url, cache=True), download_file(h_twomass_image_url, cache=True), download_file(k_twomass_image_url, cache=True)
   data_allwise_j, data_allwise_h, data_allwise_k = fits.getdata(file_allwise_j), fits.getdata(file_allwise_h), fits.getdata(file_allwise_k)
@@ -65,6 +71,8 @@ def twomass_image(ra, dec, radius):
   plt.rcParams["figure.figsize"] = [8, 8]
   plt.rcParams["figure.autolayout"] = True
   def mouse_event(event):
+    '''Makes a list of the x, y, and axes the mouse click is.'''
+
     location.append(event.ydata)
     location.append(event.xdata)
     location.append(event.inaxes)
@@ -80,9 +88,9 @@ def twomass_image(ra, dec, radius):
   scatter = ax.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor = '#40E842', facecolor = 'none')
 
   #Normalize the image and plots it
-  init_top = 95
-  init_bot = 45
-  norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
+  stretch = 99
+  norm1_w1 = ImageNormalize(total_data.data, PercentileInterval(stretch), stretch = SinhStretch())
+  # norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
   ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
   #Makes the figure look pretty
@@ -106,10 +114,8 @@ def twomass_image(ra, dec, radius):
   check = CheckButtons(rax, labels, default)
 
   #Adds a slider for the scaling of the image
-  freq_top = plt.axes([0.25, 0.155, 0.65, 0.03])
-  slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
   freq_bottom = plt.axes([0.25, 0.125, 0.65, 0.03])
-  slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
+  slider_bottom = Slider(ax = freq_bottom, label = 'Stetch:', valmin = 80, valmax = 100, valinit = stretch, color = '#E48671')
 
   #Adds a slider for the circle size
   circle_slid_location = plt.axes([0.25, 0.095, 0.65, 0.03])
@@ -126,6 +132,8 @@ def twomass_image(ra, dec, radius):
 
   #Update the image depending on what the user chooses
   def update_button(label):
+    '''Updates the list of activated images and updates the image the user can see'''
+
     total_data = 0
     for lab in labels:
       if lab == label:
@@ -141,29 +149,32 @@ def twomass_image(ra, dec, radius):
         total_data = total_data + real_data[d]
       else: 
         pass
-    norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+    norm1_w1 = ImageNormalize(total_data.data, PercentileInterval(slider_bottom.val), stretch = SinhStretch())
     ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
   #Updates the scaling when the slider is changed
   def update_slider_stretch(val):
+    '''Updates the stretch the user can see, based in percentiles'''
+
     total_data = 0
     for d in range(len(default)):
       if default[d] == True: 
         total_data = total_data + real_data[d]
       else: 
         pass
-    norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+    norm1_w1 = ImageNormalize(total_data.data, PercentileInterval(slider_bottom.val), stretch = SinhStretch())
     ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
   #Updates the notes added by the user when there is an input
   text_list = [text]
   def submit(expression):
+    '''Updates the list of types in the 'Notes' setting'''
+
     text = expression
     text_list.append(text)   
 
   #Allows the sliders and buttons to be pressed
   check.on_clicked(update_button)
-  slider_top.on_changed(update_slider_stretch)
   slider_bottom.on_changed(update_slider_stretch)
   text_box.on_text_change(submit)
 
@@ -219,8 +230,9 @@ def twomass_image(ra, dec, radius):
       plt.figure().clear()
       return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
 
-#Find all the objects in the radius defined by the user
 def twomass_table(ra, dec, radius): 
+  '''Find all the objects in the radius defined by the user'''
+  
   blockPrint()
 
   #Uses astroquery to find all objects in the radius

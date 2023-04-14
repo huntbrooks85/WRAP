@@ -58,7 +58,8 @@ header = ['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 
                   'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']
 
 def single_object_search(): 
-  #Starts searching through each catalog
+  '''Performs the single object search by going to each catalog script and recording the data down.
+  Once all the data is recorded it it put into a CSV file for the user.'''
   for q in range(len(catalogs)): 
 
     #Calls the catalog and records the data down
@@ -103,8 +104,10 @@ def single_object_search():
       myFile.close()
 
 def single_tab_check(): 
-  fake_list = []
+  '''Checks if the User put in the correct formats for the RA, DEC, and Radius options.'''
+
   #Checks if the RA tab is entered with a number
+  fake_list = []
   try: 
     float(values['RA'])
   except ValueError:
@@ -131,7 +134,8 @@ def single_tab_check():
   return fake_list
 
 def multi_object_search():
-  #Starts searching each object
+  '''Performs the Multi-object search by going to each catalog script and recording the data down.
+  Once all the data is recorded it it put into a CSV file for the user.'''
   for index in range(len(ra_list)): 
 
     #Make variables for the RA, DEC, and RADIUS used
@@ -177,7 +181,7 @@ def multi_object_search():
       myFile.close()
 
 def multi_tab_check():
-  #Checks if the FILE tab is entered
+  '''Checks if the User put in anything for the File, FileType, and Radius options.'''
   if values['file'] == '': 
     sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
     sg.cprint('Please enter a correct file directory!                                                               ', c='wheat4', end='', key = ML_KEY_MULTI)
@@ -196,6 +200,8 @@ def multi_tab_check():
     sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
 
 def multi_tab_table(): 
+  '''Reads in the file the user chose for the multi-object search'''
+
   #Reads in the file depending on the filetype
   if values['type'] == 'CSV':
     csv_table = pd.read_csv(values['file'])
@@ -215,24 +221,31 @@ def multi_tab_table():
     ra_list = ipac_table['ra'].tolist()
     dec_list = ipac_table['dec'].tolist()
   return ra_list, dec_list
+
 #Sets the different outputs for the 2 different tabs
 ML_KEY_SINGLE = '-ML-'  + sg.WRITE_ONLY_KEY
 ML_KEY_MULTI  = '-ML2-' + sg.WRITE_ONLY_KEY
 
 #Prints when the catalog search is started
 def wrap_start(catalog, tab):
+  '''The print function for when a catalog search has started'''
+
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
   sg.cprint('Started ' + str(catalog) + ' Search                                                                                                                            ', c='wheat4', end='', key = tab)
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Prints when a catalog search has finished and found an object
 def wrap_found(catalog, tab):
+  '''Print function for when the catalog search was successful.'''
+
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
   sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Prints when a catalog search has finished and did not find an object
 def wrap_not_found(catalog, tab):
+  '''Print function for when the catalog search was not successful.'''
+
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
   sg.cprint('Object Not Found                                                                                                                                               ', c='wheat4', end='', key = tab)
   sg.cprint('Finished ' + str(catalog) + ' Search                                                                                                                           ', c='wheat4', end='', key = tab)
@@ -240,6 +253,8 @@ def wrap_not_found(catalog, tab):
 
 #Prints when the catalog search has finished
 def wrap_end(tab):
+  '''The print function for when all catalogs have been searched'''
+
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
   sg.cprint('All Catalogs Have Been Searched                                                                                                                                ', c='wheat4', end='', key = tab)
   sg.cprint('Finished Running WRAP                                                                                                                                          ', c='wheat4', end='', key = tab)

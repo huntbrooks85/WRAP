@@ -5,7 +5,7 @@
 <h2>🔭 Catalogs </h2>
 
 *   CatWISE2020 & AllWISE -> Wide-Field Infrared Survey Explorer https://irsa.ipac.caltech.edu/Missions/wise.html
-*   Gaia ->GAIA ESA https://gea.esac.esa.int/archive/
+*   Gaia -> GAIA ESA https://gea.esac.esa.int/archive/
 *   VISTA -> Visible and Infrared Survey Telescope for Astronomy http://horus.roe.ac.uk/vsa/index.html
 *   WFCAM -> Wide Field Camera http://wsa.roe.ac.uk/index.html
 *   2MASS -> Two Micron All Sky Survey https://irsa.ipac.caltech.edu/Missions/2mass.html
@@ -26,7 +26,7 @@
 
 ```
 -> pyvo == 1.4 
--> numpy = 1.22.0
+-> numpy == 1.22.0
 -> pandas == 1.5.3 
 -> astropy == 5.2.1
 -> truncate == 0.11 
@@ -46,7 +46,7 @@
 <p> How to Start Program </p>
 
 1) Open terminal 
-2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter_brooks8/Desktop/WRAP_Project/WRAP")
+2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
 3) Type "python WRAP.py" into the terminal
 
 <p> How to Use WRAP </p>

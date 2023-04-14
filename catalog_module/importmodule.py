@@ -32,6 +32,7 @@ from astropy.utils.data import download_file
 from dl import authClient as ac, queryClient as qc
 from astroquery.mast import Observations, MastMissions, Catalogs
 from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
+from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormalize)
 
 #Checks if the users system is greater than Python 3.8
 # ------------------------------------------------------------- #

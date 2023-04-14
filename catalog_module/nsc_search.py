@@ -9,8 +9,11 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 def nsc_image(ra, dec, radius): 
-    '''Does the NSC search by obtaining the image and table catalogs and 
-    overplots these points to allow the user to click their object'''
+    ''' First, it gets the images from the NSC API from AstroLab and downloads the images. 
+    Second, crops the images, around the RA and DEC from the user and grabs relavent data to the image. 
+    Third, calls the table function to get all the objects from the NSC source catalog. 
+    Fourth, makes the window for the user to click the object with all settings. 
+    Finally, finds the closest object to the click and records the data. '''
     
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
@@ -104,6 +107,8 @@ def nsc_image(ra, dec, radius):
         plt.rcParams["figure.figsize"] = [8, 8]
         plt.rcParams["figure.autolayout"] = True
         def mouse_event(event):
+            '''Makes a list of the x, y, and axes the mouse click is.'''
+
             location.append(event.ydata)
             location.append(event.xdata)
             location.append(event.inaxes)
@@ -164,8 +169,10 @@ def nsc_image(ra, dec, radius):
         axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
         close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
+        #Update the image depending on what the user chooses
         def update_button(label):
-            '''Update the image depending on what the user chooses'''
+            '''Updates the list of activated images and updates the image the user can see.'''
+
             total_data = 0
             for lab in labels:
                 if lab == label:
@@ -184,8 +191,10 @@ def nsc_image(ra, dec, radius):
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
             ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
+        #Updates the scaling when the slider is changed
         def update_slider_stretch(val):
-            '''Updates the scaling when the slider is changed'''
+            '''Updates the stretch the user can see, based in percentiles'''
+
             total_data = 0
             for d in range(len(default)):
                 if default[d] == True: 
@@ -198,6 +207,8 @@ def nsc_image(ra, dec, radius):
         #Updates the notes added by the user when there is an input
         text_list = [text]
         def submit(expression):
+            '''Updates the list of types in the 'Notes' setting'''
+
             text = expression
             text_list.append(text)
                 
@@ -271,7 +282,8 @@ def nsc_image(ra, dec, radius):
         return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Image Not Found'
 
 def nsc_table(ra, dec, radius): 
-    '''Queries the NSC table using AstroQuery SQL search feature'''
+    '''Find all the objects in the radius defined by the user'''
+
     blockPrint()
 
     #Makes a SQL query using the ra, dec, and radius

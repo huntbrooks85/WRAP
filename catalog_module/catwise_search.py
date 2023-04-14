@@ -1,16 +1,21 @@
 #Import all of the packages
 from catalog_module.importmodule import *
 
-#Makes a function that blocks the printing function
 def blockPrint():
+  '''Makes a function that blocks the printing function'''
   sys.stdout = open(os.devnull, 'w')
 
-#Makes a function that allows the printing function
 def enablePrint():
+  '''Makes a function that allows the printing function'''
   sys.stdout = sys.__stdout__
 
-#Does the CatWISE search
 def catwise_image(ra, dec, radius): 
+  ''' First, it gets the images from the CatWISE 2020 API from IRSA and downloads the images. 
+  Second, crops the images, around the RA and DEC from the user and grabs relavent data to the image. 
+  Third, calls the table function to get all the objects from the CatWISE 2020 source catalog. 
+  Fourth, makes the window for the user to click the object with all settings. 
+  Finally, finds the closest object to the click and records the data. '''
+
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
   plt.style.use('Solarize_Light2')
@@ -61,6 +66,8 @@ def catwise_image(ra, dec, radius):
   plt.rcParams["figure.figsize"] = [8, 8]
   plt.rcParams["figure.autolayout"] = True
   def mouse_event(event):
+    '''Makes a list of the x, y, and axes the mouse click is.'''
+
     location.append(event.ydata)
     location.append(event.xdata)
     location.append(event.inaxes)
@@ -120,6 +127,8 @@ def catwise_image(ra, dec, radius):
 
   #Update the image depending on what the user chooses
   def update_button(label):
+    '''Updates the list of activated images and updates the image the user can see.'''
+
     total_data = 0
     for lab in labels:
       if lab == label:
@@ -140,6 +149,8 @@ def catwise_image(ra, dec, radius):
 
   #Updates the scaling when the slider is changed
   def update_slider_stretch(val):
+    '''Updates the stretch the user can see, based in percentiles'''
+    
     total_data = 0
     for d in range(len(default)):
       if default[d] == True: 
@@ -152,6 +163,8 @@ def catwise_image(ra, dec, radius):
   #Updates the notes added by the user when there is an input
   text_list = [text]
   def submit(expression):
+    '''Updates the list of types in the 'Notes' setting'''
+    
     text = expression
     text_list.append(text)
 
@@ -217,8 +230,10 @@ def catwise_image(ra, dec, radius):
       return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max] 
   
 def catwise_table(ra, dec, radius): 
+  '''Find all the objects in the radius defined by the user'''
+
   enablePrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='catwise_2020', spatial='Box', width=radius * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='catwise_2020', spatial='Box', width = radius * u.arcsec)
   return location_data
