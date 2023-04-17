@@ -106,37 +106,37 @@ def allwise_image(ra, dec, radius):
   fontdict = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
   plt.suptitle('AllWISE Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
   ax.set_title('Dates: \n'
-             + 'W1 Date: ' + str(date_w1) + ' (Y/M/D)  ' + '  W2 Date: ' + str(date_w2) + ' (Y/M/D)\n'
-             + 'W3 Date: ' + str(date_w3) + ' (Y/M/D)  '+ '  W4 Date: ' + str(date_w4) + ' (Y/M/D)\n', fontdict = fontdict, y = 0.97)
+             + 'W1 Date: ' + str(date_w1) + ' (Y-M-D)  ' + '  W2 Date: ' + str(date_w2) + ' (Y-M-D)\n'
+             + 'W3 Date: ' + str(date_w3) + ' (Y-M-D)  ' + '  W4 Date: ' + str(date_w4) + ' (Y-M-D)\n', fontdict = fontdict, y = 1.05)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
   figure.set_size_inches(4.75, 6.95)
   figure.canvas.set_window_title('AllWISE Search')
 
   #Make checkbuttons with all of the different image bands
-  rax = plt.axes([0.045, 0.4, 0.105, 0.12])
+  rax = plt.axes([0.045, 0.4, 0.115, 0.1])
   labels = ['W1', 'W2', 'W3', 'W4']
   real_data = [cutout_w1.data, cutout_w2.data, cutout_w3.data, cutout_w4.data]
   default = [True, True, False, False]
   check = CheckButtons(rax, labels, default)
 
   #Adds a slider for the scaling of the image
-  freq_top = plt.axes([0.25, 0.155, 0.65, 0.03])
+  freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
   slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
-  freq_bottom = plt.axes([0.25, 0.125, 0.65, 0.03])
+  freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
   slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
 
   #Adds a slider for the circle size
-  circle_slid_location = plt.axes([0.25, 0.095, 0.65, 0.03])
+  circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
   circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
 
   #Adds a notes section that the user can add notes about their data
-  axbox = plt.axes([0.25, 0.06, 0.65, 0.03])
+  axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
   text = ''
   text_box = TextBox(axbox, 'Notes:', initial = text, textalignment="center")
 
   #Make a button that can be clicked if no object is found
-  axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
+  axes_button = plt.axes([0.04, 0.775, 0.92, 0.04])
   close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
   #Updates the image depending on what the user chooses
@@ -225,7 +225,7 @@ def allwise_image(ra, dec, radius):
         return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
       
       #Checks if the "Object Not Found" button was clicked
-      elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
+      elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
         w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_allwise = ra
         dec_allwise = dec
@@ -234,7 +234,7 @@ def allwise_image(ra, dec, radius):
         return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
-      elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
+      elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
         scatter.remove()
         scatter = ax.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
 

@@ -115,29 +115,29 @@ def galex_image(ra, dec, radius_use):
         fontdict = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
         plt.suptitle('GALEX Search', fontsize = 35, y = 0.95, fontfamily = 'Times New Roman')
         ax.set_title('Dates: \n'
-                   + 'FUV Date: ' + str(date_w1) + ' (Y/M/D)  ', fontdict = fontdict, y = 1.05)
+                   + 'FUV Date: ' + str(date_w1) + ' (Y-M-D)  ', fontdict = fontdict, y = 1.105)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
         figure.set_size_inches(4.75, 6.95)
         figure.canvas.set_window_title('GALEX Search')
 
         #Adds a slider for the scaling of the image
-        freq_top = plt.axes([0.25, 0.155, 0.65, 0.03])
+        freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
         slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
-        freq_bottom = plt.axes([0.25, 0.125, 0.65, 0.03])
+        freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
         slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
 
         #Adds a slider for the circle size
-        circle_slid_location = plt.axes([0.25, 0.095, 0.65, 0.03])
+        circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
         circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius_use), valmax = (circle_size + 1*radius_use), valinit = circle_size, color = '#E48671')
 
         #Adds a notes section that the user can add notes about their data
-        axbox = plt.axes([0.25, 0.06, 0.65, 0.03])
+        axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
         text = ''
         text_box = TextBox(axbox, 'Notes:', initial = text, textalignment="center")
 
         #Make a button that can be clicked if no object is found
-        axes_button = plt.axes([0.04, 0.012, 0.92, 0.04])
+        axes_button = plt.axes([0.04, 0.775, 0.92, 0.04])
         close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
         #Updates the scaling when the slider is changed
@@ -190,7 +190,7 @@ def galex_image(ra, dec, radius_use):
                     return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
                 
                 #Checks if the "Object Not Found" button was clicked
-                elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
+                elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
                     fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
                     ra_galex, dec_galex = ra, dec
                     plt.close('all')
@@ -198,7 +198,7 @@ def galex_image(ra, dec, radius_use):
                     return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
-                elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
+                elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
                     scatter.remove()
                     scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
 
