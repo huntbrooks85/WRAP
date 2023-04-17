@@ -255,7 +255,7 @@ def nsc_image(ra, dec, radius):
                     return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
                 
                 #Checks if the Object not Found button was clicked
-                elif click_axes == 'Axes(0.04,0.012;0.92x0.04)':
+                elif click_axes == 'Axes(0.04,0.767;0.92x0.04)':
                     g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_nsc, dec_nsc = ra, dec
                     plt.close('all')
@@ -263,7 +263,7 @@ def nsc_image(ra, dec, radius):
                     return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Object Not Found was Pressed'
                 
                 #Changes the circle size if the slider is changed
-                elif click_axes == 'Axes(0.25,0.095;0.65x0.03)':
+                elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
                     scatter.remove()
                     scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
                 
