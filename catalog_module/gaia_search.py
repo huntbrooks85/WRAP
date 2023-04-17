@@ -42,15 +42,16 @@ def gaia_image(ra, dec, radius):
 
   #Find the location of all the object found in GAIA in the radius choosen by the user 
   location_data = gaia_table(ra, dec, radius)
-  object_ra = location_data['ra'].tolist()
-  object_dec = location_data['dec'].tolist()
+  object_year = location_data['ref_epoch'].tolist()
+  object_ra, object_ra_sigma = location_data['ra'].tolist(), location_data['ra_error']
+  object_dec, object_dec_sigma = location_data['dec'].tolist(), location_data['dec_error']
   parallax_list, parallax_list_sigma = location_data['parallax'].tolist(), location_data['parallax_error'].tolist()
   rad_v_list, rad_v_list_sigma = location_data['radial_velocity'].tolist(), location_data['radial_velocity_error'].tolist()
   pmra_list, pmra_list_sigma = location_data['pmra'].tolist(), location_data['pmra_error'].tolist()
   pmdec_list, pmdec_list_sigma = location_data['pmdec'].tolist(), location_data['pmdec_error'].tolist()
-  g_list = location_data['phot_g_mean_mag'].tolist()
-  bp_list = location_data['phot_bp_mean_mag'].tolist()
-  rp_list = location_data['phot_rp_mean_mag'].tolist()
+  g_list, g_list_e = location_data['phot_g_mean_mag'].tolist(), location_data['phot_g_mean_flux_error'].tolist()
+  bp_list, bp_list_e = location_data['phot_bp_mean_mag'].tolist(), location_data['phot_bp_mean_flux_error'].tolist()
+  rp_list, rp_list_e = location_data['phot_rp_mean_mag'].tolist(), location_data['phot_rp_mean_flux_error'].tolist()
 
   #Obtains the headers for each image
   hdu_w1, hdu_w2 = fits.open(file_allwise_w1)[0], fits.open(file_allwise_w2)[0]
@@ -205,25 +206,28 @@ def gaia_image(ra, dec, radius):
         distance = []
         for i in range(len(object_ra)):
           distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
         list_location = distance.index(np.min(distance))
+        year = object_year[list_location]
         ra_gaia, dec_gaia = object_ra[list_location], object_dec[list_location]
+        ra_gaia_e, dec_gaia_e = object_ra_sigma[list_location], object_dec_sigma[list_location]
         par, par_e = parallax_list[list_location], parallax_list_sigma[list_location]
         rad, rad_e = rad_v_list[list_location], rad_v_list_sigma[list_location]
         pmra, pmra_e = pmra_list[list_location], pmra_list_sigma[list_location]
         pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_sigma[list_location]
-        g = g_list[list_location]
-        bp = bp_list[list_location]
-        rp = rp_list[list_location]
-        return ra_gaia, dec_gaia, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp, text_list[text_max]
+        g, g_e = g_list[list_location], (2.5/np.log(10))*(g_list_e[list_location]/g_list[list_location])
+        bp, bp_e = bp_list[list_location], (2.5/np.log(10))*(bp_list_e[list_location]/bp_list[list_location])
+        rp, rp_e = rp_list[list_location], (2.5/np.log(10))*(rp_list_e[list_location]/rp_list[list_location])
+        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, text_list[text_max]
       
       #Checks if the Object not Found button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-        par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ra_gaia_e, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_gaia = ra
         dec_gaia = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_gaia, dec_gaia, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp, 'Object Not Found was Pressed'
+        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -232,12 +236,12 @@ def gaia_image(ra, dec, radius):
         
     #Checks if the window was closed
     elif press is None:
-      par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      ra_gaia_e, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
       ra_gaia = ra
       dec_gaia = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_gaia, dec_gaia, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, bp, rp, text_list[text_max]
+      return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, text_list[text_max]
 
 def gaia_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
@@ -246,7 +250,7 @@ def gaia_table(ra, dec, radius):
 
   #Makes the SQL code to run it into the GAIA search
   query = "SELECT TOP 2000 \
-  gaia_source.ra,gaia_source.dec,gaia_source.parallax,gaia_source.parallax_error,gaia_source.radial_velocity,gaia_source.radial_velocity_error,gaia_source.pmra,gaia_source.pmra_error,gaia_source.pmdec,gaia_source.pmdec_error,gaia_source.phot_g_mean_mag,gaia_source.phot_bp_mean_mag,gaia_source.phot_rp_mean_mag \
+  gaia_source.ra,gaia_source.dec,gaia_source.ra_error,gaia_source.phot_g_mean_flux_error,gaia_source.phot_bp_mean_flux_error,gaia_source.phot_rp_mean_flux_error,gaia_source.ref_epoch,gaia_source.dec_error,gaia_source.parallax,gaia_source.parallax_error,gaia_source.radial_velocity,gaia_source.radial_velocity_error,gaia_source.pmra,gaia_source.pmra_error,gaia_source.pmdec,gaia_source.pmdec_error,gaia_source.phot_g_mean_mag,gaia_source.phot_bp_mean_mag,gaia_source.phot_rp_mean_mag \
   FROM gaiadr3.gaia_source \
   WHERE \
   CONTAINS( \

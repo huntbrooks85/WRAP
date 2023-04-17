@@ -45,6 +45,7 @@ def twomass_image(ra, dec, radius):
 
   #Find the location of all the object found in AllWISE in the radius choosen by the user 
   location_data = twomass_table(ra, dec, radius)
+  object_date = location_data['jdate'].tolist()
   object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
   j_list, j_list_e = location_data['j_m'].tolist(), location_data['j_cmsig'].tolist()
   h_list, h_list_e = location_data['h_m'].tolist(), location_data['h_cmsig'].tolist()
@@ -202,20 +203,22 @@ def twomass_image(ra, dec, radius):
         distance = []
         for i in range(len(object_ra)):
           distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
         list_location = distance.index(np.min(distance))
+        date = object_date[list_location]
         ra_2mass, dec_2mass = object_ra[list_location], object_dec[list_location]
         j, j_e = j_list[list_location], j_list_e[list_location]
         h, h_e = h_list[list_location], h_list_e[list_location]
         ks, ks_e = ks_list[list_location], ks_list_e[list_location]
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, text_list[text_max]
       
       #Checks if the Object not Found button was clicked
       elif click_axes == 'Axes(0.04,0.78;0.92x0.04)':
-        j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        date, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_2mass, dec_2mass = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, 'Object Not Found was Pressed'
       
       #Adds the functionality of the circle slider bar
       elif click_axes == 'Axes(0.25,0.068;0.65x0.03)':
@@ -224,11 +227,11 @@ def twomass_image(ra, dec, radius):
 
     #Checks if the window was closed
     elif press is None:
-      j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      date, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
       ra_2mass, dec_2mass = ra, dec
       plt.close('all')
       plt.figure().clear()
-      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, text_list[text_max]
 
 def twomass_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

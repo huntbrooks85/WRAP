@@ -46,7 +46,9 @@ def ps_image(ra, dec, radius):
 
     #Obtains the data table for panstarrs and then gets all of the relatvent data from the table
     panstarr_data = ps_table(ra, dec, radius)
+    object_mjd = panstarr_data['epochMean'].tolist()
     ra_list, dec_list = panstarr_data['raStack'].tolist(), panstarr_data['decStack'].tolist()
+    ra_list_e, dec_list_e = panstarr_data['raStackErr'].tolist(), panstarr_data['decStackErr'].tolist()
     g_list, g_list_e = panstarr_data['gApMag'].tolist(), panstarr_data['gApMagErr'].tolist()
     r_list, r_list_e = panstarr_data['rApMag'].tolist(), panstarr_data['rApMagErr'].tolist()
     i_list, i_list_e = panstarr_data['iApMag'].tolist(), panstarr_data['iApMagErr'].tolist()
@@ -237,22 +239,25 @@ def ps_image(ra, dec, radius):
           distance = []
           for i in range(len(ra_list)):
             distance.append(math.dist(coord, [ra_list[i], dec_list[i]]))
+
           list_location = distance.index(np.min(distance))
+          mjd = object_mjd[list_location]
           ps_ra, ps_dec = ra_list[list_location], dec_list[list_location]
+          ps_ra_e, ps_dec_e = ra_list_e[list_location], dec_list_e[list_location]
           g, g_e = g_list[list_location], g_list_e[list_location]
           r, r_e = r_list[list_location], r_list_e[list_location]
           i, i_e = i_list[list_location], i_list_e[list_location]
           z, z_e = z_list[list_location], z_list_e[list_location]
           y, y_e = y_list[list_location], y_list_e[list_location]
-          return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, text_list[text_max]
+          return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, text_list[text_max]
         
         #Checks if the Object not Found button was clicked
         elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-          g, g_e, r, r_e, i, i_e, z, z_e, y, y_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+          ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ps_ra, ps_dec = ra, dec
           plt.close('all')
           plt.figure().clear()
-          return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, 'Object Not Found was Pressed'
+          return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'Object Not Found was Pressed'
         
         #Updates the circle size when slider is moved
         elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -261,17 +266,17 @@ def ps_image(ra, dec, radius):
 
       #Checks if the window was closed
       elif press is None:
-        g, g_e, r, r_e, i, i_e, z, z_e, y, y_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ps_ra, ps_dec = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, text_list[text_max]
+        return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, text_list[text_max]
     
   #If the images were not found returns null values
   elif len(r_finder_list) == 0: 
-    g, g_e, r, r_e, i, i_e, z, z_e, y, y_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     ps_ra, ps_dec = ra, dec
-    return ps_ra, ps_dec, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, 'Image Not Found'
+    return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'Image Not Found'
 
 #Find all the objects in the radius defined by the user
 def ps_table(ra, dec, radius): 

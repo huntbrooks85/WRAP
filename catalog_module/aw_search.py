@@ -50,6 +50,7 @@ def allwise_image(ra, dec, radius):
   #Find the location of all the object found in AllWISE in the radius choosen by the user 
   location_data = allwise_table(ra, dec, radius)
   object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
+  object_ra_sigma, object_dec_sigma = location_data['sigra'].tolist(), location_data['sigdec'].tolist()
   w1_list, w2_list = location_data['w1mpro'].tolist(), location_data['w2mpro'].tolist()
   w3_list, w4_list = location_data['w3mpro'].tolist(), location_data['w4mpro'].tolist()
   w1_list_sigma, w2_list_sigma = location_data['w1sigmpro'].tolist(), location_data['w2sigmpro'].tolist()
@@ -216,22 +217,23 @@ def allwise_image(ra, dec, radius):
 
         #Obtains all of the clicked objects data
         ra_allwise, dec_allwise = object_ra[list_location], object_dec[list_location]
+        ra_aw_e, dec_aw_e = object_ra_sigma[list_location], object_dec_sigma[list_location]
         w1, w2 = w1_list[list_location], w2_list[list_location]
         w3, w4 = w3_list[list_location], w4_list[list_location]
         w1_sigma, w2_sigma = w1_list_sigma[list_location], w2_list_sigma[list_location]
         w3_sigma, w4_sigma = w3_list_sigma[list_location], w4_list_sigma[list_location]
         pmra, pmdec = pmra_list[list_location], pmdec_list[list_location]
         pmra_sigma, pmdec_sigma = pmra_sigma_list[list_location], pmdec_sigma_list[list_location]
-        return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
+        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
       
       #Checks if the "Object Not Found" button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-        w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ra_aw_e, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_allwise = ra
         dec_allwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
+        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -240,12 +242,12 @@ def allwise_image(ra, dec, radius):
 
     #Checks if the window was closed
     elif press is None:
-      w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      ra_aw_e, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
       ra_allwise = ra
       dec_allwise = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_allwise, dec_allwise, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
+      return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
   
 def allwise_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

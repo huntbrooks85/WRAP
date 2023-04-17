@@ -36,26 +36,26 @@ catalog_functions = [catwise_image, allwise_image, gaia_image,
                      ps_image, nsc_image, galex_image]
 
 #Defines all of the variable names
-value_names = [['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes'], 
-               ['aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
-               ['gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes'], 
-               ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes'], 
-               ['wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes'], 
-               ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes'], 
-               ['ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes'], 
-               ['nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes'],  
+value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_notes'], 
+               ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes'], 
+               ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_notes'], 
+               ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_notes'], 
+               ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_notes'], 
+               ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_jdate', '2mass_notes'], 
+               ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_notes'], 
+               ['nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_notes'],  
                ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']]
 
 #Defines the header for the CSV file
-header = ['cw_ra', 'cw_dec', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_notes', 
-                  'aw_ra', 'aw_dec', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes', 
-                  'gaia_ra', 'gaia_dec', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_bp', 'gaia_rp', 'gaia_notes', 
-                  'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_notes', 
-                  'wfcam_ra', 'wfcam_dec', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_notes', 
-                  '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_notes', 
-                  'ps_ra', 'ps_dec', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_notes', 
-                  'nsc_ra', 'nsc_dec', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_notes',  
-                  'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']
+header = ['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_notes', 
+          'aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_notes', 
+          'gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_notes',
+          'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_notes', 
+          'wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_notes', 
+          '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_jdate', '2mass_notes', 
+          'ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_notes', 
+          'nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_notes',  
+          'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_notes']
 
 def single_object_search(): 
   '''Performs the single object search by going to each catalog script and recording the data down.

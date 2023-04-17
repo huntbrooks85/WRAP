@@ -42,7 +42,9 @@ def catwise_image(ra, dec, radius):
 
   #Find the location of all the object found in CatWISE in the radius choosen by the user 
   location_data = catwise_table(ra, dec, radius)
+  object_mjd = location_data['meanobsmjd'].tolist()
   object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
+  object_ra_sigma, object_dec_sigma = location_data['sigra'].tolist(), location_data['sigdec'].tolist()
   w1_list, w2_list = location_data['w1mpro'].tolist(), location_data['w2mpro'].tolist()
   w1_list_sigma, w2_list_sigma = location_data['w1sigmpro'].tolist(), location_data['w2sigmpro'].tolist()
   pmra_list, pmdec_list = location_data['pmra'].tolist(), location_data['pmdec'].tolist()
@@ -199,22 +201,25 @@ def catwise_image(ra, dec, radius):
         distance = []
         for i in range(len(object_ra)):
           distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
         list_location = distance.index(np.min(distance))
+        mjd = object_mjd[list_location]
         ra_catwise, dec_catwise = object_ra[list_location], object_dec[list_location]
+        ra_cw_e, dec_cw_e = object_ra_sigma[list_location], object_dec_sigma[list_location]
         w1, w2 = w1_list[list_location], w2_list[list_location]
         w1_sigma, w2_sigma = w1_list_sigma[list_location], w2_list_sigma[list_location]
         pmra, pmdec = pmra_list[list_location], pmdec_list[list_location]
         pmra_sigma, pmdec_sigma = pmra_sigma_list[list_location], pmdec_sigma_list[list_location]
-        return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max] 
+        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, text_list[text_max] 
       
       #Checks if the "Object Not Found" button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-        w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        mjd, ra_cw_e, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_catwise = ra
         dec_catwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
+        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -223,12 +228,12 @@ def catwise_image(ra, dec, radius):
         
     #Checks if the window was closed
     elif press is None:
-      w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      mjd, ra_cw_e, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
       ra_catwise = ra
       dec_catwise = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_catwise, dec_catwise, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max] 
+      return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, text_list[text_max]
   
 def catwise_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

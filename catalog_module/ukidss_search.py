@@ -48,7 +48,9 @@ def ukidss_image(ra, dec, radius):
             return j, h, k
 
         #Gets the columns from the table
+        object_epoch = table['epoch'].tolist()
         object_ra, object_dec = table['ra'].tolist(), table['dec'].tolist()
+        object_ra_e, object_dec_e = table['sigRa'].tolist(), table['sigDec'].tolist()
         Y_list, Y_list_e = table['yAperMag3'].tolist(), table['yAperMag3Err'].tolist()
         J_list, J_list_e = table['jAperMag3'].tolist(), table['jAperMag3Err'].tolist()
         H_list, H_list_e = table['hAperMag3'].tolist(), table['hAperMag3Err'].tolist()
@@ -216,24 +218,27 @@ def ukidss_image(ra, dec, radius):
                     distance = []
                     for i in range(len(object_ra)):
                         distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
                     list_location = distance.index(np.min(distance))
+                    epoch = object_epoch[list_location]
                     ra_wfcam, dec_wfcam = object_ra[list_location], object_dec[list_location]
+                    ra_wfcam_e, dec_wfcam_e = object_ra_e[list_location], object_dec_e[list_location]
                     Y_mag, Y_e = Y_list[list_location], Y_list_e[list_location]
                     J_mag, J_e = J_list[list_location], J_list_e[list_location]
                     H_mag, H_e = H_list[list_location], H_list_e[list_location]
                     K_mag, K_e = K_list[list_location], K_list_e[list_location]
                     pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
                     pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
-                    return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max] 
+                    return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list[text_max] 
                 
                 #Checks if the "Object Not Found" button was clicked
                 elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-                    Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                    ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_wfcam = ra
                     dec_wfcam = dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, 'Object Not Found was Pressed'
+                    return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -242,17 +247,17 @@ def ukidss_image(ra, dec, radius):
 
             #Checks if the window was closed
             elif press is None:
-                Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                 ra_wfcam = ra
                 dec_wfcam = dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max] 
+                return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list[text_max] 
 
     #If the image is not found return null values
     else: 
-        Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_wfcam = ra
         dec_wfcam = dec
         text_list = 'Image Not Found'
-        return ra_wfcam, dec_wfcam, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, text_list
+        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list

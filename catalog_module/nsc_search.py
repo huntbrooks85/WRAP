@@ -31,7 +31,9 @@ def nsc_image(ra, dec, radius):
     if len(imgTable) > 0:
         #Runs the table function to obtain the g, r, i, and z bands
         location_data = nsc_table(ra, dec, radius)
+        mjd_list = location_data['mjd'].tolist()
         object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
+        object_ra_e, object_dec_e = location_data['raerr'].tolist(), location_data['decerr'].tolist()
         g_list, g_list_e = location_data['gmag'].tolist(), location_data['gerr'].tolist()
         r_list, r_list_e = location_data['rmag'].tolist(), location_data['rerr'].tolist()
         i_list, i_list_e = location_data['imag'].tolist(), location_data['ierr'].tolist()
@@ -242,8 +244,11 @@ def nsc_image(ra, dec, radius):
                     distance = []
                     for i in range(len(object_ra)):
                         distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
                     list_location = distance.index(np.min(distance))
+                    mjd = mjd_list[list_location]
                     ra_nsc, dec_nsc = object_ra[list_location], object_dec[list_location]
+                    ra_nsc_e, dec_nsc_e = object_ra_e[list_location], object_dec_e[list_location]
                     g, g_e = g_list[list_location], g_list_e[list_location]
                     r, r_e = r_list[list_location], r_list_e[list_location]
                     i, i_e = i_list[list_location], i_list_e[list_location]
@@ -252,15 +257,15 @@ def nsc_image(ra, dec, radius):
                     y, y_e = y_list[list_location], y_list_e[list_location]
                     pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
                     pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
-                    return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
+                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, text_list[text_max]
                 
                 #Checks if the Object not Found button was clicked
                 elif click_axes == 'Axes(0.04,0.767;0.92x0.04)':
-                    g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                    ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_nsc, dec_nsc = ra, dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Object Not Found was Pressed'
+                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'Object Not Found was Pressed'
                 
                 #Changes the circle size if the slider is changed
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -269,17 +274,17 @@ def nsc_image(ra, dec, radius):
                 
             #Checks if the window was closed
             elif press is None:
-                g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+                ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                 ra_nsc, dec_nsc = ra, dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, text_list[text_max]
+                return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, text_list[text_max]
             
     #Returns null values if image is not found
     else: 
-        g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_nsc, dec_nsc = ra, dec
-        return ra_nsc, dec_nsc, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, 'Image Not Found'
+        return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'Image Not Found'
 
 def nsc_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''
@@ -288,7 +293,7 @@ def nsc_table(ra, dec, radius):
 
     #Makes a SQL query using the ra, dec, and radius
     query = " \
-    SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr  \
+    SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr, raerr, decerr, mjd  \
     FROM nsc_dr2.object \
     WHERE ra > " + str((ra - (radius/7200))) + " and ra < " + str((ra + (radius/7200))) + " " \
     "AND dec > " + str((dec - (radius/7200))) + " and dec < " + str((dec + (radius/7200))) + " " \

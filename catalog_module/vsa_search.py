@@ -52,6 +52,8 @@ def vsa_image(ra, dec, radius):
       return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list[text_max]  
     
     #Obtains the photometry and astrometry from the catalog
+    object_mjd_y, object_mjd_j = table['yMjd'].tolist(), table['jMjd'].tolist()
+    object_mjd_h, object_mjd_ks = table['hMjd'].tolist(), table['ksMjd'].tolist()
     object_ra, object_dec = table['ra'].tolist(), table['dec'].tolist()
     Y_list, Y_list_e = table['yAperMag3'].tolist(), table['yAperMag3Err'].tolist()
     J_list, J_list_e = table['jAperMag3'].tolist(), table['jAperMag3Err'].tolist()
@@ -214,21 +216,24 @@ def vsa_image(ra, dec, radius):
           distance = []
           for i in range(len(object_ra)):
             distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+
           list_location = distance.index(np.min(distance))
+          ymjd, jmjd = object_mjd_y[list_location], object_mjd_j[list_location]
+          hmjd, ksmjd = object_mjd_h[list_location], object_mjd_ks[list_location]
           ra_vsa, dec_vsa = object_ra[list_location], object_dec[list_location]
           y, y_e = Y_list[list_location], Y_list_e[list_location]
           j, j_e = J_list[list_location], J_list_e[list_location]
           h, h_e = H_list[list_location], H_list_e[list_location]
           ks, ks_e = Ks_list[list_location], Ks_list_e[list_location]
-          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, text_list[text_max]
         
         #Checks if the Object not Found button was clicked
         elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-          y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+          ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_vsa, dec_vsa = ra, dec
           plt.close('all')
           plt.figure().clear()
-          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
+          return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, 'Object Not Found was Pressed'
         
         #Allows updates for the circle size slider bar
         elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -237,16 +242,16 @@ def vsa_image(ra, dec, radius):
 
       #Checks if the window was closed
       elif press is None:
-        y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_vsa, dec_vsa = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+        return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, text_list[text_max]
       
   #Returns null values if the images are not found
   else: 
-    y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     ra_vsa, dec_vsa = ra, dec
     text_list = 'Image Not Found'
-    return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list
+    return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, text_list
   
