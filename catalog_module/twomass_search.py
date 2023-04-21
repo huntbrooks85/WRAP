@@ -28,40 +28,49 @@ def twomass_image(ra, dec, radius):
 
   #With this metadata it finds the API link for the W1 and W2 images
   J_finder, h_finder, k_finder = 'All-Sky Release Survey J-Band Atlas Image', 'All-Sky Release Survey H-Band Atlas Image', 'All-Sky Release Survey K-Band Atlas Image'
+  j_twomass_image_url_list, h_twomass_image_url_list, k_twomass_image_url_list = [], [], []
   with open('Output/metadata/TWOMASS_metadata.txt', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
       if line.find(J_finder) != -1:
-        j_twomass_image_url = ((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0]
+        j_twomass_image_url_list.append(((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0])
       elif line.find(h_finder) != -1:
-        h_twomass_image_url = ((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0]
+        h_twomass_image_url_list.append(((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0])
       elif line.find(k_finder) != -1:
-        k_twomass_image_url = ((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0]
+        k_twomass_image_url_list.append(((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0])
 
-  print(j_twomass_image_url)
-  #Download the W1 and W2 images
-  file_allwise_j, file_allwise_h, file_allwise_k = download_file(j_twomass_image_url, cache=True), download_file(h_twomass_image_url, cache=True), download_file(k_twomass_image_url, cache=True)
-  data_allwise_j, data_allwise_h, data_allwise_k = fits.getdata(file_allwise_j), fits.getdata(file_allwise_h), fits.getdata(file_allwise_k)
+  #Finds the properly cropped image from 2MASS
+  for i in range(len(j_twomass_image_url_list)):
+    j_twomass_image_url, h_twomass_image_url, k_twomass_image_url = j_twomass_image_url_list[i], h_twomass_image_url_list[i], k_twomass_image_url_list[i]
+
+    #Download the W1 and W2 images
+    file_allwise_j, file_allwise_h, file_allwise_k = download_file(j_twomass_image_url, cache = True), download_file(h_twomass_image_url, cache = True), download_file(k_twomass_image_url, cache = True)
+    data_allwise_j, data_allwise_h, data_allwise_k = fits.getdata(file_allwise_j), fits.getdata(file_allwise_h), fits.getdata(file_allwise_k)
+
+    #Gets the headers from the images
+    hdu_j, hdu_h, hdu_k = fits.open(file_allwise_j)[0], fits.open(file_allwise_h)[0], fits.open(file_allwise_k)[0]
+    wcs = WCS(hdu_j.header)
+
+    #Make a cutout from the coadd image for the RA and DEC put in
+    position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
+    size = u.Quantity([radius, radius], u.arcsec)
+    cutout_j = Cutout2D(data_allwise_j, position, size, fill_value = np.nan, wcs = wcs.celestial)
+    cutout_h = Cutout2D(data_allwise_h, position, size, fill_value = np.nan, wcs = wcs.celestial)
+    cutout_k = Cutout2D(data_allwise_k, position, size, fill_value = np.nan, wcs = wcs.celestial)
+    wcs_cropped = cutout_j.wcs
+
+    #Checks if the cutout of the image is square
+    if cutout_j.shape[0] == cutout_j.shape[1]:
+      break
+    else:
+      pass
 
   #Find the location of all the object found in AllWISE in the radius choosen by the user 
   location_data = twomass_table(ra, dec, radius)
-  object_date = location_data['jdate'].tolist()
   object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
   j_list, j_list_e = location_data['j_m'].tolist(), location_data['j_cmsig'].tolist()
   h_list, h_list_e = location_data['h_m'].tolist(), location_data['h_cmsig'].tolist()
   ks_list, ks_list_e = location_data['k_m'].tolist(), location_data['k_cmsig'].tolist()
-
-  #Gets the headers from the images
-  hdu_j, hdu_h, hdu_k = fits.open(file_allwise_j)[0], fits.open(file_allwise_h)[0], fits.open(file_allwise_k)[0]
-  wcs = WCS(hdu_j.header)
-
-  #Make a cutout from the coadd image for the RA and DEC put in
-  position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
-  size = u.Quantity([radius, radius], u.arcsec)
-  cutout_j = Cutout2D(data_allwise_j, position, size, fill_value = np.nan, wcs = wcs.celestial)
-  cutout_h = Cutout2D(data_allwise_h, position, size, fill_value = np.nan, wcs = wcs.celestial)
-  cutout_k = Cutout2D(data_allwise_k, position, size, fill_value = np.nan, wcs = wcs.celestial)
-  wcs_cropped = cutout_j.wcs
   enablePrint()
 
   #Gets the dates of when the images were taken
@@ -91,12 +100,11 @@ def twomass_image(ra, dec, radius):
   #Normalize the image and plots it
   stretch = 99
   norm1_w1 = ImageNormalize(total_data.data, PercentileInterval(stretch), stretch = SinhStretch())
-  # norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
   ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
   #Makes the figure look pretty
-  plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-  plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
+  plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False, labelbottom = False)
+  plt.tick_params(axis = 'y', which = 'both', bottom = False, top = False, labelbottom = False)
   fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
   plt.suptitle('2MASS Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
   ax.set_title('Dates: \n'
@@ -205,20 +213,19 @@ def twomass_image(ra, dec, radius):
           distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
 
         list_location = distance.index(np.min(distance))
-        date = object_date[list_location]
         ra_2mass, dec_2mass = object_ra[list_location], object_dec[list_location]
         j, j_e = j_list[list_location], j_list_e[list_location]
         h, h_e = h_list[list_location], h_list_e[list_location]
         ks, ks_e = ks_list[list_location], ks_list_e[list_location]
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, text_list[text_max]
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
       
       #Checks if the Object not Found button was clicked
       elif click_axes == 'Axes(0.04,0.78;0.92x0.04)':
-        date, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_2mass, dec_2mass = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, 'Object Not Found was Pressed'
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
       
       #Adds the functionality of the circle slider bar
       elif click_axes == 'Axes(0.25,0.068;0.65x0.03)':
@@ -227,11 +234,11 @@ def twomass_image(ra, dec, radius):
 
     #Checks if the window was closed
     elif press is None:
-      date, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
       ra_2mass, dec_2mass = ra, dec
       plt.close('all')
       plt.figure().clear()
-      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, date, text_list[text_max]
+      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
 
 def twomass_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
@@ -239,5 +246,5 @@ def twomass_table(ra, dec, radius):
   blockPrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='fp_psc', spatial='Box', width=radius * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = radius * u.arcsec)
   return location_data

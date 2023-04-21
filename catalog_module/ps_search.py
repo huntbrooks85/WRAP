@@ -117,6 +117,7 @@ def ps_image(ra, dec, radius):
     #Sets the WCS coordinates for the plots
     total_data = cutout_r.data + cutout_i.data
     ax = plt.subplot(projection = wcs_cropped)
+    
     #Plots the objects found in the radius
     circle_size = (radius*3)
     scatter = ax.scatter(ra_list, dec_list, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
