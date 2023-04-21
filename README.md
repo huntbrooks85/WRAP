@@ -78,18 +78,19 @@
 
  <p> CatWISE2020: </p>
 
-* cw_ra: The Right Accenceion (RA) from CatWISE2020 
-* cw_dec: The Declination (DEC) from CatWISE2020 
+* cw_ra & cw_ra_e: The Right Accenceion (RA) (degrees) from CatWISE2020 and its uncertainties (arcsecs)
+* cw_dec&* cw_dec_e: The Declination (DEC) (degrees) from CatWISE2020 and its uncertainties (arcsecs)
 * cw_w1 & cw_w1_e: The W1 band from CatWISE2020 and its uncertainties 
 * cw_w2 & cw_w2_e: The W2 band from CatWISE2020 and its uncertainties 
 * cw_pmra & cw_pmra_e: The proper motion in RA from CatWISE2020 and its uncertainties 
 * cw_pmdec & cw_pmdec_e: The proper motion in DEC from CatWISE2020 and its uncertainties 
+* cw_mjd: The modified julian date from CatWISE 2020
 * cw_notes: The notes written in the CatWISE2020 by the user
 
  <p> AllWISE: </p>
 
-* aw_ra: The Right Accenceion (RA) from AllWISE
-* aw_dec: The Declination (DEC) from AllWISE
+* aw_ra & aw_ra_e: The Right Accenceion (RA) (degrees) from AllWISE and its uncertainties (arcsecs)
+* aw_dec & aw_dec_e: The Declination (DEC) (degrees) from AllWISE and its uncertainties (arcsecs)
 * aw_w1 & aw_w1_e: The W1 band from AllWISE and its uncertainties
 * aw_w2 & aw_w2_e: The W2 band from AllWISE and its uncertainties
 * aw_w3 & aw_w3_e: The W3 band from AllWISE and its uncertainties
