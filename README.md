@@ -79,7 +79,7 @@
  <p> CatWISE2020: </p>
 
 * cw_ra & cw_ra_e: The Right Accenceion (RA) (degrees) from CatWISE2020 and its uncertainties (arcsecs)
-* cw_dec&* cw_dec_e: The Declination (DEC) (degrees) from CatWISE2020 and its uncertainties (arcsecs)
+* cw_dec & cw_dec_e: The Declination (DEC) (degrees) from CatWISE2020 and its uncertainties (arcsecs)
 * cw_w1 & cw_w1_e: The W1 band from CatWISE2020 and its uncertainties 
 * cw_w2 & cw_w2_e: The W2 band from CatWISE2020 and its uncertainties 
 * cw_pmra & cw_pmra_e: The proper motion in RA from CatWISE2020 and its uncertainties 
@@ -107,9 +107,10 @@
 * gaia_radv & gaia_radv_e: The radial velocity from Gaia and its uncertainties
 * gaia_pmra & gaia_pmra_e: The proper motion in RA from Gaia and its uncertainties
 * gaia_pmdec & gaia_pmdec_e: The proper motion in DEC from Gaia and its uncertainties
-* gaia_g: The g band from Gaia and its uncertainties
-* gaia_bp: The bp band from Gaia and its uncertainties
-* gaia_rp: The rp band from Gaia and its uncertainties
+* gaia_g & gaia_g_e: The g band from Gaia and its uncertainties
+* gaia_bp & gaia_bp_e: The bp band from Gaia and its uncertainties
+* gaia_rp & gaia_rp_e: The rp band from Gaia and its uncertainties
+* gaia_year: The calendar year from the Gaia archive
 * gaia_notes: The notes written in the Gaia by the user
 
  <p> VISTA: </p>
@@ -120,18 +121,23 @@
 * vsa_j & vsa_j_e: The J band from VISTA and its uncertainties
 * vsa_h & vsa_h_e: The H band from VISTA and its uncertainties
 * vsa_ks & vsa_ks_e: The Ks band from VISTA and its uncertainties
+* vsa_mjd_y: The modified julian date for VISTA's Y band
+* vsa_mjd_j: The modified julian date for VISTA's J band
+* vsa_mjd_h: The modified julian date for VISTA's H band
+* vsa_mjd_ks: The modified julian date for VISTA's Ks band
 * vsa_notes: The notes written in the VISTA by the user
 
  <p> WFCAM: </p>
 
-* wfcam_ra: The Right Accenceion (RA) from WFCAM
-* wfcam_dec: The Declination (DEC) from WFCAM
+* wfcam_ra & wfcam_ra_e: The Right Accenceion (RA) from WFCAM and its uncertainties
+* wfcam_dec & wfcam_dec_e: The Declination (DEC) from WFCAM and its uncertainties
 * wfcam_y & wfcam_y_e: The Y band from WFCAM and its uncertainties
 * wfcam_j & wfcam_j_e: The J band from WFCAM and its uncertainties
 * wfcam_h & wfcam_h_e: The H band from WFCAM and its uncertainties
 * wfcam_k & wfcam_k_e: The K band from WFCAM and its uncertainties
 * wfcam_pmra & wfcam_pmra_e: The proper motion in RA from WFCAM and its uncertainties
 * wfcam_pmdec & wfcam_pmdec_e: The proper motion in DEC from WFCAM and its uncertainties
+* wfcam_epoch: The calendar year from the WFCAM archive
 * wfcam_notes: The notes written in the WFCAM by the user
 
  <p> 2MASS: </p>
@@ -141,23 +147,25 @@
 * 2mass_j & 2mass_j_e: The J band from 2MASS and its uncertainties
 * 2mass_h & 2mass_h_e: The J band from 2MASS and its uncertainties
 * 2mass_ks & 2mass_ks_e: The Ks band from 2MASS and its uncertainties
+* 2mass_jdate: The julian date for the 2MASS catalog
 * 2mass_notes: The notes written in the 2MASS by the user
 
  <p> PanSTARRS: </p>
 
-* ps_ra: The Right Accenceion (RA) from PanSTARRS
-* ps_dec: The Declination (DEC) from PanSTARRS
+* ps_ra & ps_ra_e: The Right Accenceion (RA) from PanSTARRS and its uncertainties
+* ps_dec & ps_dec_e: The Declination (DEC) from PanSTARRS and its uncertainties
 * ps_g & ps_g_e: The g band from PanSTARRS and its uncertainties
 * ps_r & ps_r_e: The r band from PanSTARRS and its uncertainties
 * ps_i & ps_i_e: The i band from PanSTARRS and its uncertainties
 * ps_z & ps_z_e: The z band from PanSTARRS and its uncertainties
 * ps_y & ps_y_e: The y band from PanSTARRS and its uncertainties
+* ps_mjd: The modified julian date from the PanSTARRS archive
 * ps_notes: The notes written in the PanSTARRS by the user
 
  <p> NSC: </p>
 
-* nsc_ra: The Right Accenceion (RA) from NSC
-* nsc_dec: The Declination (DEC) from NSC
+* nsc_ra & nsc_ra_e: The Right Accenceion (RA) from NSC and its uncertainties
+* nsc_dec & nsc_dec_e: The Declination (DEC) from NSC and its uncertainties
 * nsc_g & nsc_g_e: The g band from NSC and its uncertainties
 * nsc_r & nsc_r_e: The r band from NSC and its uncertainties
 * nsc_i & nsc_i_e: The i band from NSC and its uncertainties
@@ -166,6 +174,7 @@
 * nsc_y & nsc_y_e: The y band from NSC and its uncertainties
 * nsc_pmra & nsc_pmra_e: The proper motion in RA from NSC and its uncertainties
 * nsc_pmedc & nsc_pmdec_e: The proper motion in DEC from NSC and its uncertainties
+* nsc_mjd: The modified julian date from the NSC catalog
 * nsc_notes: The notes written in the NSC by the user
 
  <p> GALEX: </p>
