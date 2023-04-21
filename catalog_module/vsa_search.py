@@ -22,12 +22,18 @@ def vsa_image(ra, dec, radius):
   blockPrint()
 
   #Obtains all of the urls in J, H, and K from VSA
-  url_J, url_H, url_Ks = [Vsa.get_image_list(
-    SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
-             image_width = radius * u.arcsec,
-             waveband = band,
-             database = 'VHSDR6')
-    for band in ['J', 'H', 'Ks']]
+  database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIKINGDR5', 'VIDEODR6', 'ULTRAVISTADR4']
+  for img in database_list:
+    url_J, url_H, url_Ks = [Vsa.get_image_list(
+      SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
+                image_width = radius * u.arcsec,
+                waveband = band,
+                database = img)
+      for band in ['J', 'H', 'Ks']]
+    if len(url_J) == 0:
+      pass
+    else: 
+      break
   
   #Checking to see if the images exist
   if len(url_J) > 0 and len(url_H) > 0 and len(url_Ks) > 0: 
@@ -38,12 +44,13 @@ def vsa_image(ra, dec, radius):
 
     #Find the location of all the object found in VSA in the radius choosen by the user
     catalog_list = ['VHS', 'VVV', 'VMC', 'VIKING', 'VIDEO', 'UltraVISTA']
-    for cat in catalog_list: 
+    database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIKINGDR5', 'VIDEODR6', 'ULTRAVISTADR4']
+    for i in range(len(catalog_list)): 
       table = Vsa.query_region(
          SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
                   radius = (radius/2) * u.arcsec,
-                  programme_id = cat,
-                  database = 'VHSDR6')
+                  programme_id = catalog_list[i],
+                  database = database_list[i])
       if len(table) > 0:
         break
     if len(table) == 0: 
@@ -132,7 +139,7 @@ def vsa_image(ra, dec, radius):
 
     #Adds a slider for the circle size
     circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
-    circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
+    circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = 5, valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
 
     #Adds a notes section that the user can add notes about their data
     axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
@@ -229,7 +236,7 @@ def vsa_image(ra, dec, radius):
         
         #Checks if the Object not Found button was clicked
         elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
-          ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+          ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_vsa, dec_vsa = ra, dec
           plt.close('all')
           plt.figure().clear()
@@ -242,7 +249,7 @@ def vsa_image(ra, dec, radius):
 
       #Checks if the window was closed
       elif press is None:
-        ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_vsa, dec_vsa = ra, dec
         plt.close('all')
         plt.figure().clear()
@@ -250,7 +257,7 @@ def vsa_image(ra, dec, radius):
       
   #Returns null values if the images are not found
   else: 
-    ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     ra_vsa, dec_vsa = ra, dec
     text_list = 'Image Not Found'
     return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, text_list

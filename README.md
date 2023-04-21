@@ -147,7 +147,6 @@
 * 2mass_j & 2mass_j_e: The J band from 2MASS and its uncertainties
 * 2mass_h & 2mass_h_e: The J band from 2MASS and its uncertainties
 * 2mass_ks & 2mass_ks_e: The Ks band from 2MASS and its uncertainties
-* 2mass_jdate: The julian date for the 2MASS catalog
 * 2mass_notes: The notes written in the 2MASS by the user
 
  <p> PanSTARRS: </p>
