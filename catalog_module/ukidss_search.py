@@ -19,33 +19,69 @@ def ukidss_image(ra, dec, radius):
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
-    blockPrint()
+    # blockPrint()
     
     #Obtains all of the urls in J, H, and K from UKIDSS
-    url_J = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'J', database = 'UKIDSSDR11PLUS')
-    url_H = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'H', database = 'UKIDSSDR11PLUS')
-    url_K = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'K', database = 'UKIDSSDR11PLUS')
-    url_Y = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'Y', database = 'UKIDSSDR11PLUS')
+    database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
+    for data in database_list:
+        url_J = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'J', database = data)
+        url_H = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'H', database = data)
+        url_K = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'K', database = data)
+        url_Y = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = radius * u.arcsec, waveband = 'Y', database = data)
+        if len(url_J) == 0:
+            pass
+        else:
+            break
 
     #Checking to see if the images exist
-    if len(url_Y) > 0 and len(url_J) > 0 and len(url_H) > 0 and len(url_K) > 0: 
-        
-        #Downloading the fits images
-        file_ukidss_J, file_ukidss_H, file_ukidss_K, file_ukidss_Y = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_K[0], cache=True), download_file(url_Y[0], cache=True)
-        data_ukidss_J, data_ukidss_H, data_ukidss_K, data_ukidss_Y = fits.getdata(file_ukidss_J), fits.getdata(file_ukidss_H), fits.getdata(file_ukidss_K), fits.getdata(file_ukidss_Y)
+    if len(url_J) > 0: 
+        #Defines each variables depending on if the image was found in UKIDSS DR11 or UHS DR1
+        if data == 'UKIDSSDR11PLUS':
+            #Downloading the fits images
+            file_ukidss_J, file_ukidss_H, file_ukidss_K, file_ukidss_Y = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_K[0], cache=True), download_file(url_Y[0], cache=True)
+            data_ukidss_J, data_ukidss_H, data_ukidss_K, data_ukidss_Y = fits.getdata(file_ukidss_J), fits.getdata(file_ukidss_H), fits.getdata(file_ukidss_K), fits.getdata(file_ukidss_Y)
 
-        #Find the table of all the objects found in UKIDSS in the radius choosen by the user
-        catalog_list = ['LAS', 'GPS', 'GCS', 'DXS']
-        for cat in catalog_list:
-            table = Ukidss.query_region(
-                 SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
-                 radius = (radius/2) * u.arcsec, 
-                 programme_id = cat)
-            if len(table) > 0: 
-                break
-        if len(table) == 0: 
-            j, h, k = np.nan, np.nan, np.nan
-            return j, h, k
+            #Obtains the headers from the images
+            hdu_j, hdu_h, hdu_k, hdu_y = fits.open(file_ukidss_J)[1], fits.open(file_ukidss_H)[1], fits.open(file_ukidss_K)[1], fits.open(file_ukidss_Y)[1]
+            wcs_j, wcs_h, wcs_k, wcs_y = WCS(hdu_j.header),  WCS(hdu_h.header), WCS(hdu_k.header), WCS(hdu_y.header)
+
+            #Make a cutout from the coadd image for the RA and DEC put in
+            position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
+            size = u.Quantity([radius, radius], u.arcsec)
+            cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs_j.celestial)
+            cutout_h = Cutout2D(data_ukidss_H, position, size, wcs = wcs_h.celestial)
+            cutout_k = Cutout2D(data_ukidss_K, position, size, wcs = wcs_k.celestial)
+            cutout_y = Cutout2D(data_ukidss_Y, position, size, wcs = wcs_y.celestial)
+            wcs_cropped = cutout_j.wcs
+
+            #Resizes the H, K, and Y bands to that of J
+            j_shape = (cutout_j.data).shape
+            h_reshape, k_reshape, y_reshape = cv2.resize(cutout_h.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_k.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_y.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST)
+            total_data = cutout_j.data + y_reshape
+
+            #Obtains the dates for each image
+            date_y, date_j, date_h, date_k = hdu_y.header[73].split(' ', 2)[0], hdu_j.header[73].split(' ', 2)[0], hdu_h.header[73].split(' ', 5)[2], hdu_k.header[73].split(' ', 5)[2]
+
+        elif data == 'UHSDR1': 
+            #Downloading the fits images
+            file_ukidss_J = download_file(url_J[0], cache=True) 
+            data_ukidss_J = fits.getdata(file_ukidss_J)
+
+            #Obtains the headers from the images
+            hdu_j = fits.open(file_ukidss_J)[1]
+            wcs_j = WCS(hdu_j.header)
+
+            #Make a cutout from the coadd image for the RA and DEC put in
+            position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
+            size = u.Quantity([radius, radius], u.arcsec)
+            cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs_j.celestial)
+            wcs_cropped = cutout_j.wcs
+            total_data = cutout_j.data
+
+            #Obtains the dates for each image
+            date_j = hdu_j.header[73].split(' ', 2)[0]
+
+        table = ukidss_table(ra, dec, radius)
 
         #Gets the columns from the table
         object_epoch = table['epoch'].tolist()
@@ -57,23 +93,6 @@ def ukidss_image(ra, dec, radius):
         K_list, K_list_e = table['kAperMag3'].tolist(), table['kAperMag3Err'].tolist()
         pmra_list, pmra_list_e = table['muRa'].tolist(), table['sigMuRa'].tolist()
         pmdec_list, pmdec_list_e = table['muDec'].tolist(), table['sigMuDec'].tolist()
-
-        #Obtains the headers from the images
-        hdu_j, hdu_h, hdu_k, hdu_y = fits.open(file_ukidss_J)[1], fits.open(file_ukidss_H)[1], fits.open(file_ukidss_K)[1], fits.open(file_ukidss_Y)[1]
-        wcs_j, wcs_h, wcs_k, wcs_y = WCS(hdu_j.header),  WCS(hdu_h.header), WCS(hdu_k.header), WCS(hdu_y.header)
-
-        #Make a cutout from the coadd image for the RA and DEC put in
-        position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
-        size = u.Quantity([radius, radius], u.arcsec)
-        cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs_j.celestial)
-        cutout_h = Cutout2D(data_ukidss_H, position, size, wcs = wcs_h.celestial)
-        cutout_k = Cutout2D(data_ukidss_K, position, size, wcs = wcs_k.celestial)
-        cutout_y = Cutout2D(data_ukidss_Y, position, size, wcs = wcs_y.celestial)
-        wcs_cropped = cutout_j.wcs
-        enablePrint()
-
-        #Obtains the dates for each image
-        date_y, date_j, date_h, date_k = hdu_y.header[73].split(' ', 2)[0], hdu_j.header[73].split(' ', 2)[0], hdu_h.header[73].split(' ', 5)[2], hdu_k.header[73].split(' ', 5)[2]
 
         #Defining a mouse click as an event on the plot
         location = []
@@ -88,12 +107,7 @@ def ukidss_image(ra, dec, radius):
         fig_1 = plt.figure()
         cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
         
-        #Resizes the H, K, and Y bands to that of J
-        j_shape = (cutout_j.data).shape
-        h_reshape, k_reshape, y_reshape = cv2.resize(cutout_h.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_k.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_y.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST)
-        
         #Sets the WCS coordinates for the plots
-        total_data = cutout_j.data + y_reshape
         ax = plt.subplot(projection = wcs_cropped)
 
         #Plots the objects found in the radius
@@ -120,11 +134,14 @@ def ukidss_image(ra, dec, radius):
         figure.canvas.set_window_title('WFCAM Search')
 
         #Make checkbuttons with all of the different image bands
-        rax = plt.axes([0.045, 0.4, 0.115, 0.1])
-        labels = ['Y', 'J', 'H', 'K']
-        real_data = [y_reshape, cutout_j.data, h_reshape, k_reshape]
-        default = [True, True, False, False]
-        check = CheckButtons(rax, labels, default)
+        if data == 'UKIDSSDR11PLUS':
+            rax = plt.axes([0.045, 0.4, 0.115, 0.1])
+            labels = ['Y', 'J', 'H', 'K']
+            real_data = [y_reshape, cutout_j.data, h_reshape, k_reshape]
+            default = [True, True, False, False]
+            check = CheckButtons(rax, labels, default)
+        else: 
+            pass
 
         #Adds a slider for the scaling of the image
         freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
@@ -145,7 +162,7 @@ def ukidss_image(ra, dec, radius):
         axes_button = plt.axes([0.04, 0.775, 0.92, 0.04])
         close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
-         #Update the image depending on what the user chooses
+        #Update the image depending on what the user chooses
         def update_button(label):
             '''Updates the list of activated images and updates the image the user can see'''
 
@@ -261,3 +278,22 @@ def ukidss_image(ra, dec, radius):
         dec_wfcam = dec
         text_list = 'Image Not Found'
         return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list
+    
+def ukidss_table(ra, dec, radius):
+    '''Find all the objects in the radius defined by the user'''
+
+    #Find the table of all the objects found in UKIDSSDR11PLUS in the radius choosen by the user
+    catalog_list = ['LAS', 'GPS', 'GCS', 'DXS']
+    for cat in catalog_list:
+        table = Ukidss.query_region(
+                SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
+                radius = (radius/2) * u.arcsec, 
+                programme_id = cat)
+        if len(table) > 0: 
+            return table
+        else: 
+            table = []
+
+    #Find the table of all the objects found in UHSDR1 in the radius choosen by the user
+    if len(table) == 0: 
+        print('hi') 
