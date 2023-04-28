@@ -236,7 +236,7 @@ def ps_image(ra, dec, radius):
           plt.figure().clear()
 
           #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-          coord = wcs_cropped.pixel_to_world_values(location[n-5],location[n-4])
+          coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
           distance = []
           for i in range(len(ra_list)):
             distance.append(math.dist(coord, [ra_list[i], dec_list[i]]))

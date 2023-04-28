@@ -22,13 +22,17 @@ from astropy import units as u
 from astropy.table import Table
 import matplotlib.pyplot as plt
 from astroquery.gaia import Gaia
+from matplotlib import transforms
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
 from dl.helpers.utils import convert
 from astroquery.ukidss import Ukidss
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord
+from matplotlib.transforms import Affine2D
 from astropy.utils.data import download_file
+# from astropy.wcs.utils import rotate_CD_matrix
+from astropy.visualization.wcsaxes import WCSAxes
 from dl import authClient as ac, queryClient as qc
 from astroquery.mast import Observations, MastMissions, Catalogs
 from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
@@ -37,7 +41,7 @@ from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormali
 #Checks if the users system is greater than Python 3.8
 # ------------------------------------------------------------- #
 ver = sys.version_info
-if ver.major >= 3.8:
+if ver.major < 3:
     sys.exit('Python 3.8, or newer, is required to run WRAP!')
 
 #Ignores all of the warnings from the packages above

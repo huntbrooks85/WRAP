@@ -111,26 +111,30 @@ def ukidss_image(ra, dec, radius):
             location.append(event.inaxes)
         fig_1 = plt.figure()
         cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
-        
-        #Sets the WCS coordinates for the plots
-        ax = plt.subplot(projection = wcs_cropped)
-
-        #Plots the objects found in the radius
-        circle_size = (radius*3)
-        scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
-
-        #Normalize the image and plots it
-        init_top, init_bot = 95, 45
-        norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
-        ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
         #Makes the figure look pretty
-        plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-        plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
+        plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False, labelbottom = False)
+        plt.tick_params(axis = 'y', which = 'both', bottom = False, top = False, labelbottom = False)
         fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
         plt.suptitle('WFCAM Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
         figure = plt.gcf()
+
+        #Sets the plot depending on if it was found in UHS or UKIDSS
         if data == 'UHSDR1':
+            #Sets the WCS coordinates for the plots
+            ax = plt.subplot(projection = wcs_cropped)
+
+            #Plots the objects found in the radius
+            circle_size = (radius*3)
+            scatter = ax.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
+
+            #Normalize the image and plots it
+            init_top, init_bot = 95, 45
+            img_rotate = np.rot90(cutout_j.data)
+            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
+            ax.imshow(img_rotate, cmap = 'Greys', norm = norm1_w1)
+
+            #Formats the window correctly
             ax.set_title('Dates: \n'
             'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict = fontdict_1, y = 1.05)
             figure.set_size_inches(4.75, 6.85)
@@ -141,13 +145,29 @@ def ukidss_image(ra, dec, radius):
                 shape = shape[0]
             plt.ylim(0, shape)
             plt.xlim(shape, 0)
+            
         else:
+            #Sets the WCS coordinates for the plots
+            ax = plt.subplot(projection = wcs_cropped)
+
+            #Plots the objects found in the radius
+            circle_size = (radius*3)
+            scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
+
+            #Normalize the image and plots it
+            init_top, init_bot = 95, 45
+            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
+            ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+
+            #Formats the window correctly
             ax.set_title('Dates: \n'
                     + 'Y Date: ' + str(date_y) + ' (YYYYMMDD)   ' + 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n'
                     + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1.05)
             figure.set_size_inches(4.75, 6.95)
+            plt.xlim(len(total_data[0]), 0)
+
+        #Finishes formatting the problem correctly
         plt.grid(linewidth = 0)
-        plt.xlim(len(total_data[0]), 0)
         figure.canvas.set_window_title('WFCAM Search')
 
         #Make checkbuttons with all of the different image bands
@@ -212,7 +232,10 @@ def ukidss_image(ra, dec, radius):
                 else: 
                     pass
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
-            ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+            if data == 'UHSDR1':
+                ax.imshow(img_rotate, cmap = 'Greys', norm = norm1_w1)
+            else:
+                ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
         #Updates the notes added by the user when there is an input
         text_list = [text]
@@ -232,7 +255,6 @@ def ukidss_image(ra, dec, radius):
         #Display image until it is clicked to find the object
         n = -1
         while True:
-            print(location)
             press = plt.waitforbuttonpress()
             text_max = len(text_list) - 1
 
@@ -250,7 +272,7 @@ def ukidss_image(ra, dec, radius):
                     plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-                    coord = wcs_cropped.pixel_to_world_values(location[n-5],location[n-4])
+                    coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
                     distance = []
                     for i in range(len(object_ra)):
                         distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))

@@ -102,7 +102,7 @@ def galex_image(ra, dec, radius_use):
 
         #Plots the objects found in the radius
         circle_size = (radius_use*4)
-        scatter = plt.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
+        scatter = plt.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
         #Normalize the image and plots it
         init_top, init_bot = 95, 45
@@ -179,7 +179,7 @@ def galex_image(ra, dec, radius_use):
                     plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-                    coord = wcs_cropped_w1.pixel_to_world_values(location[n-5],location[n-4])
+                    coord = wcs_cropped_w1.pixel_to_world_values(location[n-4],location[n-5])
                     distance = []
                     for i in range(len(object_ra)):
                         distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))

@@ -42,21 +42,7 @@ def vsa_image(ra, dec, radius):
     file_vsa_J, file_vsa_H, file_vsa_Ks = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_Ks[0], cache=True)
     data_vsa_J, data_vsa_H, data_vsa_Ks = fits.getdata(file_vsa_J), fits.getdata(file_vsa_H), fits.getdata(file_vsa_Ks)
 
-    #Find the location of all the object found in VSA in the radius choosen by the user
-    catalog_list = ['VHS', 'VVV', 'VMC', 'VIKING', 'VIDEO', 'UltraVISTA']
-    database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIKINGDR5', 'VIDEODR6', 'ULTRAVISTADR4']
-    for i in range(len(catalog_list)): 
-      table = Vsa.query_region(
-         SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
-                  radius = (radius/2) * u.arcsec,
-                  programme_id = catalog_list[i],
-                  database = database_list[i])
-      if len(table) > 0:
-        break
-    if len(table) == 0: 
-      y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-      ra_vsa, dec_vsa = ra, dec
-      return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, text_list[text_max]  
+    table = vsa_table(ra, dec, radius)
     
     #Obtains the photometry and astrometry from the catalog
     object_mjd_y, object_mjd_j = table['yMjd'].tolist(), table['jMjd'].tolist()
@@ -119,8 +105,8 @@ def vsa_image(ra, dec, radius):
                + 'J Date: ' + str(date_j) + ' (Y-M-D)  ' + '  H Date: ' + str(date_h) + ' (Y-M-D)\n'
                + 'K Date: ' + str(date_k) + ' (Y-M-D) \n', fontdict = fontdict_1, y = 1.05)
     plt.grid(linewidth = 0)
-    figure = plt.gcf()
     plt.ylim(len(total_data[0]), 0)
+    figure = plt.gcf()
     figure.set_size_inches(4.75, 6.95)
     figure.canvas.set_window_title('VSA Search')
 
@@ -219,7 +205,7 @@ def vsa_image(ra, dec, radius):
           plt.figure().clear()
 
           #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-          coord = wcs_cropped.pixel_to_world_values(location[n-5],location[n-4])
+          coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
           distance = []
           for i in range(len(object_ra)):
             distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
@@ -262,3 +248,19 @@ def vsa_image(ra, dec, radius):
     text_list = 'Image Not Found'
     return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, text_list
   
+def vsa_table(ra, dec, radius): 
+  '''Find all the objects in the radius defined by the user'''
+
+  blockPrint()
+    
+  #Find the location of all the object found in VSA in the radius choosen by the user
+  catalog_list = ['VHS', 'VVV', 'VMC', 'VIKING', 'VIDEO', 'UltraVISTA']
+  database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIKINGDR5', 'VIDEODR6', 'ULTRAVISTADR4']
+  for i in range(len(catalog_list)): 
+    table = Vsa.query_region(
+        SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
+                radius = (radius/2) * u.arcsec,
+                programme_id = catalog_list[i],
+                database = database_list[i])
+    if len(table) > 0:
+      return table
