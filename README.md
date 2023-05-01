@@ -40,6 +40,7 @@
 ```
 
 <p>3. Fixing Astroquery Module </p>
+
 1) Open the "replacement_module" directory
 2) Copy the "core.py" file
 3) Go to the file directory containing the UKIDSS astroquery files (example: "/Users/hunter_brooks8/opt/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
