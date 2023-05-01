@@ -51,6 +51,7 @@
 5) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file in WRAP's "replacement_module" directory
 
 <h2> 🏆 Opening Application: </h2>
+
 *   Only tested on MacOS Ventura 13.2.1, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
 *   Note that the window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the buttom. 
 
