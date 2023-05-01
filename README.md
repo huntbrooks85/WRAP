@@ -45,9 +45,9 @@
 2) Copy the "core.py" file
 3) Go to the file directory containing the UKIDSS astroquery files (example: "/Users/hunter_brooks8/opt/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
 4) If you are struggling to find your file directory use these steps:
-   1) Type "ipython" in your terminal
-   2) Type "import astroquery"
-   3) Type "astroquery.__file__"
+   1) Type ipython in your terminal
+   2) Type: import astroquery
+   3) Type: astroquery.__file__
    4) This provides you with your astroquery file directory
 5) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file in WRAP's "replacement_module" directory
 
