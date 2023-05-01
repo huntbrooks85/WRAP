@@ -40,15 +40,15 @@
 ```
 
 <p>3. Fixing Astroquery Module </p>
-1) Open the "replacement_module" directory
-2) Copy the "core.py" file
-3) Go to the file directory containing the UKIDSS astroquery files (example: "/Users/hunter_brooks8/opt/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
-4) If you are struggling to find your file directory use these steps:
+* Open the "replacement_module" directory
+* Copy the "core.py" file
+* Go to the file directory containing the UKIDSS astroquery files (example: "/Users/hunter_brooks8/opt/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
+* If you are struggling to find your file directory use these steps:
    1) Type "ipython" in your terminal
    2) Type "import astroquery"
    3) Type "astroquery.__file__"
    4) This provides you with your astroquery file directory
-5) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file in WRAP's "replacement_module" directory
+* Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file in WRAP's "replacement_module" directory
 
 <h2> 🏆 Opening Application: </h2>
 *   Only tested on MacOS Ventura 13.2.1, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 

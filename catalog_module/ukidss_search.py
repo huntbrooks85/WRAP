@@ -40,7 +40,7 @@ def ukidss_image(ra, dec, radius):
         #Defines each variables depending on if the image was found in UKIDSS DR11 or UHS DR1
         if data == 'UHSDR1': 
             #Downloading the fits images
-            file_ukidss_J = download_file(url_J[0], cache=True) 
+            file_ukidss_J = download_file(url_J[0], cache = True) 
             data_ukidss_J = fits.getdata(file_ukidss_J)
 
             #Obtains the headers from the images
@@ -51,8 +51,8 @@ def ukidss_image(ra, dec, radius):
             position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
             size = u.Quantity([radius, radius], u.arcsec)
             cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs_j.celestial)
-            wcs_cropped = cutout_j.wcs
             total_data = cutout_j.data
+            wcs_cropped = cutout_j.wcs
 
             #Obtains the dates for each image
             date_j = hdu_j.header[73].split(' ', 2)[0]
@@ -112,39 +112,29 @@ def ukidss_image(ra, dec, radius):
         fig_1 = plt.figure()
         cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
 
-        #Makes the figure look pretty
-        plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False, labelbottom = False)
-        plt.tick_params(axis = 'y', which = 'both', bottom = False, top = False, labelbottom = False)
-        fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
-        plt.suptitle('WFCAM Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
-        figure = plt.gcf()
-
         #Sets the plot depending on if it was found in UHS or UKIDSS
         if data == 'UHSDR1':
-            #Sets the WCS coordinates for the plots
+            # Sets the WCS coordinates for the plots
             ax = plt.subplot(projection = wcs_cropped)
 
-            #Plots the objects found in the radius
+            # Apply the rotation to the object positions and plot them
             circle_size = (radius*3)
-            scatter = ax.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
+            scatter = plt.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor = '#40E842', facecolor = 'none')
 
-            #Normalize the image and plots it
+            # Normalize the image and plots it
             init_top, init_bot = 95, 45
-            img_rotate = np.rot90(cutout_j.data)
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
+            img_rotate = np.rot90(cutout_j.data)
             ax.imshow(img_rotate, cmap = 'Greys', norm = norm1_w1)
 
-            #Formats the window correctly
-            ax.set_title('Dates: \n'
-            'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict = fontdict_1, y = 1.05)
+            # Formats the window correctly
+            fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
+            figure = plt.gcf()
+            ax.set_title('Dates: \n' 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict=fontdict_1, y=1.05)
             figure.set_size_inches(4.75, 6.85)
-            shape = cutout_j.shape
-            if shape[0] > shape[1]:
-                shape = shape[1]
-            elif shape[1] > shape[0]:
-                shape = shape[0]
-            plt.ylim(0, shape)
+            shape = min(cutout_j.shape)
             plt.xlim(shape, 0)
+            plt.ylim(0, shape)
             
         else:
             #Sets the WCS coordinates for the plots
@@ -160,6 +150,8 @@ def ukidss_image(ra, dec, radius):
             ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
             #Formats the window correctly
+            fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
+            figure = plt.gcf()
             ax.set_title('Dates: \n'
                     + 'Y Date: ' + str(date_y) + ' (YYYYMMDD)   ' + 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n'
                     + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1.05)
@@ -167,6 +159,9 @@ def ukidss_image(ra, dec, radius):
             plt.xlim(len(total_data[0]), 0)
 
         #Finishes formatting the problem correctly
+        plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False, labelbottom = False)
+        plt.tick_params(axis = 'y', which = 'both', bottom = False, top = False, labelbottom = False)
+        plt.suptitle('WFCAM Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
         plt.grid(linewidth = 0)
         figure.canvas.set_window_title('WFCAM Search')
 
