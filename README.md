@@ -60,7 +60,7 @@
 *   Note 1: Only tested on MacOS Ventura 13.*, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
 *   Note 2: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
 *   Note 3: The orientation for all of the catalogs is North pointed up and East pointing left. 
-*   Note 4: 2MASS can have weird imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
+*   Note 4: 2MASS can have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
 <p> How to Start Program </p>
 
