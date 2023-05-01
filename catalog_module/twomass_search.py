@@ -40,30 +40,43 @@ def twomass_image(ra, dec, radius):
         k_twomass_image_url_list.append(((lines[lines.index(line) + 1]).split('[')[2]).split(']')[0])
 
   #Finds the properly cropped image from 2MASS
+  shape_difference = []
   for i in range(len(j_twomass_image_url_list)):
-    j_twomass_image_url, h_twomass_image_url, k_twomass_image_url = j_twomass_image_url_list[i], h_twomass_image_url_list[i], k_twomass_image_url_list[i]
+    j_twomass_image_url= j_twomass_image_url_list[i]
 
     #Download the W1 and W2 images
-    file_allwise_j, file_allwise_h, file_allwise_k = download_file(j_twomass_image_url, cache = True), download_file(h_twomass_image_url, cache = True), download_file(k_twomass_image_url, cache = True)
-    data_allwise_j, data_allwise_h, data_allwise_k = fits.getdata(file_allwise_j), fits.getdata(file_allwise_h), fits.getdata(file_allwise_k)
+    file_allwise_j = download_file(j_twomass_image_url, cache = True)
+    data_allwise_j = fits.getdata(file_allwise_j)
 
     #Gets the headers from the images
-    hdu_j, hdu_h, hdu_k = fits.open(file_allwise_j)[0], fits.open(file_allwise_h)[0], fits.open(file_allwise_k)[0]
+    hdu_j = fits.open(file_allwise_j)[0]
     wcs = WCS(hdu_j.header)
 
     #Make a cutout from the coadd image for the RA and DEC put in
     position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
     size = u.Quantity([radius, radius], u.arcsec)
     cutout_j = Cutout2D(data_allwise_j, position, size, fill_value = np.nan, wcs = wcs.celestial)
-    cutout_h = Cutout2D(data_allwise_h, position, size, fill_value = np.nan, wcs = wcs.celestial)
-    cutout_k = Cutout2D(data_allwise_k, position, size, fill_value = np.nan, wcs = wcs.celestial)
-    wcs_cropped = cutout_j.wcs
 
-    #Checks if the cutout of the image is square
-    if cutout_j.shape[0] == cutout_j.shape[1]:
-      break
-    else:
-      pass
+    #Adds the difference between the height and width's absolute value to a list
+    shape_difference.append(abs(cutout_j.shape[0] - cutout_j.shape[1]))
+
+  #Finds the best url link
+  shape_best = shape_difference.index(np.min(shape_difference))
+  j_twomass_image_url, h_twomass_image_url, k_twomass_image_url = j_twomass_image_url_list[shape_best], h_twomass_image_url_list[shape_best], k_twomass_image_url_list[shape_best]
+
+  #Download the W1 and W2 images for the best url link
+  file_allwise_j, file_allwise_h, file_allwise_k = download_file(j_twomass_image_url, cache = True), download_file(h_twomass_image_url, cache = True), download_file(k_twomass_image_url, cache = True)
+  data_allwise_j, data_allwise_h, data_allwise_k = fits.getdata(file_allwise_j), fits.getdata(file_allwise_h), fits.getdata(file_allwise_k)
+
+  #Gets the headers from the images for the best url link
+  hdu_j, hdu_h, hdu_k = fits.open(file_allwise_j)[0], fits.open(file_allwise_h)[0], fits.open(file_allwise_k)[0]
+  wcs = WCS(hdu_j.header)
+
+  #Make a cutout from the coadd image for the RA and DEC put in for the best url link
+  cutout_j = Cutout2D(data_allwise_j, position, size, fill_value = np.nan, wcs = wcs.celestial)
+  cutout_h = Cutout2D(data_allwise_h, position, size, fill_value = np.nan, wcs = wcs.celestial)
+  cutout_k = Cutout2D(data_allwise_k, position, size, fill_value = np.nan, wcs = wcs.celestial)
+  wcs_cropped = cutout_j.wcs
 
   #Find the location of all the object found in AllWISE in the radius choosen by the user 
   location_data = twomass_table(ra, dec, radius)
@@ -111,6 +124,9 @@ def twomass_image(ra, dec, radius):
              + 'J Date: ' + str(date_j) + ' (YYMMDD)  ' + '  H Date: ' + str(date_h) + ' (YYMMDD)\n'
              + 'K Date: ' + str(date_k) + ' (YYMMDD)  \n', fontdict = fontdict_1, y = 1.04)
   plt.grid(linewidth = 0)
+  shape = max(cutout_j.shape)
+  plt.xlim(0, shape)
+  plt.ylim(0, shape)
   figure = plt.gcf()
   figure.set_size_inches(4.75, 6.65)
   figure.canvas.set_window_title('2MASS Search')
@@ -152,8 +168,8 @@ def twomass_image(ra, dec, radius):
         elif default[index] == True: 
           default[index] = False
     for d in range(len(default)):
-      if default == [False, False, False]: 
-        total_data = real_data[0]*0
+      if default != [True, True, True]: 
+        total_data = real_data[1]*0
       if default[d] == True: 
         total_data = total_data + real_data[d]
       else: 
@@ -246,5 +262,5 @@ def twomass_table(ra, dec, radius):
   blockPrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = radius * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = (radius - 1) * u.arcsec)
   return location_data

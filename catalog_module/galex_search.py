@@ -222,5 +222,5 @@ def galex_table(ra, dec, radius):
     blockPrint()
 
     #Gets the table of all of the data in the radius from the user
-    catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius=(radius/7200), catalog = "Galex", table = "mean")
+    catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius = ((radius/7200) - 0.000277778), catalog = "Galex", table = "mean")
     return catalog_data

@@ -286,5 +286,5 @@ def ps_table(ra, dec, radius):
   blockPrint()
 
   # #Finds the table for the Panstarrs data around the ra and dec given by the user
-  catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius = (radius/7200), catalog = "Panstarrs", table = "stack")
+  catalog_data = Catalogs.query_region(str(ra) + ' ' + str(dec), radius = ((radius/7200) - 0.000277778), catalog = "Panstarrs", table = "stack")
   return catalog_data

@@ -60,6 +60,7 @@
 *   Note 1: Only tested on MacOS Ventura 13.*, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
 *   Note 2: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
 *   Note 3: The orientation for all of the catalogs is North pointed up and East pointing left. 
+*   Note 4: 2MASS can have weird imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
 <p> How to Start Program </p>
 
@@ -210,6 +211,7 @@ Mr. Hunter Brooks -> hcb98@nau.edu
 
 1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
 2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. Please also include this text in your acknowledgments: 
+    1) ...discuss with co-authors for what to do here...
 
 * WISE: This publication makes use of data products from the Wide-field Infrared Survey Explorer, which is a joint project of the University of California, Los Angeles, and the Jet Propulsion Laboratory/California Institute of Technology, funded by the National Aeronautics and Space Administration.
 * NEOWISE: This publication also makes use of data products from NEOWISE, which is a project of the Jet Propulsion Laboratory/California Institute of Technology, funded by the Planetary Science Division of the National Aeronautics and Space Administration.

@@ -295,8 +295,8 @@ def nsc_table(ra, dec, radius):
     query = " \
     SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr, raerr, decerr, mjd  \
     FROM nsc_dr2.object \
-    WHERE ra > " + str((ra - (radius/7200))) + " and ra < " + str((ra + (radius/7200))) + " " \
-    "AND dec > " + str((dec - (radius/7200))) + " and dec < " + str((dec + (radius/7200))) + " " \
+    WHERE ra > " + str((ra - ((radius/7200) - 0.000277778))) + " and ra < " + str((ra + ((radius/7200) - 0.000277778))) + " " \
+    "AND dec > " + str((dec - ((radius/7200) - 0.000277778))) + " and dec < " + str((dec + ((radius/7200) - 0.000277778))) + " " \
     ""
 
     #Run this SQL quiery into the online NSC database
