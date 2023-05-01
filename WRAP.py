@@ -293,7 +293,7 @@ layout_multi = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (13
 
                  [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
                  [sg.Text('RADIUS', font = ('Times New Roman', 22), size=(17, 1), justification='center'),              sg.Text('FILETYPE', font = ('Times New Roman', 22), size=(9, 1), justification='center'),               sg.Text('Output File Name', size=(25, 1), justification='center', font = ('Times New Roman', 22))],
-                 [sg.InputText(size=(22, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
+                 [sg.InputText(size=(22, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output2', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
 
                  [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],
                  [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 22), size = (9, 2))],
@@ -361,7 +361,7 @@ while True:
   if group == 'Multi-Object Search':
 
     #Checks if the 'Run WRAP' button is clicked
-    if event in (None, 'Run WRAP1'):
+    if event in (None, 'Run WRAP0'):
 
       #Calls the "multi_tab_check" function
       multi_tab_check()
@@ -378,13 +378,13 @@ while True:
         ra_list, dec_list = multi_tab_table()
 
         #Makes a csv file and writes the header
-        output = values['output']
+        output = values['output2']
         
         #Makes the output file name
-        if values['output'] == '':
+        if values['output2'] == '':
           output = 'WRAP_output'
         else: 
-          output = values['output']
+          output = values['output2']
 
         #Makes the CSV file and writes the header
         myFile = open('Output/' + str(output) + '.csv', 'w')
@@ -395,14 +395,14 @@ while True:
         multi_object_search()
 
     #Provides the user with the authors information if the 'Help' button is pressed
-    if event in (None, 'Help2'):
+    if event in (None, 'Help1'):
       sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
       sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
       sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
       sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
 
     #Closes WRAP if the 'Close WRAP' button is pressed
-    if event in (None, 'Close WRAP3'):
+    if event in (None, 'Close WRAP2'):
       break
 
 #Closes the window

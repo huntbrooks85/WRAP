@@ -255,7 +255,7 @@ def gaia_table(ra, dec, radius):
   WHERE \
   CONTAINS( \
   POINT('ICRS',gaiadr3.gaia_source.ra,gaiadr3.gaia_source.dec), \
-  CIRCLE('ICRS', " + str(ra) + "," + str(dec) + "," + str((radius/2) * 0.000277778)+ ")" \
+  CIRCLE('ICRS', " + str(ra) + "," + str(dec) + "," + str(((radius/2) * 0.000277778) - 0.000277778)+ ")" \
   ")=1"
 
   #Run this SQL quiery into the online GAIA database

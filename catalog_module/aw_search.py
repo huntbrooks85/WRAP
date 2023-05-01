@@ -255,5 +255,5 @@ def allwise_table(ra, dec, radius):
   blockPrint()
  
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='allwise_p3as_psd', spatial='Box', width=radius * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'allwise_p3as_psd', spatial = 'Box', width = (radius - 1) * u.arcsec)
   return location_data

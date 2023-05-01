@@ -83,7 +83,9 @@ def vsa_image(ra, dec, radius):
     cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
 
     #Sets the WCS coordinates for the plots
-    total_data = cutout_j.data + cutout_ks.data
+    ks_shape = cutout_ks.shape
+    j_reshape, h_reshape = cv2.resize(cutout_j.data, (ks_shape[1], ks_shape[0]), interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_h.data, (ks_shape[1], ks_shape[0]), interpolation = cv2.INTER_NEAREST)
+    total_data = j_reshape + cutout_ks.data
     ax = plt.subplot(projection = wcs_cropped)
 
     #Plots the objects found in the radius
@@ -105,15 +107,17 @@ def vsa_image(ra, dec, radius):
                + 'J Date: ' + str(date_j) + ' (Y-M-D)  ' + '  H Date: ' + str(date_h) + ' (Y-M-D)\n'
                + 'K Date: ' + str(date_k) + ' (Y-M-D) \n', fontdict = fontdict_1, y = 1.05)
     plt.grid(linewidth = 0)
-    plt.ylim(len(total_data[0]), 0)
+    shape = min(cutout_ks.shape)
+    plt.xlim(0, shape)
+    plt.ylim(shape, 0)
     figure = plt.gcf()
     figure.set_size_inches(4.75, 6.95)
     figure.canvas.set_window_title('VSA Search')
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
-    labels = ['J', 'H', 'K']
-    real_data = [cutout_j.data, cutout_h.data, cutout_ks.data]
+    labels = ['J', 'H', 'Ks']
+    real_data = [j_reshape, h_reshape, cutout_ks.data]
     default = [True, False, True]
     check = CheckButtons(rax, labels, default)
 
@@ -259,7 +263,7 @@ def vsa_table(ra, dec, radius):
   for i in range(len(catalog_list)): 
     table = Vsa.query_region(
         SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
-                radius = (radius/2) * u.arcsec,
+                radius = ((radius/2) - 1) * u.arcsec,
                 programme_id = catalog_list[i],
                 database = database_list[i])
     if len(table) > 0:

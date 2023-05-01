@@ -4,14 +4,14 @@
   
 <h2>🔭 Catalogs </h2>
 
-*   CatWISE2020 & AllWISE -> Wide-Field Infrared Survey Explorer https://irsa.ipac.caltech.edu/Missions/wise.html
-*   Gaia -> GAIA ESA https://gea.esac.esa.int/archive/
-*   VISTA -> Visible and Infrared Survey Telescope for Astronomy http://horus.roe.ac.uk/vsa/index.html
-*   WFCAM -> Wide Field Camera http://wsa.roe.ac.uk/index.html
-*   2MASS -> Two Micron All Sky Survey https://irsa.ipac.caltech.edu/Missions/2mass.html
-*   PanSTARRS -> Panoramic Survey Telescope and Rapid Response System https://outerspace.stsci.edu/display/PANSTARRS/
-*   NSC -> NOIRLab Source Catalog https://datalab.noirlab.edu/nscdr2/index.php
-*   GALEX -> Galaxy Evolution Explorer http://www.galex.caltech.edu
+*   CatWISE2020 & AllWISE -> Wide-Field Infrared Survey Explorer: https://irsa.ipac.caltech.edu/Missions/wise.html
+*   Gaia -> GAIA ESA: https://gea.esac.esa.int/archive/
+*   VISTA -> Visible and Infrared Survey Telescope for Astronomy: http://horus.roe.ac.uk/vsa/index.html
+*   WFCAM -> Wide Field CameraP http://wsa.roe.ac.uk/index.html
+*   2MASS -> Two Micron All Sky Survey: https://irsa.ipac.caltech.edu/Missions/2mass.html
+*   PanSTARRS -> Panoramic Survey Telescope and Rapid Response System: https://outerspace.stsci.edu/display/PANSTARRS/
+*   NSC -> NOIRLab Source Catalog: https://datalab.noirlab.edu/nscdr2/index.php
+*   GALEX -> Galaxy Evolution Explorer: http://www.galex.caltech.edu
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -20,6 +20,7 @@
 ```
 -> Python 3.8.8 is needed for WRAP 
 -> Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
+-> Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 ```
 
 <p>2. Packages </p>
@@ -39,6 +40,9 @@
 -> beautifulsoup4 == 4.11.1
 ```
 
+* PIP Installation Guide: https://pip.pypa.io/en/stable/installation/
+* How to Use PIP: https://packaging.python.org/en/latest/tutorials/installing-packages/
+
 <p>3. Fixing Astroquery Module </p>
 
 1) Open the "replacement_module" directory
@@ -53,8 +57,9 @@
 
 <h2> 🏆 Opening Application: </h2>
 
-*   Only tested on MacOS Ventura 13.2.1, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
-*   Note that the window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the buttom. 
+*   Note 1: Only tested on MacOS Ventura 13.*, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
+*   Note 2: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
+*   Note 3: The orientation for all of the catalogs is North pointed up and East pointing left. 
 
 <p> How to Start Program </p>
 
@@ -199,4 +204,21 @@
 
 <h2> 📞 Support </h2>
 
-Hunter Brooks -> hcb98@nau.edu
+Mr. Hunter Brooks -> hcb98@nau.edu
+
+<h2> 📖 Acknowledgments </h2>
+
+1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
+2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. Please also include this text in your acknowledgments: 
+
+* WISE: This publication makes use of data products from the Wide-field Infrared Survey Explorer, which is a joint project of the University of California, Los Angeles, and the Jet Propulsion Laboratory/California Institute of Technology, funded by the National Aeronautics and Space Administration.
+* NEOWISE: This publication also makes use of data products from NEOWISE, which is a project of the Jet Propulsion Laboratory/California Institute of Technology, funded by the Planetary Science Division of the National Aeronautics and Space Administration.
+* Gaia: This work has made use of data from the European Space Agency (ESA) mission Gaia (https://www.cosmos.esa.int/gaia), processed by the Gaia Data Processing and Analysis Consortium (DPAC, https://www.cosmos.esa.int/web/gaia/dpac/consortium). Funding for the DPAC has been provided by national institutions, in particular the institutions participating in the Gaia Multilateral Agreement.
+* VHS: Based on observations obtained as part of the VISTA Hemisphere Survey, ESO Progam, 179.A-2010 (PI: McMahon)
+* VSA: The VISTA Data Flow System pipeline processing and science archive are described in Irwin et al (2004), Hambly et al (2008) and Cross et al. (2012). 
+* UHS: The UHS is a partnership between the UK STFC, The University of Hawaii, The University of Arizona, Lockheed Martin and NASA
+* WFCAM: The UKIDSS project is defined in Lawrence et al 2007. UKIDSS uses the UKIRT Wide Field Camera (WFCAM; Casali et al 2007) and a photometric system described in Hewett et al 2006. The pipeline processing and science archive are described in Irwin et al (2008) and Hambly et al (2008). 
+* 2MASS: This publication makes use of data products from the Two Micron All Sky Survey, which is a joint project of the University of Massachusetts and the Infrared Processing and Analysis Center/California Institute of Technology, funded by the National Aeronautics and Space Administration and the National Science Foundation.
+* PanSTARRS: The Pan-STARRS1 Surveys (PS1) and the PS1 public science archive have been made possible through contributions by the Institute for Astronomy, the University of Hawaii, the Pan-STARRS Project Office, the Max-Planck Society and its participating institutes, the Max Planck Institute for Astronomy, Heidelberg and the Max Planck Institute for Extraterrestrial Physics, Garching, The Johns Hopkins University, Durham University, the University of Edinburgh, the Queen's University Belfast, the Harvard-Smithsonian Center for Astrophysics, the Las Cumbres Observatory Global Telescope Network Incorporated, the National Central University of Taiwan, the Space Telescope Science Institute, the National Aeronautics and Space Administration under Grant No. NNX08AR22G issued through the Planetary Science Division of the NASA Science Mission Directorate, the National Science Foundation Grant No. AST–1238877, the University of Maryland, Eotvos Lorand University (ELTE), the Los Alamos National Laboratory, and the Gordon and Betty Moore Foundation.
+* NSC: This research uses services or data provided by the Astro Data Lab at NSF’s NOIRLab. NOIRLab is operated by the Association of Universities for Research in Astronomy (AURA), Inc. under a cooperative agreement with the National Science Foundation.
+* GALEX: We acknowledge the contribution of the JHU Sloan Digital Sky Survey group to the development of this site. Many of its features were inspired by the look and feel of the SkyServer. A special thanks goes to Tamas Budavari for his help with the SDSS-GALEX matching and to Wil O'Mullane for his help with the CASJobs site setup and configuration. We also acknowledge Randy Thompson (MAST) for providing IDL IUEDAC routines and Mark Siebert for providing IDL routines to generate tile JPEG images. 
