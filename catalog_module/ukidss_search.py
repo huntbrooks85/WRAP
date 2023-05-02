@@ -39,6 +39,7 @@ def ukidss_image(ra, dec, radius):
         
         #Defines each variables depending on if the image was found in UKIDSS DR11 or UHS DR1
         if data == 'UHSDR1': 
+
             #Downloading the fits images
             file_ukidss_J = download_file(url_J[0], cache = True) 
             data_ukidss_J = fits.getdata(file_ukidss_J)
@@ -46,13 +47,6 @@ def ukidss_image(ra, dec, radius):
             #Obtains the headers from the images
             hdu_j = fits.open(file_ukidss_J)[1]
             wcs_j = WCS(hdu_j.header)
-
-            #Make a cutout from the coadd image for the RA and DEC put in
-            position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
-            size = u.Quantity([radius, radius], u.arcsec)
-            cutout_j = Cutout2D(data_ukidss_J, position, size, wcs = wcs_j.celestial)
-            total_data = cutout_j.data
-            wcs_cropped = cutout_j.wcs
 
             #Obtains the dates for each image
             date_j = hdu_j.header[73].split(' ', 2)[0]
@@ -114,25 +108,36 @@ def ukidss_image(ra, dec, radius):
 
         #Sets the plot depending on if it was found in UHS or UKIDSS
         if data == 'UHSDR1':
+
+            #Rotates the cutout image to the correct orientation
+            wcs = WCS(hdu_j.header)
+            position = wcs.world_to_pixel_values(ra, dec)
+            size = u.Quantity([(radius * 2.5), (radius * 2.5)], u.pixel)
+            cutout_UHS = Cutout2D(data_ukidss_J, position, size)
+
+            ra_dec_pixel = wcs.world_to_pixel_values(object_ra, object_dec)
+            shape = min(cutout_UHS.shape)
+            minus_ra = [(-x + shape) for x in ra_dec_pixel[0]]
+
             # Sets the WCS coordinates for the plots
-            ax = plt.subplot(projection = wcs_cropped)
+            ax = plt.subplot()
 
             # Apply the rotation to the object positions and plot them
             circle_size = (radius*3)
-            scatter = plt.scatter(object_ra, object_dec, transform = ax.get_transform('fk5'), s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+            scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
 
             # Normalize the image and plots it
             init_top, init_bot = 95, 45
-            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
-            img_rotate = np.rot90(cutout_j.data)
-            ax.imshow(img_rotate, cmap = 'Greys', norm = norm1_w1)
+            norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(cutout_UHS.data, init_bot), vmax = np.nanpercentile(cutout_UHS.data, init_top))
+            total_data = np.rot90(cutout_UHS.data)
+            ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin='lower')
 
             # Formats the window correctly
             fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
             figure = plt.gcf()
             ax.set_title('Dates: \n' 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict=fontdict_1, y=1.05)
             figure.set_size_inches(4.75, 6.85)
-            shape = min(cutout_j.shape)
+            
             plt.xlim(shape, 0)
             plt.ylim(0, shape)
             
@@ -159,15 +164,17 @@ def ukidss_image(ra, dec, radius):
             plt.xlim(len(total_data[0]), 0)
 
         #Finishes formatting the problem correctly
-        plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False, labelbottom = False)
-        plt.tick_params(axis = 'y', which = 'both', bottom = False, top = False, labelbottom = False)
+        ax.xaxis.set_tick_params(labelbottom=False)
+        ax.yaxis.set_tick_params(labelleft=False)
+        ax.set_xticks([])
+        ax.set_yticks([])
         plt.suptitle('WFCAM Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
         plt.grid(linewidth = 0)
         figure.canvas.set_window_title('WFCAM Search')
 
         #Make checkbuttons with all of the different image bands
         default = [True]
-        real_data = [cutout_j.data]
+        real_data = [total_data]
         if data != 'UHSDR1':
             rax = plt.axes([0.045, 0.4, 0.115, 0.1])
             labels = ['Y', 'J', 'H', 'K']
@@ -228,7 +235,7 @@ def ukidss_image(ra, dec, radius):
                     pass
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
             if data == 'UHSDR1':
-                ax.imshow(img_rotate, cmap = 'Greys', norm = norm1_w1)
+                ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1)
             else:
                 ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
@@ -259,7 +266,10 @@ def ukidss_image(ra, dec, radius):
 
                 #Finds which axes was clicked
                 click_axes = str(location[n])
-                click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+                if data != 'UHSDR1':
+                    click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+                else: 
+                    click_axes = click_axes.split('AxesSubplot', 2)[0]
 
                 #Checks if the image was clicked
                 if click_axes == '':
@@ -267,11 +277,18 @@ def ukidss_image(ra, dec, radius):
                     plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-                    coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
-                    distance = []
-                    for i in range(len(object_ra)):
-                        distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
-                    list_location = distance.index(np.min(distance))
+                    if data != 'UHSDR1':
+                        coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
+                        distance = []
+                        for i in range(len(object_ra)):
+                            distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                        list_location = distance.index(np.min(distance))
+                    else: 
+                        coord = [location[n - 4], location[n - 5]]
+                        distance = []
+                        for i in range(len(minus_ra)):
+                            distance.append(math.dist(coord, [ra_dec_pixel[1][i], minus_ra[i]]))
+                        list_location = distance.index(np.min(distance))
 
                     if data != 'UHSDR1':
                         epoch = object_epoch[list_location]
@@ -302,7 +319,10 @@ def ukidss_image(ra, dec, radius):
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
                     scatter.remove()
-                    scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
+                    if data != 'UHSDR1':
+                        scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
+                    else:
+                        scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
 
             #Checks if the window was closed
             elif press is None:
