@@ -19,7 +19,7 @@ def ukidss_image(ra, dec, radius):
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
-    # blockPrint()
+    blockPrint()
     
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
@@ -109,27 +109,62 @@ def ukidss_image(ra, dec, radius):
         #Sets the plot depending on if it was found in UHS or UKIDSS
         if data == 'UHSDR1':
 
-            #Rotates the cutout image to the correct orientation
+            #Makes the subplot for the plot
+            ax = plt.subplot()
+
+            #Gets the cutout for the fits iamge
             wcs = WCS(hdu_j.header)
             position = wcs.world_to_pixel_values(ra, dec)
             size = u.Quantity([(radius * 2.5), (radius * 2.5)], u.pixel)
             cutout_UHS = Cutout2D(data_ukidss_J, position, size)
 
-            ra_dec_pixel = wcs.world_to_pixel_values(object_ra, object_dec)
+            #Finds the camera orientation
+            cam_type = hdu_j.header['CAMNUM']
+
+            #Obtains the shape of the cutout and sets the circle size for the scatter plot
             shape = min(cutout_UHS.shape)
-            minus_ra = [(-x + shape) for x in ra_dec_pixel[0]]
-
-            # Sets the WCS coordinates for the plots
-            ax = plt.subplot()
-
-            # Apply the rotation to the object positions and plot them
             circle_size = (radius*3)
-            scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+
+            #Converts the ra
+            ra_dec_pixel = wcs.world_to_pixel_values(object_ra, object_dec)
+
+            if cam_type == 1: 
+                #Makes the dec negative
+                minus_dec = [(-x + shape) for x in ra_dec_pixel[1]]
+                
+                #Plots the correctly orientated image
+                scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+                total_data = np.rot90(cutout_UHS.data, 3)
+                plt.xlim(shape, 0)
+                plt.ylim(0, shape)
+
+            elif cam_type == 2:
+                #Plots the correctly orientated image
+                scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+                total_data = cutout_UHS.data
+                plt.xlim(0, shape)
+                plt.ylim(shape, 0)
+
+            elif cam_type == 3:
+                #Makes the ra negative
+                minus_ra = [(-x + shape) for x in ra_dec_pixel[0]]
+
+                #Plots the correctly orientated image
+                scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+                total_data = np.rot90(cutout_UHS.data)
+                plt.xlim(shape, 0)
+                plt.ylim(0, shape)
+                
+            elif cam_type == 4: 
+                #Plots the correctly orientated image
+                scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
+                total_data = cutout_UHS.data
+                plt.xlim(shape, 0)
+                plt.ylim(0, shape)
 
             # Normalize the image and plots it
             init_top, init_bot = 95, 45
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(cutout_UHS.data, init_bot), vmax = np.nanpercentile(cutout_UHS.data, init_top))
-            total_data = np.rot90(cutout_UHS.data)
             ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin='lower')
 
             # Formats the window correctly
@@ -137,9 +172,6 @@ def ukidss_image(ra, dec, radius):
             figure = plt.gcf()
             ax.set_title('Dates: \n' 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict=fontdict_1, y=1.05)
             figure.set_size_inches(4.75, 6.85)
-            
-            plt.xlim(shape, 0)
-            plt.ylim(0, shape)
             
         else:
             #Sets the WCS coordinates for the plots
@@ -284,11 +316,24 @@ def ukidss_image(ra, dec, radius):
                             distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
                         list_location = distance.index(np.min(distance))
                     else: 
-                        coord = [location[n - 4], location[n - 5]]
-                        distance = []
-                        for i in range(len(minus_ra)):
-                            distance.append(math.dist(coord, [ra_dec_pixel[1][i], minus_ra[i]]))
-                        list_location = distance.index(np.min(distance))
+                        if (cam_type == 2) or (cam_type == 4):
+                            coord = wcs.pixel_to_world_values(location[n-4],location[n-5])
+                            distance = []
+                            for i in range(len(object_ra)):
+                                distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                            list_location = distance.index(np.min(distance))
+                        elif cam_type == 3:
+                            coord = [location[n - 4], location[n - 5]]
+                            distance = []
+                            for i in range(len(minus_ra)):
+                                distance.append(math.dist(coord, [ra_dec_pixel[1][i], minus_ra[i]]))
+                            list_location = distance.index(np.min(distance))
+                        elif cam_type == 1: 
+                            coord = [location[n - 4], location[n - 5]]
+                            distance = []
+                            for i in range(len(minus_dec)):
+                                distance.append(math.dist(coord, [minus_dec[i], ra_dec_pixel[0][i]]))
+                            list_location = distance.index(np.min(distance))
 
                     if data != 'UHSDR1':
                         epoch = object_epoch[list_location]
@@ -322,7 +367,13 @@ def ukidss_image(ra, dec, radius):
                     if data != 'UHSDR1':
                         scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
                     else:
-                        scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
+                        if (cam_type == 2) or (cam_type == 4):
+                            scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
+                        elif cam_type == 3:
+                            scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
+                        elif cam_type == 1:
+                            scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
+
 
             #Checks if the window was closed
             elif press is None:
@@ -344,11 +395,10 @@ def ukidss_image(ra, dec, radius):
 def ukidss_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''
 
-    # blockPrint()
+    blockPrint()
 
     #Find the table of all the objects found in UKIDSS in the radius choosen by the user
     program_list = Ukidss.list_catalogs()
-    # database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
     for prom in program_list:
         if prom != 'UHS':
             table = Ukidss.query_region(
