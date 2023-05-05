@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
-# WRAP v0.2~
-# By Hunter Brooks, at NAU, Flagstaff, 2023/~
+# WRAP v0.4
+# By Hunter Brooks, at NAU, Flagstaff: May 5, 2023
 #
 # Purpose: Gathers photometry and astrometry from various 
 #          ultra-violet, optical, and near-infrared catalogs 
