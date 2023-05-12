@@ -37,6 +37,7 @@
 -> matplotlib == 3.5.0 
 -> PySimpleGUI == 4.60.4 
 -> OpenCV-python == 1.22.0 
+-> astro-datalab == 2.20.1 
 -> beautifulsoup4 == 4.11.1
 ```
 * For none Windows users
