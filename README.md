@@ -35,7 +35,7 @@
 -> astroquery == 0.4.6 
 -> matplotlib == 3.5.0 
 -> PySimpleGUI == 4.60.4 
--> OpenCV-python == 1.22.0 
+-> OpenCV-python == 4.7.0.72
 -> astro-datalab == 2.20.1 
 -> beautifulsoup4 == 4.11.1
 ```
