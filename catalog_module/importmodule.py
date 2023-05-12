@@ -12,6 +12,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 from astropy import wcs
+from sys import platform
 from pyvo.dal import sia
 import PySimpleGUI as sg
 from astropy.wcs import WCS
@@ -26,7 +27,6 @@ from astroquery.gaia import Gaia
 from matplotlib import transforms
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
-from dl.helpers.utils import convert
 from astroquery.ukidss import Ukidss
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord
@@ -34,11 +34,15 @@ from matplotlib.transforms import Affine2D
 from matplotlib.transforms import Affine2D
 from astropy.utils.data import download_file
 from astropy.visualization.wcsaxes import WCSAxes
-from dl import authClient as ac, queryClient as qc
 from astropy.visualization import astropy_mpl_style
 from astroquery.mast import Observations, MastMissions, Catalogs
 from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
 from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormalize)
+
+#Does not load these packages if the user is on a Windows machine
+if platform != 'win32':
+    from dl.helpers.utils import convert
+    from dl import authClient as ac, queryClient as qc
 
 #Checks if the users system is greater than Python 3.8
 # ------------------------------------------------------------- #
