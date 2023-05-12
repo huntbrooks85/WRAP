@@ -194,6 +194,8 @@ def ukidss_image(ra, dec, radius):
                     + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1.05)
             figure.set_size_inches(4.75, 6.95)
             plt.xlim(len(total_data[0]), 0)
+            plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+            plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
 
         #Finishes formatting the problem correctly
         ax.xaxis.set_tick_params(labelbottom=False)
