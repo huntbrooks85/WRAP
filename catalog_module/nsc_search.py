@@ -257,7 +257,7 @@ def nsc_image(ra, dec, radius):
                     y, y_e = y_list[list_location], y_list_e[list_location]
                     pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
                     pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
-                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, text_list[text_max]
+                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', text_list[text_max]
                 
                 #Checks if the Object not Found button was clicked
                 elif click_axes == 'Axes(0.04,0.767;0.92x0.04)':
@@ -265,7 +265,7 @@ def nsc_image(ra, dec, radius):
                     ra_nsc, dec_nsc = ra, dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'Object Not Found was Pressed'
+                    return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'Object Not Found was Pressed'
                 
                 #Changes the circle size if the slider is changed
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -278,13 +278,13 @@ def nsc_image(ra, dec, radius):
                 ra_nsc, dec_nsc = ra, dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, text_list[text_max]
+                return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', text_list[text_max]
             
     #Returns null values if image is not found
     else: 
         ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_nsc, dec_nsc = ra, dec
-        return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'Image Not Found'
+        return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'Image Not Found'
 
 def nsc_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''

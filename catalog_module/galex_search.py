@@ -190,7 +190,7 @@ def galex_image(ra, dec, radius_use):
                     ra_galex, dec_galex = object_ra[list_location], object_dec[list_location]
                     fuv, fuv_e = fuv_list[list_location], fuv_list_e[list_location]
                     nuv, nuv_e = nuv_list[list_location], nuv_list_e[list_location]
-                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
+                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Data Release 7', text_list[text_max]
                 
                 #Checks if the "Object Not Found" button was clicked
                 elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
@@ -198,7 +198,7 @@ def galex_image(ra, dec, radius_use):
                     ra_galex, dec_galex = ra, dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Object Not Found was Pressed'
+                    return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Release Data 7', 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -211,13 +211,13 @@ def galex_image(ra, dec, radius_use):
                 ra_galex, dec_galex = ra, dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, text_list[text_max]
+                return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Data Release 7', text_list[text_max]
                 
     #Returns null values if the images are not found    
     else: 
         fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
         ra_galex, dec_galex = ra, dec
-        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'Image Not Found'
+        return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Data Release 7', 'Image Not Found'
 
 def galex_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''

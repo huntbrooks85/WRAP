@@ -236,7 +236,7 @@ def twomass_image(ra, dec, radius):
         j, j_e = j_list[list_location], j_list_e[list_location]
         h, h_e = h_list[list_location], h_list_e[list_location]
         ks, ks_e = ks_list[list_location], ks_list_e[list_location]
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', text_list[text_max]
       
       #Checks if the Object not Found button was clicked
       elif click_axes == 'Axes(0.04,0.78;0.92x0.04)':
@@ -244,7 +244,7 @@ def twomass_image(ra, dec, radius):
         ra_2mass, dec_2mass = ra, dec
         plt.close('all')
         plt.figure().clear()
-        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, 'Object Not Found was Pressed'
+        return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', 'Object Not Found was Pressed'
       
       #Adds the functionality of the circle slider bar
       elif click_axes == 'Axes(0.25,0.068;0.65x0.03)':
@@ -257,7 +257,7 @@ def twomass_image(ra, dec, radius):
       ra_2mass, dec_2mass = ra, dec
       plt.close('all')
       plt.figure().clear()
-      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, text_list[text_max]
+      return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', text_list[text_max]
 
 def twomass_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

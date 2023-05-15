@@ -227,7 +227,7 @@ def allwise_image(ra, dec, radius):
         w3_sigma, w4_sigma = w3_list_sigma[list_location], w4_list_sigma[list_location]
         pmra, pmdec = pmra_list[list_location], pmdec_list[list_location]
         pmra_sigma, pmdec_sigma = pmra_sigma_list[list_location], pmdec_sigma_list[list_location]
-        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
+        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'AllWISE Source Catalog', text_list[text_max]
       
       #Checks if the "Object Not Found" button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
@@ -236,7 +236,7 @@ def allwise_image(ra, dec, radius):
         dec_allwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'Object Not Found was Pressed'
+        return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'AllWISE Source Catalog', 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -250,7 +250,7 @@ def allwise_image(ra, dec, radius):
       dec_allwise = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, text_list[text_max]
+      return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'AllWISE Source Catalog', text_list[text_max]
   
 def allwise_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

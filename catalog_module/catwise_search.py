@@ -213,7 +213,7 @@ def catwise_image(ra, dec, radius):
         w1_sigma, w2_sigma = w1_list_sigma[list_location], w2_list_sigma[list_location]
         pmra, pmdec = pmra_list[list_location], pmdec_list[list_location]
         pmra_sigma, pmdec_sigma = pmra_sigma_list[list_location], pmdec_sigma_list[list_location]
-        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, text_list[text_max] 
+        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'CatWISE 2020 Catalog', text_list[text_max] 
       
       #Checks if the "Object Not Found" button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
@@ -222,7 +222,7 @@ def catwise_image(ra, dec, radius):
         dec_catwise = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'Object Not Found was Pressed'
+        return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'CatWISE 2020 Catalog', 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -236,7 +236,7 @@ def catwise_image(ra, dec, radius):
       dec_catwise = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, text_list[text_max]
+      return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'CatWISE 2020 Catalog', text_list[text_max]
   
 def catwise_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''

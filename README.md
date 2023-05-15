@@ -111,6 +111,7 @@
 * cw_pmra & cw_pmra_e: The proper motion in RA from CatWISE2020 and its uncertainties 
 * cw_pmdec & cw_pmdec_e: The proper motion in DEC from CatWISE2020 and its uncertainties 
 * cw_mjd: The modified julian date from CatWISE 2020
+* cw_catalog: Provides the full name for which catalog the data is from
 * cw_notes: The notes written in the CatWISE2020 by the user
 
  <p> AllWISE: </p>
@@ -123,6 +124,7 @@
 * aw_w4 & aw_w4_e: The W4 band from AllWISE and its uncertainties
 * aw_pmra & aw_pmra_e: The proper motion in RA from AllWISE and its uncertainties
 * aw_pmdec & aw_pmdec_e: The proper motion in DEC from AllWISE and its uncertainties
+* aw_catalog: Provides the full name for which catalog the data is from
 * aw_notes: The notes written in the AllWISE by the user
 
  <p> Gaia: </p>
@@ -137,6 +139,7 @@
 * gaia_bp & gaia_bp_e: The bp band from Gaia and its uncertainties
 * gaia_rp & gaia_rp_e: The rp band from Gaia and its uncertainties
 * gaia_year: The calendar year from the Gaia archive
+* gaia_catalog: Provides the full name for which catalog the data is from
 * gaia_notes: The notes written in the Gaia by the user
 
  <p> VISTA: </p>
@@ -151,6 +154,7 @@
 * vsa_mjd_j: The modified julian date for VISTA's J band
 * vsa_mjd_h: The modified julian date for VISTA's H band
 * vsa_mjd_ks: The modified julian date for VISTA's Ks band
+* vsa_catalog: Provides the full name for which catalog the data is from
 * vsa_notes: The notes written in the VISTA by the user
 
  <p> WFCAM: </p>
@@ -164,6 +168,7 @@
 * wfcam_pmra & wfcam_pmra_e: The proper motion in RA from WFCAM and its uncertainties
 * wfcam_pmdec & wfcam_pmdec_e: The proper motion in DEC from WFCAM and its uncertainties
 * wfcam_epoch: The calendar year from the WFCAM archive
+* wfcam_catalog: Provides the full name for which catalog the data is from
 * wfcam_notes: The notes written in the WFCAM by the user
 
  <p> 2MASS: </p>
@@ -173,6 +178,7 @@
 * 2mass_j & 2mass_j_e: The J band from 2MASS and its uncertainties
 * 2mass_h & 2mass_h_e: The J band from 2MASS and its uncertainties
 * 2mass_ks & 2mass_ks_e: The Ks band from 2MASS and its uncertainties
+* 2mass_catalog: Provides the full name for which catalog the data is from
 * 2mass_notes: The notes written in the 2MASS by the user
 
  <p> PanSTARRS: </p>
@@ -185,6 +191,7 @@
 * ps_z & ps_z_e: The z band from PanSTARRS and its uncertainties
 * ps_y & ps_y_e: The y band from PanSTARRS and its uncertainties
 * ps_mjd: The modified julian date from the PanSTARRS archive
+* ps_catalog: Provides the full name for which catalog the data is from
 * ps_notes: The notes written in the PanSTARRS by the user
 
  <p> NSC: </p>
@@ -200,6 +207,7 @@
 * nsc_pmra & nsc_pmra_e: The proper motion in RA from NSC and its uncertainties
 * nsc_pmdec & nsc_pmdec_e: The proper motion in DEC from NSC and its uncertainties
 * nsc_mjd: The modified julian date from the NSC catalog
+* nsc_catalog: Provides the full name for which catalog the data is from
 * nsc_notes: The notes written in the NSC by the user
 
  <p> GALEX: </p>
@@ -208,6 +216,7 @@
 * galex_dec: The Declination (DEC) from GALEX
 * galex_fuv & galex_fuv_e: The FUV band from GALEX and its uncertainties
 * galex_nuv & galex_nuv_e: The NUV band from GALEX and its uncertainties
+* galex_catalog: Provides the full name for which catalog the data is from
 * galex_notes: The notes written in the GALEX by the user
 
 <h2> 📞 Support </h2>

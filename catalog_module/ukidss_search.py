@@ -352,12 +352,12 @@ def ukidss_image(ra, dec, radius):
                         K_mag, K_e = K_list[list_location], K_list_e[list_location]
                         pmra, pmra_e = pmra_list[list_location], pmra_list_e[list_location]
                         pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_e[list_location]
-                        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list[text_max] 
+                        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, text_list[text_max] 
                     else: 
                         ra_wfcam, dec_wfcam = object_ra[list_location], object_dec[list_location]
                         J_mag, J_e = J_list[list_location], J_list_e[list_location]
                         ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-                        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list[text_max] 
+                        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, text_list[text_max] 
                 
                 #Checks if the "Object Not Found" button was clicked
                 elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
@@ -366,7 +366,7 @@ def ukidss_image(ra, dec, radius):
                     dec_wfcam = dec
                     plt.close('all')
                     plt.figure().clear()
-                    return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, 'Object Not Found was Pressed'
+                    return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
                 elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -389,7 +389,7 @@ def ukidss_image(ra, dec, radius):
                 dec_wfcam = dec
                 plt.close('all')
                 plt.figure().clear()
-                return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list[text_max] 
+                return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, text_list[text_max] 
 
     #If the image is not found return null values
     else: 
@@ -397,7 +397,7 @@ def ukidss_image(ra, dec, radius):
         ra_wfcam = ra
         dec_wfcam = dec
         text_list = 'Image Not Found'
-        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, text_list
+        return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, 'WFCAM', text_list
     
 def ukidss_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''

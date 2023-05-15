@@ -221,7 +221,7 @@ def gaia_image(ra, dec, radius):
         g, g_e = g_list[list_location], (2.5/np.log(10))*(g_list_e[list_location]/g_list[list_location])
         bp, bp_e = bp_list[list_location], (2.5/np.log(10))*(bp_list_e[list_location]/bp_list[list_location])
         rp, rp_e = rp_list[list_location], (2.5/np.log(10))*(rp_list_e[list_location]/rp_list[list_location])
-        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, text_list[text_max]
+        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', text_list[text_max]
       
       #Checks if the Object not Found button was clicked
       elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
@@ -230,7 +230,7 @@ def gaia_image(ra, dec, radius):
         dec_gaia = dec
         plt.close('all')
         plt.figure().clear()
-        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'Object Not Found was Pressed'
+        return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', 'Object Not Found was Pressed'
       
       #Updates the circle size when slider is moved
       elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
@@ -244,7 +244,7 @@ def gaia_image(ra, dec, radius):
       dec_gaia = dec
       plt.close('all')
       plt.figure().clear()
-      return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, text_list[text_max]
+      return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', text_list[text_max]
 
 def gaia_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
