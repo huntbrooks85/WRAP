@@ -1,6 +1,6 @@
 <h1 align="center" id="title">✨ WRAP ✨</h1>
 
-<p id="description">Gathers photometry and astrometry from various ultra-violet, optical, and near-infrared catalogs given a RA, DEC, and Radius by the user. Completed by the user clicking their object overplotted on the catalog images and gathering all of the photometry and astrometry from those various catalogs.</p>
+<p id="description"> Wide-field Retrival of Astrodata Program (WRAP) gathers photometry and astrometry from various ultra-violet, optical, and near-infrared catalogs given a RA, DEC, and Radius by the user. Completed by the user clicking their object overplotted on the catalog images and gathering all of the photometry and astrometry from those various catalogs.</p>
   
 <h2>🔭 Catalogs </h2>
 
