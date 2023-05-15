@@ -138,7 +138,10 @@ def ps_image(ra, dec, radius):
               + 'z Date: ' + str(date_z) + ' (Y-M-D)  ' + '  y Date: ' + str(date_y) + ' (Y-M-D)   \n', fontdict = fontdict_1, y = 1.05)
     plt.grid(linewidth = 0)
     figure = plt.gcf()
-    figure.set_size_inches(4.75, 6.95)
+    if platform != 'win32':
+      figure.set_size_inches(4.75, 6.95)
+    elif platform == 'win32':
+      figure.set_size_inches(4.75, 7.25)
     figure.canvas.set_window_title('PanSTARRS Search')
 
     #Make checkbuttons with all of the different image bands

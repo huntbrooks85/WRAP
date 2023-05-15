@@ -118,7 +118,10 @@ def galex_image(ra, dec, radius_use):
                    + 'FUV Date: ' + str(date_w1) + ' (Y-M-D)  ', fontdict = fontdict, y = 1.105)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
-        figure.set_size_inches(4.75, 6.95)
+        if platform != 'win32':
+            figure.set_size_inches(4.75, 6.95)
+        elif platform == 'win32':
+            figure.set_size_inches(4.75, 7.25)
         figure.canvas.set_window_title('GALEX Search')
 
         #Adds a slider for the scaling of the image

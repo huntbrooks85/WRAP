@@ -99,7 +99,10 @@ def catwise_image(ra, dec, radius):
              + 'W2 Date: ' + str(date_w2) + ' (Y-M-D)  \n', fontdict = fontdict_1, y = 1.05)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
-  figure.set_size_inches(4.75, 6.95)
+  if platform != 'win32':
+    figure.set_size_inches(4.75, 6.95)
+  elif platform == 'win32':
+    figure.set_size_inches(4.75, 7.25)
   figure.canvas.set_window_title('CatWISE Search')
 
   #Make checkbuttons with all of the different image bands

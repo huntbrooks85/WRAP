@@ -111,7 +111,10 @@ def vsa_image(ra, dec, radius):
     plt.xlim(0, shape)
     plt.ylim(shape, 0)
     figure = plt.gcf()
-    figure.set_size_inches(4.75, 6.95)
+    if platform != 'win32': 
+      figure.set_size_inches(4.75, 6.95)
+    elif platform == 'win32': 
+      figure.set_size_inches(4.75, 7.25)
     figure.canvas.set_window_title('VSA Search')
 
     #Make checkbuttons with all of the different image bands

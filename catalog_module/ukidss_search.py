@@ -49,7 +49,7 @@ def ukidss_image(ra, dec, radius):
             wcs_j = WCS(hdu_j.header)
 
             #Obtains the dates for each image
-            date_j = hdu_j.header[73].split(' ', 2)[0]
+            date_j = str(hdu_j.header[73]).split(' ', 2)[0]
 
             #Gets the columns from the table
             object_ra, object_dec = table['ra'].tolist(), table['dec'].tolist()
@@ -79,7 +79,7 @@ def ukidss_image(ra, dec, radius):
             total_data = cutout_j.data + y_reshape
 
             #Obtains the dates for each image
-            date_y, date_j, date_h, date_k = hdu_y.header[73].split(' ', 2)[0], hdu_j.header[73].split(' ', 2)[0], hdu_h.header[73].split(' ', 5)[2], hdu_k.header[73].split(' ', 5)[2]
+            date_y, date_j, date_h, date_k = str(hdu_y.header[73]).split(' ', 2)[0], str(hdu_j.header[73]).split(' ', 2)[0], str(hdu_h.header[73]).split(' ', 5)[2], str(hdu_k.header[73]).split(' ', 5)[2]
 
             #Gets the columns from the table
             object_epoch = table['epoch'].tolist()
@@ -171,8 +171,10 @@ def ukidss_image(ra, dec, radius):
             fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
             figure = plt.gcf()
             ax.set_title('Dates: \n' 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict=fontdict_1, y=1.05)
-            figure.set_size_inches(4.75, 6.85)
-            
+            if platform != 'win32':
+                figure.set_size_inches(4.75, 6.85)
+            elif platform == 'win32': 
+                figure.set_size_inches(4.75, 7.15)
         else:
             #Sets the WCS coordinates for the plots
             ax = plt.subplot(projection = wcs_cropped)
@@ -192,7 +194,10 @@ def ukidss_image(ra, dec, radius):
             ax.set_title('Dates: \n'
                     + 'Y Date: ' + str(date_y) + ' (YYYYMMDD)   ' + 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n'
                     + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1.05)
-            figure.set_size_inches(4.75, 6.95)
+            if platform != 'win32':
+                figure.set_size_inches(4.75, 6.95)
+            elif platform == 'win32':
+                figure.set_size_inches(4.75, 7.25)
             plt.xlim(len(total_data[0]), 0)
             plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
             plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)

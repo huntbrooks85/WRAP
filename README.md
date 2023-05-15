@@ -25,7 +25,6 @@
 
 <p>2. Packages </p>
 
-* For any platform
 ```
 -> pyvo == 1.4 
 -> numpy == 1.22.0
@@ -39,10 +38,6 @@
 -> OpenCV-python == 1.22.0 
 -> astro-datalab == 2.20.1 
 -> beautifulsoup4 == 4.11.1
-```
-* For none Windows users
-```
--> astro-datalab == 2.20.1 
 ```
 
 * PIP Installation Guide: https://pip.pypa.io/en/stable/installation/

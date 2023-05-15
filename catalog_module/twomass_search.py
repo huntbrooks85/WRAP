@@ -128,7 +128,10 @@ def twomass_image(ra, dec, radius):
   plt.xlim(0, shape)
   plt.ylim(0, shape)
   figure = plt.gcf()
-  figure.set_size_inches(4.75, 6.65)
+  if platform != 'win32':
+    figure.set_size_inches(4.75, 6.65)
+  elif platform == 'win32':
+    figure.set_size_inches(4.75, 7.05)
   figure.canvas.set_window_title('2MASS Search')
 
   #Make checkbuttons with all of the different image bands
