@@ -48,7 +48,7 @@ if platform != 'win32':
 # ------------------------------------------------------------- #
 ver = sys.version_info
 if ver.major < 3:
-    sys.exit('Python 3.8, or newer, is required to run WRAP!')
+    sys.exit('Python 3.X is required to run WRAP!')
 
 #Ignores all of the warnings from the packages above
 # ------------------------------------------------------------- #

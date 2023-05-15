@@ -18,7 +18,7 @@
 <p>1. Python </p>
 
 ```
--> Python 3.8.8 is needed for WRAP 
+-> Python 3.8 or newer is needed for WRAP 
 -> Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 -> Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 ```
@@ -26,18 +26,21 @@
 <p>2. Packages </p>
 
 ```
--> pyvo == 1.4 
--> numpy == 1.22.0
--> pandas == 1.5.3 
--> astropy == 5.2.1
--> truncate == 0.11 
--> requests == 2.28.1 
--> astroquery == 0.4.6 
--> matplotlib == 3.5.0 
--> PySimpleGUI == 4.60.4 
--> OpenCV-python == 1.22.0 
--> astro-datalab == 2.20.1 
--> beautifulsoup4 == 4.11.1
+-> pyvo==1.4 
+-> numpy==1.22.0
+-> pandas==1.5.3 
+-> astropy==5.2.2
+-> truncate==0.11 
+-> requests==2.28.1 
+-> astroquery==0.4.6 
+-> matplotlib==3.5.0 
+-> PySimpleGUI==4.60.4 
+-> OpenCV-python==4.7.0.72
+-> beautifulsoup4==4.11.1
+```
+* None Windows Users
+```
+-> astro-datalab== 2.20.1 
 ```
 
 * PIP Installation Guide: https://pip.pypa.io/en/stable/installation/
@@ -46,27 +49,30 @@
 <p>3. Fixing Astroquery Module </p>
 
 1) Open the "replacement_module" directory
-2) Copy the "core.py" file
+2) Copy the "core.py" file onto your Desktop
 3) Go to the file directory containing the UKIDSS astroquery files (example: "/Users/hunter_brooks8/opt/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
 4) If you are struggling to find your file directory use these steps:
-   1) Type: ```ipython```, in your terminal
+   1) Type: ```python3```, in your terminal
    2) Type: ```import astroquery```, in your terminal
    3) Type: ```astroquery.__file__```, in your terminal
    4) This provides you with your astroquery file directory
-5) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file in WRAP's "replacement_module" directory
+   5) Leave the ```python3``` window by pressing "control + z"
+5) Open the "ukidss" folder in this directory, so that you can see the existing "core.py" file. 
+6) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file copied on your Desktop. 
 
 <h2> 🏆 Opening Application: </h2>
 
-*   Note 1: Only tested on MacOS Ventura 13.*, problems may occur for older versions of MacOS and versions for Windows and Linux will be made in the future. 
-*   Note 2: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
-*   Note 3: The orientation for all of the catalogs is North pointed up and East pointing left. 
-*   Note 4: 2MASS can have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
+*   Note 1: Only tested on MacOS Ventura 13.X and Windows 11, problems may occur for older versions of MacOS and Windows (needs to be tested on Linux)
+*   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
+*   Note 3: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
+*   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
+*   Note 5: 2MASS can have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
 <p> How to Start Program </p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
-3) Type "python WRAP.py" into the terminal
+3) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
 <p> How to Use WRAP </p>
 
@@ -206,12 +212,12 @@
 <h2> 📞 Support </h2>
 
 Mr. Hunter Brooks -> hcb98@nau.edu
+Mr. Dan Caselden -> dancaselden@gmail.com
 
 <h2> 📖 Acknowledgments </h2>
 
 1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
-2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. Please also include this text in your acknowledgments: 
-    1) ...discuss with co-authors for what to do here...
+2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. 
 
 * WISE: This publication makes use of data products from the Wide-field Infrared Survey Explorer, which is a joint project of the University of California, Los Angeles, and the Jet Propulsion Laboratory/California Institute of Technology, funded by the National Aeronautics and Space Administration.
 * NEOWISE: This publication also makes use of data products from NEOWISE, which is a project of the Jet Propulsion Laboratory/California Institute of Technology, funded by the Planetary Science Division of the National Aeronautics and Space Administration.
