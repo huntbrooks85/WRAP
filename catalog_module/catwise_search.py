@@ -244,5 +244,5 @@ def catwise_table(ra, dec, radius):
   enablePrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='catwise_2020', spatial='Box', width = (radius - 1) * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='catwise_2020', spatial='Box', width = (radius - 4) * u.arcsec)
   return location_data

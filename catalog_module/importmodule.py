@@ -8,6 +8,7 @@ import sys,os
 import astropy
 import requests
 import truncate
+import webbrowser
 import matplotlib
 import numpy as np
 import pandas as pd
@@ -15,6 +16,7 @@ from astropy import wcs
 from sys import platform
 from pyvo.dal import sia
 import PySimpleGUI as sg
+import matplotlib.cm as cm
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.io import ascii
@@ -27,6 +29,7 @@ from astroquery.gaia import Gaia
 from matplotlib import transforms
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
+from astroquery.ipac.irsa import sha
 from astroquery.ukidss import Ukidss
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord

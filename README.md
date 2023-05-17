@@ -83,9 +83,10 @@
 3) Put in the output file name that you want, do not put a file type at the end (it always saves to a csv file)
 4) Select the catalogs that will be searched through
 5) Click the green "Run Wrap" button
-6) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
-7) Repeat until every catalog image is shown
-8) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
+6) Your standard web browser will open with WISEView to aid you in finding your object
+7) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
+8) Repeat until every catalog image is shown
+9) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
 <pp> For Multi-Object Search </pp>
 1) Click the "Browse" button and click on you file with a list of RA ("ra") and DEC's ("dec") (in degrees)
@@ -94,9 +95,10 @@
 4) Put in the output file name that you want, do not put a file type at the end
 5) Select the catalogs that will be searched through
 6) Click the green "Run Wrap" button
-7) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
-8) Repeat until every catalog image is shown and every object has been run though
-9) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
+7) Your standard web browser will open with WISEView to aid you in finding your object (it will do this for every new object)
+8) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
+9) Repeat until every catalog image is shown and every object has been run though
+10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
 
 <h2> Variable Names </h2> 

@@ -24,6 +24,11 @@ from catalog_module.galex_search import galex_image
 def single_object_search(): 
   '''Performs the single object search by going to each catalog script and recording the data down.
   Once all the data is recorded it it put into a CSV file for the user.'''
+
+  #Runs the wiseview_link function
+  from catalog_module.wiseview_link import wiseview_link
+  wiseview_link(ra_use, dec_use, radius_use)
+
   for q in range(len(catalogs)): 
 
     #Calls the catalog and records the data down
@@ -100,6 +105,7 @@ def single_tab_check():
 def multi_object_search():
   '''Performs the Multi-object search by going to each catalog script and recording the data down.
   Once all the data is recorded it it put into a CSV file for the user.'''
+
   for index in range(len(ra_list)): 
 
     #Make variables for the RA, DEC, and RADIUS used
@@ -110,6 +116,10 @@ def multi_object_search():
     #Creates fake list for the data and data names
     photometry = []
     photometry_name = []
+
+    #Runs the wiseview_link function
+    from catalog_module.wiseview_link import wiseview_link
+    wiseview_link(ra_use, dec_use, radius_use)
 
     #Starts searching through each catalog
     for q in range(len(catalogs)): 
