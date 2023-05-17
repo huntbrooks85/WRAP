@@ -23,7 +23,6 @@
 * Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 * Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 
-
 <p>2. Packages </p>
 
 ```
