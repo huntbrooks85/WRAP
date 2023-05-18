@@ -43,15 +43,19 @@ from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
 from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormalize)
 
 #Does not load these packages if the user is on a Windows machine
+# ------------------------------------------------------------- #
 if platform != 'win32':
     from dl.helpers.utils import convert
     from dl import authClient as ac, queryClient as qc
 
-#Checks if the users system is greater than Python 3.8
+#Checks if the users system is greater than Python 3.8 and is not a Linux machine
 # ------------------------------------------------------------- #
 ver = sys.version_info
 if ver.major < 3:
     sys.exit('Python 3.X is required to run WRAP!')
+
+if platform == "linux" or platform == "linux2":
+    sys.exit('WRAP is not supported on Linux, please use another operating system!')
 
 #Ignores all of the warnings from the packages above
 # ------------------------------------------------------------- #
