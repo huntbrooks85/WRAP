@@ -239,7 +239,7 @@ def allwise_image(ra, dec, radius):
         ra_allwise = ra
         dec_allwise = dec
         shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-        ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for CatWISE! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+        ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for AllWISE! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
         plt.pause(0.1)
         plt.close('all')
         plt.figure().clear()

@@ -19,7 +19,7 @@ def twomass_image(ra, dec, radius):
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
   plt.style.use('Solarize_Light2')
-  blockPrint()
+  # blockPrint()
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_2mass_link = 'https://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
@@ -81,9 +81,9 @@ def twomass_image(ra, dec, radius):
   #Find the location of all the object found in AllWISE in the radius choosen by the user 
   location_data = twomass_table(ra, dec, radius)
   object_ra, object_dec = location_data['ra'].tolist(), location_data['dec'].tolist()
-  j_list, j_list_e = location_data['j_m'].tolist(), location_data['j_cmsig'].tolist()
-  h_list, h_list_e = location_data['h_m'].tolist(), location_data['h_cmsig'].tolist()
-  ks_list, ks_list_e = location_data['k_m'].tolist(), location_data['k_cmsig'].tolist()
+  j_list, j_list_e = location_data['j_m'].tolist(), location_data['j_msigcom'].tolist()
+  h_list, h_list_e = location_data['h_m'].tolist(), location_data['h_msigcom'].tolist()
+  ks_list, ks_list_e = location_data['k_m'].tolist(), location_data['k_msigcom'].tolist()
   enablePrint()
 
   #Gets the dates of when the images were taken
@@ -269,7 +269,7 @@ def twomass_image(ra, dec, radius):
 def twomass_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
   
-  blockPrint()
+  # blockPrint()
 
   #Uses astroquery to find all objects in the radius
   location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = (radius - 1) * u.arcsec)

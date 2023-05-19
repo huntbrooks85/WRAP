@@ -52,6 +52,7 @@ def gaia_image(ra, dec, radius):
   g_list, g_list_e = location_data['phot_g_mean_mag'].tolist(), location_data['phot_g_mean_flux_error'].tolist()
   bp_list, bp_list_e = location_data['phot_bp_mean_mag'].tolist(), location_data['phot_bp_mean_flux_error'].tolist()
   rp_list, rp_list_e = location_data['phot_rp_mean_mag'].tolist(), location_data['phot_rp_mean_flux_error'].tolist()
+  g_list_flux, bp_list_flux, rp_list_flux = location_data['phot_g_mean_flux'].tolist(), location_data['phot_bp_mean_flux'].tolist(), location_data['phot_rp_mean_flux'].tolist()
 
   #Obtains the headers for each image
   hdu_w1, hdu_w2 = fits.open(file_allwise_w1)[0], fits.open(file_allwise_w2)[0]
@@ -222,9 +223,21 @@ def gaia_image(ra, dec, radius):
         rad, rad_e = rad_v_list[list_location], rad_v_list_sigma[list_location]
         pmra, pmra_e = pmra_list[list_location], pmra_list_sigma[list_location]
         pmdec, pmdec_e = pmdec_list[list_location], pmdec_list_sigma[list_location]
-        g, g_e = g_list[list_location], (2.5/np.log(10))*(g_list_e[list_location]/g_list[list_location])
-        bp, bp_e = bp_list[list_location], (2.5/np.log(10))*(bp_list_e[list_location]/bp_list[list_location])
-        rp, rp_e = rp_list[list_location], (2.5/np.log(10))*(rp_list_e[list_location]/rp_list[list_location])
+        g = g_list[list_location]
+        bp = bp_list[list_location]
+        rp = rp_list[list_location]
+        if g_list_e[list_location] != None:
+          g_e = np.sqrt(((2.5/np.log(10))*(g_list_e[list_location]/g_list_flux[list_location]))**2 + (0.0027553202**2))
+        else: 
+          g_e = np.nan
+        if bp_list_e[list_location] != None:
+          bp_e = np.sqrt(((2.5/np.log(10))*(bp_list_e[list_location]/bp_list_flux[list_location]))**2 + (0.0027901700**2))
+        else: 
+          bp_e = np.nan
+        if rp_list_e[list_location] != None:
+          rp_e = np.sqrt(((2.5/np.log(10))*(rp_list_e[list_location]/rp_list_flux[list_location]))**2 + (0.0037793818**2))
+        else: 
+          rp_e = np.nan
         return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', text_list[text_max]
       
       #Checks if the Object not Found button was clicked
@@ -260,7 +273,7 @@ def gaia_table(ra, dec, radius):
 
   #Makes the SQL code to run it into the GAIA search
   query = "SELECT TOP 2000 \
-  gaia_source.ra,gaia_source.dec,gaia_source.ra_error,gaia_source.phot_g_mean_flux_error,gaia_source.phot_bp_mean_flux_error,gaia_source.phot_rp_mean_flux_error,gaia_source.ref_epoch,gaia_source.dec_error,gaia_source.parallax,gaia_source.parallax_error,gaia_source.radial_velocity,gaia_source.radial_velocity_error,gaia_source.pmra,gaia_source.pmra_error,gaia_source.pmdec,gaia_source.pmdec_error,gaia_source.phot_g_mean_mag,gaia_source.phot_bp_mean_mag,gaia_source.phot_rp_mean_mag \
+  gaia_source.ra,gaia_source.dec,gaia_source.ra_error,gaia_source.phot_g_mean_flux_error,gaia_source.phot_bp_mean_flux_error,gaia_source.phot_rp_mean_flux_error,gaia_source.ref_epoch,gaia_source.dec_error,gaia_source.parallax,gaia_source.parallax_error,gaia_source.radial_velocity,gaia_source.radial_velocity_error,gaia_source.pmra,gaia_source.pmra_error,gaia_source.pmdec,gaia_source.pmdec_error,gaia_source.phot_g_mean_mag,gaia_source.phot_bp_mean_mag,gaia_source.phot_rp_mean_mag,gaia_source.phot_g_mean_flux,gaia_source.phot_bp_mean_flux,gaia_source.phot_rp_mean_flux \
   FROM gaiadr3.gaia_source \
   WHERE \
   CONTAINS( \
