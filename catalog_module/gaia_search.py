@@ -98,7 +98,7 @@ def gaia_image(ra, dec, radius):
   plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
   plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
   fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
-  plt.suptitle('GAIA Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
+  plt.suptitle('Gaia Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
   ax.set_title('Dates: \n'
              + 'W1 Date: ' + str(date_w1) + ' (Y-M-D)  \n' 
              + 'W2 Date: ' + str(date_w2) + ' (Y-M-D)  \n', fontdict = fontdict_1, y = 1.05)
@@ -108,7 +108,7 @@ def gaia_image(ra, dec, radius):
     figure.set_size_inches(4.75, 6.95)
   elif platform == 'win32': 
     figure.set_size_inches(4.75, 7.25)
-  figure.canvas.set_window_title('GAIA Search')
+  figure.canvas.set_window_title('Gaia Search')
 
   #Make checkbuttons with all of the different image bands
   rax = plt.axes([0.045, 0.4, 0.115, 0.08])
@@ -201,6 +201,10 @@ def gaia_image(ra, dec, radius):
 
       #Checks if the image was clicked
       if click_axes == '':
+        shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+        ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for Gaia! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+        plt.pause(0.1)
+
         plt.close('all')
         plt.figure().clear()
 
@@ -228,6 +232,9 @@ def gaia_image(ra, dec, radius):
         ra_gaia_e, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_gaia = ra
         dec_gaia = dec
+        shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+        ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for Gaia! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+        plt.pause(0.1)
         plt.close('all')
         plt.figure().clear()
         return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', 'Object Not Found was Pressed'

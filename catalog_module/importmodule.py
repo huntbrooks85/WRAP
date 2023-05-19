@@ -29,7 +29,7 @@ from astroquery.gaia import Gaia
 from matplotlib import transforms
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
-from astroquery.ipac.irsa import sha
+# from astroquery.ipac.irsa import sha
 from astroquery.ukidss import Ukidss
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord

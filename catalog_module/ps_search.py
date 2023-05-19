@@ -235,6 +235,10 @@ def ps_image(ra, dec, radius):
 
         #Checks if the image was clicked
         if click_axes == '':
+          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+          ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.pause(0.1)
+
           plt.close('all')
           plt.figure().clear()
 
@@ -259,6 +263,9 @@ def ps_image(ra, dec, radius):
         elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
           ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ps_ra, ps_dec = ra, dec
+          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+          ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.pause(0.1)
           plt.close('all')
           plt.figure().clear()
           return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Object Not Found was Pressed'

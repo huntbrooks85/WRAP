@@ -115,7 +115,7 @@ def vsa_image(ra, dec, radius):
       figure.set_size_inches(4.75, 6.95)
     elif platform == 'win32': 
       figure.set_size_inches(4.75, 7.25)
-    figure.canvas.set_window_title('VSA Search')
+    figure.canvas.set_window_title('VISTA Search')
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
@@ -208,6 +208,10 @@ def vsa_image(ra, dec, radius):
 
         #Checks if the image was clicked
         if click_axes == '':
+          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.pause(1)
+
           plt.close('all')
           plt.figure().clear()
 
@@ -231,6 +235,9 @@ def vsa_image(ra, dec, radius):
         elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
           ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_vsa, dec_vsa = ra, dec
+          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.pause(0.1)
           plt.close('all')
           plt.figure().clear()
           return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, img, 'Object Not Found was Pressed'

@@ -23,12 +23,14 @@ def ukidss_image(ra, dec, radius):
     
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
-    for data in database_list:
-        url_J = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'J', database = data)
-        url_H = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'H', database = data)
-        url_K = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'K', database = data)
-        url_Y = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'Y', database = data)
+    catalo = ['LAS', 'UHSDR1']
+    for data in range(len(database_list)):
+        url_J = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'J', database = database_list[data], programme_id = catalo[data])
+        url_H = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'H', database = database_list[data], programme_id = catalo[data])
+        url_K = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'K', database = database_list[data], programme_id = catalo[data])
+        url_Y = Ukidss.get_image_list(SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (radius) * u.arcsec, image_height = (radius) * u.arcsec, waveband = 'Y', database = database_list[data], programme_id = catalo[data])
         if len(url_J) > 0: 
+            data = database_list[data]
             break
 
     #Checking to see if the images exist
@@ -49,7 +51,7 @@ def ukidss_image(ra, dec, radius):
             wcs_j = WCS(hdu_j.header)
 
             #Obtains the dates for each image
-            date_j = str(hdu_j.header[73]).split(' ', 2)[0]
+            date_j = str(hdu_j.header['HISTORY']).split(' ', 2)[0]
 
             #Gets the columns from the table
             object_ra, object_dec = table['ra'].tolist(), table['dec'].tolist()
@@ -75,11 +77,14 @@ def ukidss_image(ra, dec, radius):
 
             #Resizes the H, K, and Y bands to that of J
             j_shape = (cutout_j.data).shape
+            if j_shape[0] != j_shape[1]:
+                cutout_j = cutout_j.data[0:min(j_shape) - 1, 0:min(j_shape) - 1]
+                j_shape = (cutout_j.data).shape
             h_reshape, k_reshape, y_reshape = cv2.resize(cutout_h.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_k.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST), cv2.resize(cutout_y.data, dsize = j_shape, interpolation = cv2.INTER_NEAREST)
             total_data = cutout_j.data + y_reshape
 
             #Obtains the dates for each image
-            date_y, date_j, date_h, date_k = str(hdu_y.header[73]).split(' ', 2)[0], str(hdu_j.header[73]).split(' ', 2)[0], str(hdu_h.header[73]).split(' ', 5)[2], str(hdu_k.header[73]).split(' ', 5)[2]
+            date_y, date_j, date_h, date_k = str(hdu_y.header['HISTORY']).split(' ', 2)[0], str(hdu_j.header['HISTORY']).split(' ', 2)[0], str(hdu_h.header['HISTORY']).split(' ', 6)[2], str(hdu_k.header['HISTORY']).split(' ', 6)[2]
 
             #Gets the columns from the table
             object_epoch = table['epoch'].tolist()
@@ -298,6 +303,7 @@ def ukidss_image(ra, dec, radius):
         while True:
             press = plt.waitforbuttonpress()
             text_max = len(text_list) - 1
+            enablePrint()
 
             #Checks that it was a mouse click
             if press == False:
@@ -312,6 +318,10 @@ def ukidss_image(ra, dec, radius):
 
                 #Checks if the image was clicked
                 if click_axes == '':
+                    shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
+                    ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.pause(0.1)
+
                     plt.close('all')
                     plt.figure().clear()
 
@@ -364,6 +374,9 @@ def ukidss_image(ra, dec, radius):
                     ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_wfcam = ra
                     dec_wfcam = dec
+                    shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
+                    ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.pause(0.1)
                     plt.close('all')
                     plt.figure().clear()
                     return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, 'Object Not Found was Pressed'
