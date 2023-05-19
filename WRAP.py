@@ -261,6 +261,7 @@ if platform != 'win32':
                     [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 22), size = (9, 2))],
                     [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 22), size = (10, 2))],
                     [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 22), size = (10, 2))],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
                     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -283,6 +284,7 @@ if platform != 'win32':
                   [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 22), size = (9, 2))],
                   [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 22), size = (10, 2))],
                   [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc_multi', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 22), size = (10, 2))],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
 
                   [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -295,7 +297,7 @@ if platform != 'win32':
                               tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
   #Generates the window based off the layouts above
-  window = sg.Window('WRAP', tab_layout, size = (550, 610), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  window = sg.Window('WRAP', tab_layout, size = (550, 630), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
   
   #Makes lists for: catalog names, catalog functions, and fake variables
   catalogs = ['catwise', 'AW', 'gaia', 
@@ -350,6 +352,7 @@ elif platform == 'win32':
                     [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 15), size = (9, 2))],
                     [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 15), size = (10, 2))],
                     [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 15), size = (10, 2))],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
                     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -372,6 +375,7 @@ elif platform == 'win32':
                   [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 15), size = (9, 2))],
                   [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 15), size = (10, 2))],
                   [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 15), size = (10, 2))],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
 
                   [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -385,7 +389,7 @@ elif platform == 'win32':
 
 
   #Generates the window based off the layouts above
-  window = sg.Window('WRAP', tab_layout, size = (550, 650), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  window = sg.Window('WRAP', tab_layout, size = (550, 670), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
 
     #Makes lists for: catalog names, catalog functions, and fake variables
   catalogs = ['catwise', 'AW', 'gaia', 
@@ -431,7 +435,19 @@ while True:
   group = values['tab_group']
 
   #Runs the program if the user is in 'Single Object' tab
-  if group == 'Single Obect Search':   
+  if group == 'Single Obect Search':  
+
+    #Adds the functionality of the 'Select All' and 'Deselect All' Buttons
+    if event == 'Check_All':
+        window['catwise'].update(True), window['AW'].update(True), window['gaia'].update(True)
+        window['VSA'].update(True), window['UKIDSS'].update(True), window['2MASS'].update(True)
+        window['ps'].update(True), window['nsc'].update(True), window['galex'].update(True)
+        window['Uncheck_All'].update(False)
+    elif event == 'Uncheck_All':
+        window['catwise'].update(False), window['AW'].update(False), window['gaia'].update(False)
+        window['VSA'].update(False), window['UKIDSS'].update(False), window['2MASS'].update(False)
+        window['ps'].update(False), window['nsc'].update(False), window['galex'].update(False)
+        window['Check_All'].update(False) 
 
     #Checks if the 'Run WRAP' button is clicked
     if event in (None, 'Run WRAP'):
@@ -470,6 +486,18 @@ while True:
   #Runs the program if the user is in 'Multi-Object' tab
   if group == 'Multi-Object Search':
 
+    #Adds the functionality of the 'Select All' and 'Deselect All' Buttons
+    if event == 'Check_All_Multi':
+        window['catwise_multi'].update(True), window['AW_multi'].update(True), window['gaia_multi'].update(True)
+        window['VSA_multi'].update(True), window['UKIDSS_multi'].update(True), window['2MASS_multi'].update(True)
+        window['ps_multi'].update(True), window['nsc_multi'].update(True), window['galex_multi'].update(True)
+        window['Uncheck_All_Multi'].update(False)
+    elif event == 'Uncheck_All_Multi':
+        window['catwise_multi'].update(False), window['AW_multi'].update(False), window['gaia_multi'].update(False)
+        window['VSA_multi'].update(False), window['UKIDSS_multi'].update(False), window['2MASS_multi'].update(False)
+        window['ps_multi'].update(False), window['nsc_multi'].update(False), window['galex_multi'].update(False)
+        window['Check_All_Multi'].update(False) 
+
     #Checks if the 'Run WRAP' button is clicked
     if event in (None, 'Run WRAP0'):
 
@@ -506,10 +534,10 @@ while True:
 
     #Provides the user with the authors information if the 'Help' button is pressed
     if event in (None, 'Help1'):
-      sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
-      sg.cprint('     Thank you for using WRAP!                                                                       ', end='', c='wheat4', key = ML_KEY_MULTI)
-      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                    ', end='', c='wheat4', key = ML_KEY_MULTI)
-      sg.cprint('------------------------------------------------                                                     ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('------------------------------------------------                                                                                              ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('     Thank you for using WRAP!                                                                                                                ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                                                             ', end='', c='wheat4', key = ML_KEY_MULTI)
+      sg.cprint('------------------------------------------------                                                                                              ', end='', c='wheat4', key = ML_KEY_MULTI)
 
     #Closes WRAP if the 'Close WRAP' button is pressed
     if event in (None, 'Close WRAP2'):
