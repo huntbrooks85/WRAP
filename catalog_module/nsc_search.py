@@ -240,9 +240,8 @@ def nsc_image(ra, dec, radius):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-                    plt.ioff()
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
                     coord = wcs_cropped_i.pixel_to_world_values(location[n-4],location[n-5])
@@ -271,9 +270,8 @@ def nsc_image(ra, dec, radius):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-                    plt.ioff()
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
                     return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'Object Not Found was Pressed'
                 
                 #Changes the circle size if the slider is changed
@@ -304,8 +302,8 @@ def nsc_table(ra, dec, radius):
     query = " \
     SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr, raerr, decerr, mjd  \
     FROM nsc_dr2.object \
-    WHERE ra > " + str((ra - ((radius/7200) - 0.000277778))) + " and ra < " + str((ra + ((radius/7200) - 0.000277778))) + " " \
-    "AND dec > " + str((dec - ((radius/7200) - 0.000277778))) + " and dec < " + str((dec + ((radius/7200) - 0.000277778))) + " " \
+    WHERE ra > " + str((ra - ((radius/7200) - 0.000547778))) + " and ra < " + str((ra + ((radius/7200) - 0.000547778))) + " " \
+    "AND dec > " + str((dec - ((radius/7200) - 0.000547778))) + " and dec < " + str((dec + ((radius/7200) - 0.000547778))) + " " \
     ""
 
     #Run this SQL quiery into the online NSC database

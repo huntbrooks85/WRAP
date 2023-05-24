@@ -324,16 +324,14 @@ def ukidss_image(ra, dec, radius):
                     if cam_type != 2:
                         shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
                         ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.show(block=True)
                         plt.pause(0.1)
                     elif cam_type == 2: 
                         shape_x, shape_y = total_data.shape[0]/22, total_data.shape[1]/1.3
                         ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.show(block=True)
                         plt.pause(0.1)
 
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
                     if data != 'UHSDR1':
@@ -386,10 +384,9 @@ def ukidss_image(ra, dec, radius):
                     dec_wfcam = dec
                     shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
                     ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                    plt.show(block=True)
                     plt.pause(0.1)
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
                     return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved

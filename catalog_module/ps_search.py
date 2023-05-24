@@ -61,231 +61,237 @@ def ps_image(ra, dec, radius):
     z_link = ('http:' + (r_finder_list[4]).split('href="', 3)[3].split('"', 1)[0]).replace('amp;', '', 6)
     y_link = ('http:' + (r_finder_list[5]).split('href="', 3)[3].split('"', 1)[0]).replace('amp;', '', 6)
 
-    #Downloads the panstarrs r, i, and z image
-    file_ps_r, file_ps_i, file_ps_z, file_ps_y = download_file(r_link, cache=True), download_file(i_link, cache=True), download_file(z_link, cache=True), download_file(y_link, cache=True)
-    data_ps_r, data_ps_i, data_ps_z, data_ps_y = fits.getdata(file_ps_r), fits.getdata(file_ps_i), fits.getdata(file_ps_z), fits.getdata(file_ps_y)
+    if r_link[0:7] == 'http://':
 
-    #Removes the null RA and DEC values that PanSTARRS return
-    for elem in list(ra_list):
-      if elem == -999.0 or elem is None:
-        ra_location = ra_list.index(elem)
-        ra_list.remove(elem)
-        dec_list.pop(ra_location)
-        g_list.pop(ra_location)
-        g_list_e.pop(ra_location)
-        r_list.pop(ra_location)
-        r_list_e.pop(ra_location)
-        i_list.pop(ra_location)
-        i_list_e.pop(ra_location)
-        z_list.pop(ra_location)
-        z_list_e.pop(ra_location)
-        y_list.pop(ra_location)
-        y_list_e.pop(ra_location)
+      #Downloads the panstarrs r, i, and z image
+      file_ps_r, file_ps_i, file_ps_z, file_ps_y = download_file(r_link, cache=True), download_file(i_link, cache=True), download_file(z_link, cache=True), download_file(y_link, cache=True)
+      data_ps_r, data_ps_i, data_ps_z, data_ps_y = fits.getdata(file_ps_r), fits.getdata(file_ps_i), fits.getdata(file_ps_z), fits.getdata(file_ps_y)
 
-    #Gets the headers from the images
-    hdu_r, hdu_i, hdu_z, hdu_y = fits.open(file_ps_r)[0], fits.open(file_ps_i)[0], fits.open(file_ps_z)[0], fits.open(file_ps_y)[0]
-    wcs1 = WCS(hdu_r.header)
+      #Removes the null RA and DEC values that PanSTARRS return
+      for elem in list(ra_list):
+        if elem == -999.0 or elem is None:
+          ra_location = ra_list.index(elem)
+          ra_list.remove(elem)
+          dec_list.pop(ra_location)
+          g_list.pop(ra_location)
+          g_list_e.pop(ra_location)
+          r_list.pop(ra_location)
+          r_list_e.pop(ra_location)
+          i_list.pop(ra_location)
+          i_list_e.pop(ra_location)
+          z_list.pop(ra_location)
+          z_list_e.pop(ra_location)
+          y_list.pop(ra_location)
+          y_list_e.pop(ra_location)
 
-    #Make a cutout from the coadd image for the ra and dec put in
-    if type(dec) == str: 
-      dec = float(dec.replace('+', '', 1))
-    position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
-    size = u.Quantity([radius, radius], u.arcsec)
-    cutout_r = Cutout2D(data_ps_r, position, size, fill_value = np.nan, wcs = wcs1.celestial)
-    cutout_i = Cutout2D(data_ps_i, position, size, fill_value = np.nan, wcs = wcs1.celestial)
-    cutout_z = Cutout2D(data_ps_z, position, size, fill_value = np.nan, wcs = wcs1.celestial)
-    cutout_y = Cutout2D(data_ps_y, position, size, fill_value = np.nan, wcs = wcs1.celestial)
-    wcs_cropped = cutout_r.wcs
-    enablePrint()
+      #Gets the headers from the images
+      hdu_r, hdu_i, hdu_z, hdu_y = fits.open(file_ps_r)[0], fits.open(file_ps_i)[0], fits.open(file_ps_z)[0], fits.open(file_ps_y)[0]
+      wcs1 = WCS(hdu_r.header)
 
-    #Gets the dates that each image was taken
-    date_r, date_i, date_z, date_y = hdu_r.header[8].split('T', 2)[0], hdu_i.header[8].split('T', 2)[0], hdu_z.header[8].split('T', 2)[0], hdu_y.header[8].split('T', 2)[0]
+      #Make a cutout from the coadd image for the ra and dec put in
+      if type(dec) == str: 
+        dec = float(dec.replace('+', '', 1))
+      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5', equinox = 'J2000.0')
+      size = u.Quantity([radius, radius], u.arcsec)
+      cutout_r = Cutout2D(data_ps_r, position, size, fill_value = np.nan, wcs = wcs1.celestial)
+      cutout_i = Cutout2D(data_ps_i, position, size, fill_value = np.nan, wcs = wcs1.celestial)
+      cutout_z = Cutout2D(data_ps_z, position, size, fill_value = np.nan, wcs = wcs1.celestial)
+      cutout_y = Cutout2D(data_ps_y, position, size, fill_value = np.nan, wcs = wcs1.celestial)
+      wcs_cropped = cutout_r.wcs
+      enablePrint()
 
-    #Defining a mouse click as an event on the plot
-    location = []
-    plt.rcParams["figure.figsize"] = [8, 8]
-    plt.rcParams["figure.autolayout"] = True
-    def mouse_event(event):
-      '''Makes a list of the x, y, and axes the mouse click is.'''
+      #Gets the dates that each image was taken
+      date_r, date_i, date_z, date_y = hdu_r.header[8].split('T', 2)[0], hdu_i.header[8].split('T', 2)[0], hdu_z.header[8].split('T', 2)[0], hdu_y.header[8].split('T', 2)[0]
 
-      location.append(event.ydata)
-      location.append(event.xdata)
-      location.append(event.inaxes)
-    fig_1 = plt.figure()
-    cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
+      #Defining a mouse click as an event on the plot
+      location = []
+      plt.rcParams["figure.figsize"] = [8, 8]
+      plt.rcParams["figure.autolayout"] = True
+      def mouse_event(event):
+        '''Makes a list of the x, y, and axes the mouse click is.'''
 
-    #Sets the WCS coordinates for the plots
-    total_data = cutout_r.data + cutout_i.data
-    ax = plt.subplot(projection = wcs_cropped)
-    
-    #Plots the objects found in the radius
-    circle_size = (radius*3)
-    scatter = ax.scatter(ra_list, dec_list, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
+        location.append(event.ydata)
+        location.append(event.xdata)
+        location.append(event.inaxes)
+      fig_1 = plt.figure()
+      cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
 
-    #Normalize the image and plots it
-    init_top = 95
-    init_bot = 45
-    norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
-    ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
-
-    #Makes the figure look pretty
-    plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-    plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
-    fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
-    plt.suptitle('PanSTARRS Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
-    ax.set_title('Dates: \n'
-              + 'r Date: ' + str(date_r) + ' (Y-M-D)  ' + '  i Date: ' + str(date_i) + ' (Y-M-D)   \n'
-              + 'z Date: ' + str(date_z) + ' (Y-M-D)  ' + '  y Date: ' + str(date_y) + ' (Y-M-D)   \n', fontdict = fontdict_1, y = 1.05)
-    plt.grid(linewidth = 0)
-    figure = plt.gcf()
-    plt.xlim(0, max(total_data.shape))
-    plt.ylim(0, max(total_data.shape))
-    if platform != 'win32':
-      figure.set_size_inches(4.75, 6.95)
-    elif platform == 'win32':
-      figure.set_size_inches(4.75, 7.25)
-    figure.canvas.set_window_title('PanSTARRS Search')
-
-    #Make checkbuttons with all of the different image bands
-    rax = plt.axes([0.045, 0.4, 0.115, 0.1])
-    labels = ['r', 'i', 'z', 'y']
-    real_data = [cutout_r.data, cutout_i.data, cutout_z.data, cutout_y.data]
-    default = [True, True, False, False]
-    check = CheckButtons(rax, labels, default)
-
-    #Adds a slider for the scaling of the image
-    freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
-    slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
-    freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
-    slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
-
-    #Adds a slider for the circle size
-    circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
-    circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
-
-    #Adds a notes section that the user can add notes about their data
-    axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
-    text = ''
-    text_box = TextBox(axbox, 'Notes:', initial = text, textalignment = "center")
-
-    #Make a button that can be clicked if no object is found
-    axes_button = plt.axes([0.04, 0.775, 0.92, 0.04])
-    close = Button(axes_button, 'Object Not Found', color = '#E48671')
-
-    #Update the image depending on what the user chooses
-    def update_button(label):
-      '''Updates the list of activated images and updates the image the user can see.'''
-
-      total_data = 0
-      for lab in labels:
-        if lab == label:
-          index = labels.index(lab)
-          if default[index] == False:
-            default[index] = True
-          elif default[index] == True: 
-            default[index] = False
-      for d in range(len(default)):
-        if default == [False, False, False, False]: 
-          total_data = real_data[0]*0
-        if default[d] == True: 
-          total_data = total_data + real_data[d]
-        else: 
-          pass
-      norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
-      ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
-
-    #Updates the scaling when the slider is changed
-    def update_slider_stretch(val):
-      '''Updates the stretch the user can see, based in percentiles'''
-
-      total_data = 0
-      for d in range(len(default)):
-        if default[d] == True: 
-          total_data = total_data + real_data[d]
-        else: 
-          pass
-      norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
-      ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+      #Sets the WCS coordinates for the plots
+      total_data = cutout_r.data + cutout_i.data
+      ax = plt.subplot(projection = wcs_cropped)
       
-    #Updates the notes added by the user when there is an input
-    text_list = [text]
-    def submit(expression):
-      '''Updates the list of types in the 'Notes' setting'''
+      #Plots the objects found in the radius
+      circle_size = (radius*3)
+      scatter = ax.scatter(ra_list, dec_list, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
-      text = expression
-      text_list.append(text)
+      #Normalize the image and plots it
+      init_top = 95
+      init_bot = 45
+      norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
+      ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
 
-    #Allows the sliders and buttons to be pressed
-    check.on_clicked(update_button)
-    slider_top.on_changed(update_slider_stretch)
-    slider_bottom.on_changed(update_slider_stretch)
-    text_box.on_text_change(submit)
+      #Makes the figure look pretty
+      plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+      plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
+      fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
+      plt.suptitle('PanSTARRS Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
+      ax.set_title('Dates: \n'
+                + 'r Date: ' + str(date_r) + ' (Y-M-D)  ' + '  i Date: ' + str(date_i) + ' (Y-M-D)   \n'
+                + 'z Date: ' + str(date_z) + ' (Y-M-D)  ' + '  y Date: ' + str(date_y) + ' (Y-M-D)   \n', fontdict = fontdict_1, y = 1.05)
+      plt.grid(linewidth = 0)
+      figure = plt.gcf()
+      plt.xlim(0, max(total_data.shape))
+      plt.ylim(0, max(total_data.shape))
+      if platform != 'win32':
+        figure.set_size_inches(4.75, 6.95)
+      elif platform == 'win32':
+        figure.set_size_inches(4.75, 7.25)
+      figure.canvas.set_window_title('PanSTARRS Search')
 
-    #Display image until it is clicked to find the object
-    n = -1
-    while True:
-      press = plt.waitforbuttonpress()
-      text_max = len(text_list) - 1
+      #Make checkbuttons with all of the different image bands
+      rax = plt.axes([0.045, 0.4, 0.115, 0.1])
+      labels = ['r', 'i', 'z', 'y']
+      real_data = [cutout_r.data, cutout_i.data, cutout_z.data, cutout_y.data]
+      default = [True, True, False, False]
+      check = CheckButtons(rax, labels, default)
 
-      #Checks that it was a mouse click
-      if press == False:
-        n += 3
+      #Adds a slider for the scaling of the image
+      freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
+      slider_top = Slider(ax = freq_top, label = 'Top Stetch:', valmin = 50, valmax = 100, valinit = init_top, color = '#E48671')
+      freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
+      slider_bottom = Slider(ax = freq_bottom, label = 'Bottom Stetch:', valmin = 0, valmax = 50, valinit = init_bot, color = '#E48671')
 
-        #Finds which axes was clicked
-        click_axes = str(location[n])
-        click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+      #Adds a slider for the circle size
+      circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
+      circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
 
-        #Checks if the image was clicked
-        if click_axes == '':
-          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.pause(0.1)
-          plt.ioff()
-          plt.close('all')
-          plt.figure().clear()
+      #Adds a notes section that the user can add notes about their data
+      axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
+      text = ''
+      text_box = TextBox(axbox, 'Notes:', initial = text, textalignment = "center")
 
-          #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-          coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
-          distance = []
-          for i in range(len(ra_list)):
-            distance.append(math.dist(coord, [ra_list[i], dec_list[i]]))
+      #Make a button that can be clicked if no object is found
+      axes_button = plt.axes([0.04, 0.775, 0.92, 0.04])
+      close = Button(axes_button, 'Object Not Found', color = '#E48671')
 
-          list_location = distance.index(np.min(distance))
-          mjd = object_mjd[list_location]
-          ps_ra, ps_dec = ra_list[list_location], dec_list[list_location]
-          ps_ra_e, ps_dec_e = ra_list_e[list_location], dec_list_e[list_location]
-          g, g_e = g_list[list_location], g_list_e[list_location]
-          r, r_e = r_list[list_location], r_list_e[list_location]
-          i, i_e = i_list[list_location], i_list_e[list_location]
-          z, z_e = z_list[list_location], z_list_e[list_location]
-          y, y_e = y_list[list_location], y_list_e[list_location]
-          return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', text_list[text_max]
+      #Update the image depending on what the user chooses
+      def update_button(label):
+        '''Updates the list of activated images and updates the image the user can see.'''
+
+        total_data = 0
+        for lab in labels:
+          if lab == label:
+            index = labels.index(lab)
+            if default[index] == False:
+              default[index] = True
+            elif default[index] == True: 
+              default[index] = False
+        for d in range(len(default)):
+          if default == [False, False, False, False]: 
+            total_data = real_data[0]*0
+          if default[d] == True: 
+            total_data = total_data + real_data[d]
+          else: 
+            pass
+        norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+        ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
+
+      #Updates the scaling when the slider is changed
+      def update_slider_stretch(val):
+        '''Updates the stretch the user can see, based in percentiles'''
+
+        total_data = 0
+        for d in range(len(default)):
+          if default[d] == True: 
+            total_data = total_data + real_data[d]
+          else: 
+            pass
+        norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, slider_bottom.val), vmax = np.nanpercentile(total_data.data, slider_top.val))
+        ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_w1)
         
-        #Checks if the Object not Found button was clicked
-        elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
+      #Updates the notes added by the user when there is an input
+      text_list = [text]
+      def submit(expression):
+        '''Updates the list of types in the 'Notes' setting'''
+
+        text = expression
+        text_list.append(text)
+
+      #Allows the sliders and buttons to be pressed
+      check.on_clicked(update_button)
+      slider_top.on_changed(update_slider_stretch)
+      slider_bottom.on_changed(update_slider_stretch)
+      text_box.on_text_change(submit)
+
+      #Display image until it is clicked to find the object
+      n = -1
+      while True:
+        press = plt.waitforbuttonpress()
+        text_max = len(text_list) - 1
+
+        #Checks that it was a mouse click
+        if press == False:
+          n += 3
+
+          #Finds which axes was clicked
+          click_axes = str(location[n])
+          click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+
+          #Checks if the image was clicked
+          if click_axes == '':
+            shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+            ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+            plt.pause(0.1)
+            plt.clf()
+            plt.close('all')
+
+            #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
+            coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
+            distance = []
+            for i in range(len(ra_list)):
+              distance.append(math.dist(coord, [ra_list[i], dec_list[i]]))
+
+            list_location = distance.index(np.min(distance))
+            mjd = object_mjd[list_location]
+            ps_ra, ps_dec = ra_list[list_location], dec_list[list_location]
+            ps_ra_e, ps_dec_e = ra_list_e[list_location], dec_list_e[list_location]
+            g, g_e = g_list[list_location], g_list_e[list_location]
+            r, r_e = r_list[list_location], r_list_e[list_location]
+            i, i_e = i_list[list_location], i_list_e[list_location]
+            z, z_e = z_list[list_location], z_list_e[list_location]
+            y, y_e = y_list[list_location], y_list_e[list_location]
+            return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', text_list[text_max]
+          
+          #Checks if the Object not Found button was clicked
+          elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
+            ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+            ps_ra, ps_dec = ra, dec
+            shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+            ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+            plt.pause(0.1)
+            plt.clf()
+            plt.close('all')
+            return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Object Not Found was Pressed'
+          
+          #Updates the circle size when slider is moved
+          elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
+            scatter.remove()
+            scatter = ax.scatter(ra_list, dec_list, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
+
+        #Checks if the window was closed
+        elif press is None:
           ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ps_ra, ps_dec = ra, dec
-          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.pause(0.1)
-          plt.ioff()
           plt.close('all')
           plt.figure().clear()
-          return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Object Not Found was Pressed'
-        
-        #Updates the circle size when slider is moved
-        elif click_axes == 'Axes(0.25,0.055;0.65x0.03)':
-          scatter.remove()
-          scatter = ax.scatter(ra_list, dec_list, transform=ax.get_transform('fk5'), s = circle_slider.val, edgecolor='#40E842', facecolor='none')
-
-      #Checks if the window was closed
-      elif press is None:
-        ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-        ps_ra, ps_dec = ra, dec
-        plt.close('all')
-        plt.figure().clear()
-        return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', text_list[text_max]
+          return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', text_list[text_max]
     
+    #If the images were not found returns null values
+    elif r_link[0:7] != 'http://':
+      ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      ps_ra, ps_dec = ra, dec
+      return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Image Not Found'
+
   #If the images were not found returns null values
   elif len(r_finder_list) == 0: 
     ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan

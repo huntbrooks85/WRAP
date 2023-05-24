@@ -233,10 +233,9 @@ def twomass_image(ra, dec, radius):
         if click_axes == '':
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.ioff()
           plt.pause(0.1)
+          plt.clf()
           plt.close('all')
-          plt.figure().clear()
 
           #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
           coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
@@ -257,10 +256,9 @@ def twomass_image(ra, dec, radius):
           ra_2mass, dec_2mass = ra, dec
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.ioff()
           plt.pause(0.1)
+          plt.clf()
           plt.close('all')
-          plt.figure().clear()
           return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', 'Object Not Found was Pressed'
         
         #Adds the functionality of the circle slider bar

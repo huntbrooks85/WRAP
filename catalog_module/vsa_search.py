@@ -209,11 +209,10 @@ def vsa_image(ra, dec, radius):
         #Checks if the image was clicked
         if click_axes == '':
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.show(block=True)
+          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please time for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
           plt.pause(0.1)
+          plt.clf()
           plt.close('all')
-          plt.figure().clear()
 
           #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
           coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
@@ -236,11 +235,10 @@ def vsa_image(ra, dec, radius):
           ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_vsa, dec_vsa = ra, dec
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.show(block=True)
+          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please time for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
           plt.pause(0.1)
+          plt.clf()
           plt.close('all')
-          plt.figure().clear()
           return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, img, 'Object Not Found was Pressed'
         
         #Allows updates for the circle size slider bar
@@ -252,8 +250,8 @@ def vsa_image(ra, dec, radius):
       elif press is None:
         ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
         ra_vsa, dec_vsa = ra, dec
+        plt.clf()
         plt.close('all')
-        plt.figure().clear()
         return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, img, text_list[text_max]
       
   #Returns null values if the images are not found

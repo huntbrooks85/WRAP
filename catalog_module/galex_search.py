@@ -183,9 +183,8 @@ def galex_image(ra, dec, radius_use):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-                    plt.ioff()
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
                     coord = wcs_cropped_w1.pixel_to_world_values(location[n-4],location[n-5])
@@ -205,9 +204,8 @@ def galex_image(ra, dec, radius_use):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-                    plt.ioff()
+                    plt.clf()
                     plt.close('all')
-                    plt.figure().clear()
                     return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Release Data 7', 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved
