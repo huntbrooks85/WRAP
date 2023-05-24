@@ -210,8 +210,8 @@ def vsa_image(ra, dec, radius):
         if click_axes == '':
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-          plt.pause(1)
-
+          plt.show(block=True)
+          plt.pause(0.1)
           plt.close('all')
           plt.figure().clear()
 
@@ -237,6 +237,7 @@ def vsa_image(ra, dec, radius):
           ra_vsa, dec_vsa = ra, dec
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.show(block=True)
           plt.pause(0.1)
           plt.close('all')
           plt.figure().clear()

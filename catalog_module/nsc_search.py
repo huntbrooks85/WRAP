@@ -141,7 +141,8 @@ def nsc_image(ra, dec, radius):
                    + 'Y Date: ' + str(date_Y) + ' (Y-M-D)\n', fontdict = fontdict_1, y = 1.04)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
-        plt.xlim(len(total_data[0]), 0)
+        plt.xlim(min(total_data.shape), (min(total_data.shape) - max(total_data.shape)))
+        plt.ylim(0, max(total_data.shape))
         figure.set_size_inches(4.75, 7.05)
         figure.canvas.set_window_title('NSC Search')
 
@@ -239,7 +240,7 @@ def nsc_image(ra, dec, radius):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-
+                    plt.ioff()
                     plt.close('all')
                     plt.figure().clear()
 
@@ -270,6 +271,7 @@ def nsc_image(ra, dec, radius):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
+                    plt.ioff()
                     plt.close('all')
                     plt.figure().clear()
                     return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'Object Not Found was Pressed'

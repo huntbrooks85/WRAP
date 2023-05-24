@@ -248,7 +248,7 @@ sg.theme('LightGrey4')
 #Sets the layout if the user is not on a windows machine
 if platform != 'win32':
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-  layout_single = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
+  layout_single = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
           
                     [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
                     [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
@@ -261,7 +261,7 @@ if platform != 'win32':
                     [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 22), size = (9, 2))],
                     [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 22), size = (10, 2))],
                     [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 22), size = (10, 2))],
-                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
                     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -271,7 +271,7 @@ if platform != 'win32':
   #Makes the drop down window for types of file in the multi-object search
   filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-  layout_multi = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                      sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                       sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
+  layout_multi = [ [sg.Image(filename = ('image_module/WRAP_Logo.png'), size = (135, 95)),                               sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                       sg.Image(filename = 'image_module/BYW_Logo.png', size = (205, 95))],
           
                   [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
                   [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
@@ -284,7 +284,7 @@ if platform != 'win32':
                   [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 22), size = (9, 2))],
                   [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 22), size = (10, 2))],
                   [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc_multi', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 22), size = (10, 2))],
-                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
 
                   [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -300,18 +300,18 @@ if platform != 'win32':
   window = sg.Window('WRAP', tab_layout, size = (550, 630), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
   
   #Makes lists for: catalog names, catalog functions, and fake variables
-  catalogs = ['catwise', 'AW', 'gaia', 
-              'VSA', 'UKIDSS', '2MASS', 
-              'ps', 'nsc', 'galex']
-  catalogs_multi = ['catwise_multi', 'AW_multi', 'gaia_multi', 
-                    'VSA_multi', 'UKIDSS_multi', '2MASS_multi', 
-                    'ps_multi', 'nsc_multi', 'galex_multi']
+  catalogs = ['catwise', 'AW',     'gaia', 
+              'VSA',     'UKIDSS', '2MASS', 
+              'ps',      'nsc',    'galex']
+  catalogs_multi = ['catwise_multi',  'AW_multi',     'gaia_multi', 
+                    'VSA_multi',      'UKIDSS_multi', '2MASS_multi', 
+                    'ps_multi',       'nsc_multi',    'galex_multi']
   catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
-                  'VSA', 'UKIDSS', '2MASS', 
-                  'PanSTARRS', 'NSC', 'GALEX']
-  catalog_functions = [catwise_image, allwise_image, gaia_image, 
-                      vsa_image, ukidss_image, twomass_image, 
-                      ps_image, nsc_image, galex_image]
+                  'VSA',           'UKIDSS',  '2MASS', 
+                  'PanSTARRS',     'NSC',     'GALEX']
+  catalog_functions = [catwise_image,   allwise_image,  gaia_image, 
+                      vsa_image,        ukidss_image,   twomass_image, 
+                      ps_image,         nsc_image,      galex_image]
 
   #Defines all of the variable names
   value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes'], 
@@ -352,7 +352,7 @@ elif platform == 'win32':
                     [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 15), size = (9, 2))],
                     [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 15), size = (10, 2))],
                     [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 15), size = (10, 2))],
-                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
                     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -375,7 +375,7 @@ elif platform == 'win32':
                   [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 15), size = (9, 2))],
                   [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 15), size = (10, 2))],
                   [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 15), size = (10, 2))],
-                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'), sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
 
                   [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
@@ -391,7 +391,7 @@ elif platform == 'win32':
   #Generates the window based off the layouts above
   window = sg.Window('WRAP', tab_layout, size = (550, 670), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
 
-    #Makes lists for: catalog names, catalog functions, and fake variables
+  #Makes lists for: catalog names, catalog functions, and fake variables
   catalogs = ['catwise', 'AW', 'gaia', 
               'VSA', 'UKIDSS', '2MASS', 
               'ps', 'galex']
@@ -399,21 +399,21 @@ elif platform == 'win32':
                     'VSA_multi', 'UKIDSS_multi', '2MASS_multi', 
                     'ps_multi', 'galex_multi']
   catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
-                  'VSA', 'UKIDSS', '2MASS', 
-                  'PanSTARRS', 'GALEX']
+                   'VSA', 'UKIDSS', '2MASS', 
+                   'PanSTARRS', 'GALEX']
   catalog_functions = [catwise_image, allwise_image, gaia_image, 
                       vsa_image, ukidss_image, twomass_image, 
                       ps_image, galex_image]
 
   #Defines all of the variable names
   value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes'], 
-                ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes'], 
-                ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes'], 
-                ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes'], 
-                ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes'], 
-                ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes'], 
-                ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes'], 
-                ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']]
+                 ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes'], 
+                 ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes'], 
+                 ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes'], 
+                 ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes'], 
+                 ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes'], 
+                 ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes'], 
+                 ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']]
 
   #Defines the header for the CSV file
   header = ['input_ra', 'input_dec', 'input_radius', 
@@ -474,10 +474,10 @@ while True:
 
     #Provides the user with the authors information if the 'Help' button is pressed
     if event in (None, 'Help'):
-      sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
-      sg.cprint('     Thank you for using WRAP!                                                                                                      ', c='wheat4', end='', key = ML_KEY_SINGLE)
-      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                                                   ', c='wheat4', end='', key = ML_KEY_SINGLE)
-      sg.cprint('------------------------------------------------                                                                                    ', c='wheat4',         key = ML_KEY_SINGLE)
+      sg.cprint('------------------------------------------------                                                                                                      ', c='wheat4',         key = ML_KEY_SINGLE)
+      sg.cprint('     Thank you for using WRAP!                                                                                                                        ', c='wheat4', end='', key = ML_KEY_SINGLE)
+      sg.cprint('   Authors Contact: hcb98@nau.edu                                                                                                                     ', c='wheat4', end='', key = ML_KEY_SINGLE)
+      sg.cprint('------------------------------------------------                                                                                                      ', c='wheat4',         key = ML_KEY_SINGLE)
 
     #Closes WRAP if the 'Close WRAP' button is pressed
     if event in (None, 'Close WRAP'):

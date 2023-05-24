@@ -1,10 +1,6 @@
 #Import all of the packages
 from catalog_module.importmodule import *
 
-def blockPrint():
-  '''Makes a function that blocks the printing function'''
-  sys.stdout = open(os.devnull, 'w')
-
 def wiseview_link(ra, dec, radius): 
   '''Opens WISEView link to aid the user in finding their object'''
 

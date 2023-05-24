@@ -105,6 +105,8 @@ def gaia_image(ra, dec, radius):
              + 'W2 Date: ' + str(date_w2) + ' (Y-M-D)  \n', fontdict = fontdict_1, y = 1.05)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
+  plt.xlim(0, max(total_data.shape))
+  plt.ylim(0, max(total_data.shape))
   if platform != 'win32': 
     figure.set_size_inches(4.75, 6.95)
   elif platform == 'win32': 
@@ -205,7 +207,7 @@ def gaia_image(ra, dec, radius):
         shape_x, shape_y = total_data.shape[0], total_data.shape[1]
         ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for Gaia! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
         plt.pause(0.1)
-
+        plt.ioff()
         plt.close('all')
         plt.figure().clear()
 
@@ -248,6 +250,7 @@ def gaia_image(ra, dec, radius):
         shape_x, shape_y = total_data.shape[0], total_data.shape[1]
         ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for Gaia! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
         plt.pause(0.1)
+        plt.ioff()
         plt.close('all')
         plt.figure().clear()
         return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', 'Object Not Found was Pressed'

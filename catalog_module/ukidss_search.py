@@ -188,6 +188,8 @@ def ukidss_image(ra, dec, radius):
             circle_size = (radius*3)
             scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
+            cam_type = ''
+
             #Normalize the image and plots it
             init_top, init_bot = 95, 45
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(total_data.data, init_bot), vmax = np.nanpercentile(total_data.data, init_top))
@@ -203,7 +205,8 @@ def ukidss_image(ra, dec, radius):
                 figure.set_size_inches(4.75, 6.95)
             elif platform == 'win32':
                 figure.set_size_inches(4.75, 7.25)
-            plt.xlim(len(total_data[0]), 0)
+            plt.xlim(max(total_data.shape), 0)
+            plt.ylim(0, max(total_data.shape))
             plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
             plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
 
@@ -318,9 +321,16 @@ def ukidss_image(ra, dec, radius):
 
                 #Checks if the image was clicked
                 if click_axes == '':
-                    shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
-                    ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                    plt.pause(0.1)
+                    if cam_type != 2:
+                        shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
+                        ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                        plt.show(block=True)
+                        plt.pause(0.1)
+                    elif cam_type == 2: 
+                        shape_x, shape_y = total_data.shape[0]/22, total_data.shape[1]/1.3
+                        ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                        plt.show(block=True)
+                        plt.pause(0.1)
 
                     plt.close('all')
                     plt.figure().clear()
@@ -376,6 +386,7 @@ def ukidss_image(ra, dec, radius):
                     dec_wfcam = dec
                     shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
                     ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.show(block=True)
                     plt.pause(0.1)
                     plt.close('all')
                     plt.figure().clear()

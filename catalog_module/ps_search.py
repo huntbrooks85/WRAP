@@ -138,6 +138,8 @@ def ps_image(ra, dec, radius):
               + 'z Date: ' + str(date_z) + ' (Y-M-D)  ' + '  y Date: ' + str(date_y) + ' (Y-M-D)   \n', fontdict = fontdict_1, y = 1.05)
     plt.grid(linewidth = 0)
     figure = plt.gcf()
+    plt.xlim(0, max(total_data.shape))
+    plt.ylim(0, max(total_data.shape))
     if platform != 'win32':
       figure.set_size_inches(4.75, 6.95)
     elif platform == 'win32':
@@ -238,7 +240,7 @@ def ps_image(ra, dec, radius):
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
           plt.pause(0.1)
-
+          plt.ioff()
           plt.close('all')
           plt.figure().clear()
 
@@ -266,6 +268,7 @@ def ps_image(ra, dec, radius):
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
           ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
           plt.pause(0.1)
+          plt.ioff()
           plt.close('all')
           plt.figure().clear()
           return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Object Not Found was Pressed'

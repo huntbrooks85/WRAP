@@ -111,6 +111,8 @@ def allwise_image(ra, dec, radius):
              + 'W3 Date: ' + str(date_w3) + ' (Y-M-D)  ' + '  W4 Date: ' + str(date_w4) + ' (Y-M-D)\n', fontdict = fontdict, y = 1.05)
   plt.grid(linewidth = 0)
   figure = plt.gcf()
+  plt.xlim(0, max(total_data.shape))
+  plt.ylim(0, max(total_data.shape))
   if platform != 'win32':
     figure.set_size_inches(4.75, 6.95)
   elif platform == 'win32':
@@ -211,7 +213,7 @@ def allwise_image(ra, dec, radius):
         shape_x, shape_y = total_data.shape[0], total_data.shape[1]
         ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for AllWISE! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
         plt.pause(0.1)
-
+        plt.ioff()
         plt.close('all')
         plt.figure().clear()
 
@@ -241,6 +243,7 @@ def allwise_image(ra, dec, radius):
         shape_x, shape_y = total_data.shape[0], total_data.shape[1]
         ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for AllWISE! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
         plt.pause(0.1)
+        plt.ioff()
         plt.close('all')
         plt.figure().clear()
         return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'AllWISE Source Catalog', 'Object Not Found was Pressed'

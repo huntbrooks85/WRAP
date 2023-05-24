@@ -118,6 +118,8 @@ def galex_image(ra, dec, radius_use):
                    + 'FUV Date: ' + str(date_w1) + ' (Y-M-D)  ', fontdict = fontdict, y = 1.105)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
+        plt.xlim(0, max(total_data.shape))
+        plt.ylim(0, max(total_data.shape))
         if platform != 'win32':
             figure.set_size_inches(4.75, 6.95)
         elif platform == 'win32':
@@ -181,7 +183,7 @@ def galex_image(ra, dec, radius_use):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
-
+                    plt.ioff()
                     plt.close('all')
                     plt.figure().clear()
 
@@ -203,6 +205,7 @@ def galex_image(ra, dec, radius_use):
                     shape_x, shape_y = total_data.shape[0], total_data.shape[1]
                     ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
                     plt.pause(0.1)
+                    plt.ioff()
                     plt.close('all')
                     plt.figure().clear()
                     return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Release Data 7', 'Object Not Found was Pressed'
