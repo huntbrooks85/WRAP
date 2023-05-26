@@ -40,6 +40,7 @@ from astropy.visualization.wcsaxes import WCSAxes
 from astropy.visualization import astropy_mpl_style
 from astroquery.mast import Observations, MastMissions, Catalogs
 from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureManager
 from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormalize)
 
 #Does not load these packages if the user is on a Windows machine

@@ -127,7 +127,7 @@ def ukidss_image(ra, dec, radius):
             cam_type = hdu_j.header['CAMNUM']
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
-            shape = min(cutout_UHS.shape)
+            shape = max(cutout_UHS.shape)
             circle_size = (radius*3)
 
             #Converts the ra
@@ -140,7 +140,7 @@ def ukidss_image(ra, dec, radius):
                 #Plots the correctly orientated image
                 scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = np.rot90(cutout_UHS.data, 3)
-                plt.xlim(shape, 0)
+                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
                 plt.ylim(0, shape)
 
             elif cam_type == 2:
@@ -148,7 +148,7 @@ def ukidss_image(ra, dec, radius):
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
                 plt.xlim(0, shape)
-                plt.ylim(shape, 0)
+                plt.ylim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
 
             elif cam_type == 3:
                 #Makes the ra negative
@@ -157,14 +157,14 @@ def ukidss_image(ra, dec, radius):
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = np.rot90(cutout_UHS.data)
-                plt.xlim(shape, 0)
+                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
                 plt.ylim(0, shape)
                 
             elif cam_type == 4: 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
-                plt.xlim(shape, 0)
+                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
                 plt.ylim(0, shape)
 
             # Normalize the image and plots it
@@ -223,6 +223,7 @@ def ukidss_image(ra, dec, radius):
         default = [True]
         real_data = [total_data]
         if data != 'UHSDR1':
+            shape = max(cutout_j.shape)
             rax = plt.axes([0.045, 0.4, 0.115, 0.1])
             labels = ['Y', 'J', 'H', 'K']
             real_data = [y_reshape, cutout_j.data, h_reshape, k_reshape]
@@ -322,13 +323,13 @@ def ukidss_image(ra, dec, radius):
                 #Checks if the image was clicked
                 if click_axes == '':
                     if cam_type != 2:
-                        shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
+                        shape_x, shape_y = shape/1.06, shape/4
                         ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.pause(0.1)
+                        plt.pause(5)
                     elif cam_type == 2: 
-                        shape_x, shape_y = total_data.shape[0]/22, total_data.shape[1]/1.3
+                        shape_x, shape_y = shape/22, shape/1.3
                         ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.pause(0.1)
+                        plt.pause(5)
 
                     plt.clf()
                     plt.close('all')
@@ -401,7 +402,6 @@ def ukidss_image(ra, dec, radius):
                             scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
                         elif cam_type == 1:
                             scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_slider.val, edgecolor = '#40E842', facecolor = 'none')
-
 
             #Checks if the window was closed
             elif press is None:
