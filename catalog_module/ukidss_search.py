@@ -18,6 +18,7 @@ def ukidss_image(ra, dec, radius):
       
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
+    matplotlib.use("TkAgg")
     plt.style.use('Solarize_Light2')
     blockPrint()
     
@@ -177,7 +178,7 @@ def ukidss_image(ra, dec, radius):
             figure = plt.gcf()
             ax.set_title('Dates: \n' 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n', fontdict=fontdict_1, y=1.05)
             if platform != 'win32':
-                figure.set_size_inches(4.75, 6.85)
+                figure.set_size_inches(4.75, 7.15)
             elif platform == 'win32': 
                 figure.set_size_inches(4.75, 7.15)
         else:
@@ -202,7 +203,7 @@ def ukidss_image(ra, dec, radius):
                     + 'Y Date: ' + str(date_y) + ' (YYYYMMDD)   ' + 'J Date: ' + str(date_j) + ' (YYYYMMDD) \n'
                     + 'H Date: ' + str(date_h) + ' (Y/M/D)   ' + 'K Date: ' + str(date_k) + ' (Y/M/D) \n', fontdict = fontdict_1, y = 1.05)
             if platform != 'win32':
-                figure.set_size_inches(4.75, 6.95)
+                figure.set_size_inches(4.75, 7.25)
             elif platform == 'win32':
                 figure.set_size_inches(4.75, 7.25)
             plt.xlim(max(total_data.shape), 0)
@@ -218,6 +219,8 @@ def ukidss_image(ra, dec, radius):
         plt.suptitle('WFCAM Search', fontsize = 35, y = 0.96, fontfamily = 'Times New Roman')
         plt.grid(linewidth = 0)
         figure.canvas.set_window_title('WFCAM Search')
+        mng = pyplot.get_current_fig_manager()
+        mng.window.resizable(False, False)
 
         #Make checkbuttons with all of the different image bands
         default = [True]
@@ -322,15 +325,25 @@ def ukidss_image(ra, dec, radius):
 
                 #Checks if the image was clicked
                 if click_axes == '':
-                    if cam_type != 2:
-                        shape_x, shape_y = shape/1.06, shape/4
-                        ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.pause(5)
-                    elif cam_type == 2: 
-                        shape_x, shape_y = shape/22, shape/1.3
-                        ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-                        plt.pause(5)
-
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.75, 1)
+                    figure2.canvas.set_window_title('Successful WFCAM Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
+                    plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
 
@@ -339,26 +352,26 @@ def ukidss_image(ra, dec, radius):
                         coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
                         distance = []
                         for i in range(len(object_ra)):
-                            distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                            distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
                         list_location = distance.index(np.min(distance))
                     else: 
                         if (cam_type == 2) or (cam_type == 4):
                             coord = wcs.pixel_to_world_values(location[n-4],location[n-5])
                             distance = []
                             for i in range(len(object_ra)):
-                                distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                                distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
                             list_location = distance.index(np.min(distance))
                         elif cam_type == 3:
                             coord = [location[n - 4], location[n - 5]]
                             distance = []
                             for i in range(len(minus_ra)):
-                                distance.append(math.dist(coord, [ra_dec_pixel[1][i], minus_ra[i]]))
+                                distance.append(math.dist(coord, [float(ra_dec_pixel[1][i]), float(minus_ra[i])]))
                             list_location = distance.index(np.min(distance))
                         elif cam_type == 1: 
                             coord = [location[n - 4], location[n - 5]]
                             distance = []
                             for i in range(len(minus_dec)):
-                                distance.append(math.dist(coord, [minus_dec[i], ra_dec_pixel[0][i]]))
+                                distance.append(math.dist(coord, [float(minus_dec[i]), float(ra_dec_pixel[0][i])]))
                             list_location = distance.index(np.min(distance))
 
                     if data != 'UHSDR1':
@@ -383,11 +396,29 @@ def ukidss_image(ra, dec, radius):
                     ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_wfcam = ra
                     dec_wfcam = dec
-                    shape_x, shape_y = total_data.shape[0]/1.06, total_data.shape[1]/4
-                    ax.text(shape_x, shape_y, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for WFCAM! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.75, 1)
+                    figure2.canvas.set_window_title('Successful WFCAM Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
                     plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
+
                     return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved

@@ -20,6 +20,7 @@ import matplotlib.cm as cm
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.io import ascii
+from matplotlib import pyplot
 from bs4 import BeautifulSoup
 from astroquery.vsa import Vsa
 from astropy import units as u
@@ -29,7 +30,6 @@ from astroquery.gaia import Gaia
 from matplotlib import transforms
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
-# from astroquery.ipac.irsa import sha
 from astroquery.ukidss import Ukidss
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord

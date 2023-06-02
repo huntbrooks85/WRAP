@@ -441,13 +441,17 @@ while True:
     if event == 'Check_All':
         window['catwise'].update(True), window['AW'].update(True), window['gaia'].update(True)
         window['VSA'].update(True), window['UKIDSS'].update(True), window['2MASS'].update(True)
-        window['ps'].update(True), window['nsc'].update(True), window['galex'].update(True)
+        window['ps'].update(True), window['galex'].update(True)
         window['Uncheck_All'].update(False)
+        if platform != 'win32':
+          window['nsc'].update(True)
     elif event == 'Uncheck_All':
         window['catwise'].update(False), window['AW'].update(False), window['gaia'].update(False)
         window['VSA'].update(False), window['UKIDSS'].update(False), window['2MASS'].update(False)
-        window['ps'].update(False), window['nsc'].update(False), window['galex'].update(False)
+        window['ps'].update(False), window['galex'].update(False)
         window['Check_All'].update(False) 
+        if platform != 'win32':
+           window['nsc'].update(False)
 
     #Checks if the 'Run WRAP' button is clicked
     if event in (None, 'Run WRAP'):
@@ -490,13 +494,17 @@ while True:
     if event == 'Check_All_Multi':
         window['catwise_multi'].update(True), window['AW_multi'].update(True), window['gaia_multi'].update(True)
         window['VSA_multi'].update(True), window['UKIDSS_multi'].update(True), window['2MASS_multi'].update(True)
-        window['ps_multi'].update(True), window['nsc_multi'].update(True), window['galex_multi'].update(True)
+        window['ps_multi'].update(True), window['galex_multi'].update(True)
         window['Uncheck_All_Multi'].update(False)
+        if platform != 'win32':
+          window['nsc_multi'].update(True)
     elif event == 'Uncheck_All_Multi':
         window['catwise_multi'].update(False), window['AW_multi'].update(False), window['gaia_multi'].update(False)
         window['VSA_multi'].update(False), window['UKIDSS_multi'].update(False), window['2MASS_multi'].update(False)
-        window['ps_multi'].update(False), window['nsc_multi'].update(False), window['galex_multi'].update(False)
+        window['ps_multi'].update(False), window['galex_multi'].update(False)
         window['Check_All_Multi'].update(False) 
+        if platform != 'win32':
+          window['nsc_multi'].update(False)
 
     #Checks if the 'Run WRAP' button is clicked
     if event in (None, 'Run WRAP0'):

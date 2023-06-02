@@ -17,6 +17,7 @@ def nsc_image(ra, dec, radius):
     
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
+    matplotlib.use("TkAgg")
     plt.style.use('Solarize_Light2')
     blockPrint()
 
@@ -143,8 +144,10 @@ def nsc_image(ra, dec, radius):
         figure = plt.gcf()
         plt.xlim(min(total_data.shape), (min(total_data.shape) - max(total_data.shape)))
         plt.ylim(0, max(total_data.shape))
-        figure.set_size_inches(4.75, 7.05)
+        figure.set_size_inches(4.75, 7.35)
         figure.canvas.set_window_title('NSC Search')
+        mng = pyplot.get_current_fig_manager()
+        mng.window.resizable(False, False)
 
         #Make checkbuttons with all of the different image bands
         rax = plt.axes([0.045, 0.4, 0.12, 0.14])
@@ -237,8 +240,24 @@ def nsc_image(ra, dec, radius):
 
                 #Checks if the image was clicked
                 if click_axes == '':
-                    shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-                    ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.5, 1)
+                    figure2.canvas.set_window_title('Successful NSC Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
                     plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
@@ -247,7 +266,7 @@ def nsc_image(ra, dec, radius):
                     coord = wcs_cropped_i.pixel_to_world_values(location[n-4],location[n-5])
                     distance = []
                     for i in range(len(object_ra)):
-                        distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                        distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
 
                     list_location = distance.index(np.min(distance))
                     mjd = mjd_list[list_location]
@@ -267,11 +286,29 @@ def nsc_image(ra, dec, radius):
                 elif click_axes == 'Axes(0.04,0.767;0.92x0.04)':
                     ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
                     ra_nsc, dec_nsc = ra, dec
-                    shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-                    ax.text(shape_x/1.1, shape_y/5, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for NSC! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.5, 1)
+                    figure2.canvas.set_window_title('Successful NSC Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
                     plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
+        
                     return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'Object Not Found was Pressed'
                 
                 #Changes the circle size if the slider is changed

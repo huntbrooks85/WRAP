@@ -19,6 +19,7 @@ def galex_image(ra, dec, radius_use):
     #Makes outline for the window of the plot
     plt.rcParams['toolbar'] = 'None'
     plt.style.use('Solarize_Light2')
+    matplotlib.use("TkAgg")
 
     blockPrint()
     #Obtains all of the observations from MAST
@@ -121,10 +122,12 @@ def galex_image(ra, dec, radius_use):
         plt.xlim(0, max(total_data.shape))
         plt.ylim(0, max(total_data.shape))
         if platform != 'win32':
-            figure.set_size_inches(4.75, 6.95)
+            figure.set_size_inches(4.75, 7.25)
         elif platform == 'win32':
             figure.set_size_inches(4.75, 7.25)
         figure.canvas.set_window_title('GALEX Search')
+        mng = pyplot.get_current_fig_manager()
+        mng.window.resizable(False, False)
 
         #Adds a slider for the scaling of the image
         freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
@@ -180,17 +183,33 @@ def galex_image(ra, dec, radius_use):
 
                 #Checks if the image was clicked
                 if click_axes == '':
-                    shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-                    ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.75, 1)
+                    figure2.canvas.set_window_title('Successful GALEX Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
                     plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
 
                     #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-                    coord = wcs_cropped_w1.pixel_to_world_values(location[n-4],location[n-5])
+                    coord = wcs_cropped_w1.pixel_to_world_values(location[n-4], location[n-5])
                     distance = []
                     for i in range(len(object_ra)):
-                        distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+                        distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
                     list_location = distance.index(np.min(distance))
                     ra_galex, dec_galex = object_ra[list_location], object_dec[list_location]
                     fuv, fuv_e = fuv_list[list_location], fuv_list_e[list_location]
@@ -201,11 +220,29 @@ def galex_image(ra, dec, radius_use):
                 elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
                     fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
                     ra_galex, dec_galex = ra, dec
-                    shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-                    ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+
+                    #Makes a pop-up window with success text
+                    plt.clf()
+                    plt.close('all')
+                    plt.figure(1)
+                    plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for GALEX! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+                    plt.xlim(0, 1)
+                    plt.ylim(0, 1)
+                    plt.grid(linewidth = 0)
+                    ax = plt.gca()
+                    ax.xaxis.set_tick_params(labelbottom=False)
+                    ax.yaxis.set_tick_params(labelleft=False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+                    figure2 = plt.gcf()
+                    figure2.set_size_inches(4.75, 1)
+                    figure2.canvas.set_window_title('Successful GALEX Search')
+                    mng2 = pyplot.get_current_fig_manager()
+                    mng2.window.resizable(False, False)
                     plt.pause(0.1)
                     plt.clf()
                     plt.close('all')
+        
                     return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Release Data 7', 'Object Not Found was Pressed'
                 
                 #Updates the circle size when slider is moved

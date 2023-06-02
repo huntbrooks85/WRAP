@@ -18,6 +18,7 @@ def twomass_image(ra, dec, radius):
     
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
+  matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
   blockPrint()
 
@@ -134,14 +135,16 @@ def twomass_image(ra, dec, radius):
               + 'K Date: ' + str(date_k) + ' (YYMMDD)  \n', fontdict = fontdict_1, y = 1.04)
     plt.grid(linewidth = 0)
     shape = max(cutout_j.shape)
-    plt.xlim(0, shape)
-    plt.ylim(0, shape)
+    plt.xlim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
+    plt.ylim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
     figure = plt.gcf()
     if platform != 'win32':
-      figure.set_size_inches(4.75, 6.75)
+      figure.set_size_inches(4.75, 6.95)
     elif platform == 'win32':
       figure.set_size_inches(4.75, 7.05)
     figure.canvas.set_window_title('2MASS Search')
+    mng = pyplot.get_current_fig_manager()
+    mng.window.resizable(False, False)
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
@@ -231,8 +234,24 @@ def twomass_image(ra, dec, radius):
 
         #Checks if the image was clicked
         if click_axes == '':
-          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          #Makes a pop-up window with success text
+          plt.clf()
+          plt.close('all')
+          plt.figure(1)
+          plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.xlim(0, 1)
+          plt.ylim(0, 1)
+          plt.grid(linewidth = 0)
+          ax = plt.gca()
+          ax.xaxis.set_tick_params(labelbottom=False)
+          ax.yaxis.set_tick_params(labelleft=False)
+          ax.set_xticks([])
+          ax.set_yticks([])
+          figure2 = plt.gcf()
+          figure2.set_size_inches(4.75, 1)
+          figure2.canvas.set_window_title('Successful 2MASS Search')
+          mng2 = pyplot.get_current_fig_manager()
+          mng2.window.resizable(False, False)
           plt.pause(0.1)
           plt.clf()
           plt.close('all')
@@ -241,7 +260,7 @@ def twomass_image(ra, dec, radius):
           coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
           distance = []
           for i in range(len(object_ra)):
-            distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+            distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
 
           list_location = distance.index(np.min(distance))
           ra_2mass, dec_2mass = object_ra[list_location], object_dec[list_location]
@@ -254,11 +273,29 @@ def twomass_image(ra, dec, radius):
         elif click_axes == 'Axes(0.04,0.78;0.92x0.04)':
           j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_2mass, dec_2mass = ra, dec
-          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/5, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+
+          #Makes a pop-up window with success text
+          plt.clf()
+          plt.close('all')
+          plt.figure(1)
+          plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for 2MASS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.xlim(0, 1)
+          plt.ylim(0, 1)
+          plt.grid(linewidth = 0)
+          ax = plt.gca()
+          ax.xaxis.set_tick_params(labelbottom=False)
+          ax.yaxis.set_tick_params(labelleft=False)
+          ax.set_xticks([])
+          ax.set_yticks([])
+          figure2 = plt.gcf()
+          figure2.set_size_inches(4.75, 1)
+          figure2.canvas.set_window_title('Successful 2MASS Search')
+          mng2 = pyplot.get_current_fig_manager()
+          mng2.window.resizable(False, False)
           plt.pause(0.1)
           plt.clf()
           plt.close('all')
+          
           return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', 'Object Not Found was Pressed'
         
         #Adds the functionality of the circle slider bar

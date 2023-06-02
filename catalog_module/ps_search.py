@@ -18,6 +18,7 @@ def ps_image(ra, dec, radius):
   
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
+  matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
   blockPrint()
 
@@ -143,10 +144,12 @@ def ps_image(ra, dec, radius):
       plt.xlim(0, max(total_data.shape))
       plt.ylim(0, max(total_data.shape))
       if platform != 'win32':
-        figure.set_size_inches(4.75, 6.95)
+        figure.set_size_inches(4.75, 7.25)
       elif platform == 'win32':
         figure.set_size_inches(4.75, 7.25)
       figure.canvas.set_window_title('PanSTARRS Search')
+      mng = pyplot.get_current_fig_manager()
+      mng.window.resizable(False, False)
 
       #Make checkbuttons with all of the different image bands
       rax = plt.axes([0.045, 0.4, 0.115, 0.1])
@@ -239,17 +242,33 @@ def ps_image(ra, dec, radius):
 
           #Checks if the image was clicked
           if click_axes == '':
-            shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-            ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+            #Makes a pop-up window with success text
+            plt.clf()
+            plt.close('all')
+            plt.figure(1)
+            plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+            plt.xlim(0, 1)
+            plt.ylim(0, 1)
+            plt.grid(linewidth = 0)
+            ax = plt.gca()
+            ax.xaxis.set_tick_params(labelbottom=False)
+            ax.yaxis.set_tick_params(labelleft=False)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            figure2 = plt.gcf()
+            figure2.set_size_inches(5.05, 1)
+            figure2.canvas.set_window_title('Successful PanSTARRS Search')
+            mng2 = pyplot.get_current_fig_manager()
+            mng2.window.resizable(False, False)
             plt.pause(0.1)
             plt.clf()
             plt.close('all')
 
             #Find the closest point to the location clicked to obtain W1, W2, W3, and W4 photometry
-            coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
+            coord = wcs_cropped.pixel_to_world_values(location[n-4], location[n-5])
             distance = []
             for i in range(len(ra_list)):
-              distance.append(math.dist(coord, [ra_list[i], dec_list[i]]))
+              distance.append(math.dist(coord, [float(ra_list[i]), float(dec_list[i])]))
 
             list_location = distance.index(np.min(distance))
             mjd = object_mjd[list_location]
@@ -266,11 +285,29 @@ def ps_image(ra, dec, radius):
           elif click_axes == 'Axes(0.04,0.775;0.92x0.04)':
             ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
             ps_ra, ps_dec = ra, dec
-            shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-            ax.text(shape_x/32, shape_y/5, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+
+            #Makes a pop-up window with success text
+            plt.clf()
+            plt.close('all')
+            plt.figure(1)
+            plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for PanSTARRS! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+            plt.xlim(0, 1)
+            plt.ylim(0, 1)
+            plt.grid(linewidth = 0)
+            ax = plt.gca()
+            ax.xaxis.set_tick_params(labelbottom=False)
+            ax.yaxis.set_tick_params(labelleft=False)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            figure2 = plt.gcf()
+            figure2.set_size_inches(5.05, 1)
+            figure2.canvas.set_window_title('Successful PanSTARRS Search')
+            mng2 = pyplot.get_current_fig_manager()
+            mng2.window.resizable(False, False)
             plt.pause(0.1)
             plt.clf()
             plt.close('all')
+
             return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Object Not Found was Pressed'
           
           #Updates the circle size when slider is moved

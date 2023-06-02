@@ -18,6 +18,7 @@ def vsa_image(ra, dec, radius):
   
   #Makes outline for the window of the plot
   plt.rcParams['toolbar'] = 'None'
+  matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
   blockPrint()
 
@@ -112,10 +113,12 @@ def vsa_image(ra, dec, radius):
     plt.ylim(shape, 0)
     figure = plt.gcf()
     if platform != 'win32': 
-      figure.set_size_inches(4.75, 6.95)
+      figure.set_size_inches(4.75, 7.25)
     elif platform == 'win32': 
       figure.set_size_inches(4.75, 7.25)
     figure.canvas.set_window_title('VISTA Search')
+    mng = pyplot.get_current_fig_manager()
+    mng.window.resizable(False, False)
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
@@ -208,8 +211,26 @@ def vsa_image(ra, dec, radius):
 
         #Checks if the image was clicked
         if click_axes == '':
+
+          #Makes a pop-up window with success text
+          plt.clf()
+          plt.close('all')
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please time for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.figure(1)
+          plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.xlim(0, 1)
+          plt.ylim(0, 1)
+          plt.grid(linewidth = 0)
+          ax = plt.gca()
+          ax.xaxis.set_tick_params(labelbottom=False)
+          ax.yaxis.set_tick_params(labelleft=False)
+          ax.set_xticks([])
+          ax.set_yticks([])
+          figure2 = plt.gcf()
+          figure2.set_size_inches(4.6, 1)
+          figure2.canvas.set_window_title('Successful VISTA Search')
+          mng2 = pyplot.get_current_fig_manager()
+          mng2.window.resizable(False, False)
           plt.pause(0.1)
           plt.clf()
           plt.close('all')
@@ -218,7 +239,7 @@ def vsa_image(ra, dec, radius):
           coord = wcs_cropped.pixel_to_world_values(location[n-4],location[n-5])
           distance = []
           for i in range(len(object_ra)):
-            distance.append(math.dist(coord, [object_ra[i], object_dec[i]]))
+            distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
 
           list_location = distance.index(np.min(distance))
           ymjd, jmjd = object_mjd_y[list_location], object_mjd_j[list_location]
@@ -235,10 +256,30 @@ def vsa_image(ra, dec, radius):
           ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
           ra_vsa, dec_vsa = ra, dec
           shape_x, shape_y = total_data.shape[0], total_data.shape[1]
-          ax.text(shape_x/20, shape_y/1.35, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please time for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+
+          #Makes a pop-up window with success text
+          plt.clf()
+          plt.close('all')
+          shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+          plt.figure(1)
+          plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded for VISTA! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+          plt.xlim(0, 1)
+          plt.ylim(0, 1)
+          plt.grid(linewidth = 0)
+          ax = plt.gca()
+          ax.xaxis.set_tick_params(labelbottom=False)
+          ax.yaxis.set_tick_params(labelleft=False)
+          ax.set_xticks([])
+          ax.set_yticks([])
+          figure2 = plt.gcf()
+          figure2.set_size_inches(4.6, 1)
+          figure2.canvas.set_window_title('Successful VISTA Search')
+          mng2 = pyplot.get_current_fig_manager()
+          mng2.window.resizable(False, False)
           plt.pause(0.1)
           plt.clf()
           plt.close('all')
+          
           return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, img, 'Object Not Found was Pressed'
         
         #Allows updates for the circle size slider bar
