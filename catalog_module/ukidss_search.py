@@ -128,7 +128,7 @@ def ukidss_image(ra, dec, radius):
             cam_type = hdu_j.header['CAMNUM']
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
-            shape = max(cutout_UHS.shape)
+            shape = min(cutout_UHS.shape)
             circle_size = (radius*3)
 
             #Converts the ra
@@ -142,13 +142,13 @@ def ukidss_image(ra, dec, radius):
                 scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = np.rot90(cutout_UHS.data, 3)
                 plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, shape)
+                plt.ylim(0, max(cutout_UHS.shape))
 
             elif cam_type == 2:
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
-                plt.xlim(0, shape)
+                plt.xlim(0, max(cutout_UHS.shape))
                 plt.ylim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
 
             elif cam_type == 3:
@@ -159,14 +159,14 @@ def ukidss_image(ra, dec, radius):
                 scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = np.rot90(cutout_UHS.data)
                 plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, shape)
+                plt.ylim(0, max(cutout_UHS.shape))
                 
             elif cam_type == 4: 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
                 plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, shape)
+                plt.ylim(0, max(cutout_UHS.shape))
 
             # Normalize the image and plots it
             init_top, init_bot = 95, 45

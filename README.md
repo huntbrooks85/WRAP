@@ -93,6 +93,8 @@
 Mr. Hunter Brooks -> hcb98@nau.edu
 Mr. Dan Caselden -> dancaselden@gmail.com
 
+Slack Community: Email Mr. Hunter Brooks for a link to the slack community. 
+
 <h2> 📖 Acknowledgments </h2>
 
 1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
