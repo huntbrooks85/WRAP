@@ -87,7 +87,7 @@ def gaia_image(ra, dec, radius):
   ax = plt.subplot(projection = wcs_cropped_w1)
 
   #Plots the objects found in the radius
-  circle_size = (radius*3)
+  circle_size = (radius*2)
   scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s = circle_size, edgecolor='#40E842', facecolor='none')
 
   #Normalize the image and plots it
@@ -131,7 +131,7 @@ def gaia_image(ra, dec, radius):
 
   #Adds a slider for the circle size
   circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
-  circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = (circle_size - 2.5*radius), valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
+  circle_slider = Slider(ax = circle_slid_location, label = 'Circle Size:', valmin = 5, valmax = (circle_size + 1*radius), valinit = circle_size, color = '#E48671')
 
   #Adds a notes section that the user can add notes about their data
   axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
