@@ -1,0 +1,49 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: "http://stsci.edu/schemas/asdf/transform/spline1d-1.0.0"
+title: >
+  A spline1d model.
+
+description: |
+  A spline1d model represented by an array of its knots, an array of its
+  coefficients, and its degree. In addition the bounding endpoints
+  of the spline can be represented as well
+
+examples:
+  -
+    - Example spline
+    - |
+        !transform/spline1d-1.0.0
+          knots: !core/ndarray-1.0.0
+            [0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 1.0, 1.0, 1.0]
+          coefficients: !core/ndarray-1.0.0
+            [1.2, 1.2, 1.2, 1.2, 0.3, 56.1, 56.1, 56.1, 56.1]
+          degree: 3
+
+definitions:
+  coeffs:
+    tag: tag:stsci.edu:asdf/core/ndarray-1.0.0
+    ndim: 1
+    datatype: float64
+
+allOf:
+  - $ref: "transform-1.2.0"
+  - type: object
+    properties:
+      knots:
+        description: |
+          The spline knots
+        $ref: "#/definitions/coeffs"
+      coefficients:
+        description: |
+          The spline coefficients
+        $ref: "#/definitions/coeffs"
+      degree:
+        description: |
+          The spline degree
+        type: integer
+        minimum: 1
+        maximum: 5
+    required: [knots, coefficients, degree]
+...

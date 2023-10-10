@@ -1,0 +1,2 @@
+[asdf.resource_mappings]
+asdf_transform_schemas = asdf_transform_schemas.integration:get_resource_mappings

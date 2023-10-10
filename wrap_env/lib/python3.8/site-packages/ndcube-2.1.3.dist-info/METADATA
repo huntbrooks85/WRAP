@@ -1,0 +1,141 @@
+Metadata-Version: 2.1
+Name: ndcube
+Version: 2.1.3
+Summary: A package for multi-dimensional contiguous and non-contiguous coordinate aware arrays.
+Home-page: https://docs.sunpy.org/projects/ndcube/
+Download-URL: https://pypi.org/project/ndcube/
+Author: The SunPy Community
+Author-email: sunpy@googlegroups.com
+License: BSD 2-Clause
+Project-URL: Source Code, https://github.com/sunpy/ndcube/
+Project-URL: Documentation, https://docs.sunpy.org/projects/ndcube/
+Project-URL: Changelog, https://docs.sunpy.org/projects/ndcube/en/stable/whatsnew/changelog.html
+Project-URL: Issue Tracker, https://github.com/sunpy/ndcube/issues
+Keywords: nddata,science,sun,wcs,gwcs,coordinates,sunpy,astropy,solar,spectroscopy
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Scientific/Engineering :: Physics
+Provides: ndcube
+Requires-Python: >=3.8
+Description-Content-Type: text/x-rst
+License-File: LICENSE.rst
+Requires-Dist: astropy (>=4.2)
+Requires-Dist: gwcs (>=0.15)
+Requires-Dist: numpy (>1.17)
+Provides-Extra: all
+Requires-Dist: matplotlib (>=3.2) ; extra == 'all'
+Requires-Dist: mpl-animators (>=1.0) ; extra == 'all'
+Requires-Dist: reproject (>=0.7.1) ; extra == 'all'
+Provides-Extra: dev
+Requires-Dist: dask ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: pytest-astropy ; extra == 'dev'
+Requires-Dist: pytest-mpl (>=0.12) ; extra == 'dev'
+Requires-Dist: scipy ; extra == 'dev'
+Requires-Dist: sunpy (>=4.0.0) ; extra == 'dev'
+Requires-Dist: matplotlib ; extra == 'dev'
+Requires-Dist: pytest-doctestplus (>=0.9.0) ; extra == 'dev'
+Requires-Dist: sphinx ; extra == 'dev'
+Requires-Dist: sphinx-automodapi ; extra == 'dev'
+Requires-Dist: sphinx-changelog (>=1.1.0) ; extra == 'dev'
+Requires-Dist: sphinx-gallery ; extra == 'dev'
+Requires-Dist: sphinxext-opengraph ; extra == 'dev'
+Requires-Dist: sunpy-sphinx-theme ; extra == 'dev'
+Requires-Dist: matplotlib (>=3.2) ; extra == 'dev'
+Requires-Dist: mpl-animators (>=1.0) ; extra == 'dev'
+Requires-Dist: reproject (>=0.7.1) ; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: matplotlib ; extra == 'docs'
+Requires-Dist: pytest-doctestplus (>=0.9.0) ; extra == 'docs'
+Requires-Dist: sphinx ; extra == 'docs'
+Requires-Dist: sphinx-automodapi ; extra == 'docs'
+Requires-Dist: sphinx-changelog (>=1.1.0) ; extra == 'docs'
+Requires-Dist: sphinx-gallery ; extra == 'docs'
+Requires-Dist: sphinxext-opengraph ; extra == 'docs'
+Requires-Dist: sunpy-sphinx-theme ; extra == 'docs'
+Requires-Dist: sunpy (>=4.0.0) ; extra == 'docs'
+Provides-Extra: plotting
+Requires-Dist: matplotlib (>=3.2) ; extra == 'plotting'
+Requires-Dist: mpl-animators (>=1.0) ; extra == 'plotting'
+Provides-Extra: reproject
+Requires-Dist: reproject (>=0.7.1) ; extra == 'reproject'
+Provides-Extra: tests
+Requires-Dist: dask ; extra == 'tests'
+Requires-Dist: pytest ; extra == 'tests'
+Requires-Dist: pytest-astropy ; extra == 'tests'
+Requires-Dist: pytest-mpl (>=0.12) ; extra == 'tests'
+Requires-Dist: scipy ; extra == 'tests'
+Requires-Dist: sunpy (>=4.0.0) ; extra == 'tests'
+
+******
+ndcube
+******
+
+|Latest Version| |codecov| |matrix| |Powered by NumFOCUS| |Powered by SunPy|
+
+.. |Latest Version| image:: https://img.shields.io/pypi/v/ndcube.svg
+   :target: https://pypi.python.org/pypi/ndcube/
+   :alt: It is up to date, we promise
+.. |matrix| image:: https://img.shields.io/matrix/ndcube:openastronomy.org.svg?colorB=%23FE7900&label=Chat&logo=matrix&server_fqdn=openastronomy.modular.im
+   :target: https://app.element.io/#/room/#ndcube:openastronomy.org
+   :alt: join us on #ndcube:openastronom.org on matrix
+.. |codecov| image:: https://codecov.io/gh/sunpy/ndcube/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/sunpy/sunpy
+   :alt: Best code cov this side of mars
+.. |Powered by NumFOCUS| image:: https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A
+   :target: https://numfocus.org
+   :alt: Go give them money
+.. |Powered by SunPy| image:: http://img.shields.io/badge/powered%20by-SunPy-orange.svg?style=flat
+   :target: http://www.sunpy.org
+   :alt: SunPy
+
+ndcube is an open-source SunPy affiliated package for manipulating, inspecting and visualizing multi-dimensional contiguous and non-contiguous coordinate-aware data arrays.
+
+It combines data, uncertainties, units, metadata, masking, and coordinate transformations into classes with unified slicing and generic coordinate transformations and plotting/animation capabilities.
+It is designed to handle data of any number of dimensions and axis types (e.g. spatial, temporal, spectral, etc.) whose relationship between the array elements and the real world can be described by World Coordinate System (WCS) translations.
+
+Installation
+============
+
+For detailed installation instructions, see the `installation guide`_ in the ndcube docs.
+
+.. _installation guide: https://docs.sunpy.org/projects/ndcube/en/stable/installation.html
+
+Getting Help
+============
+
+For more information or to ask questions about ndcube, check out:
+
+-  `ndcube Documentation`_
+-  `ndcube Element Channel`_
+
+.. _ndcube Documentation: https://docs.sunpy.org/projects/ndcube/
+.. _ndcube Element Channel: https://app.element.io/#/room/#ndcube:openastronomy.org
+
+Contributing
+============
+
+If you would like to get involved, check out the `Newcomers Guide`_ section of the sunpy docs.
+This shows how to get setup with a "sunpy" workflow but the same applies for ndcube, you will just need to replace sunpy with ndcube.
+
+Help is always welcome so let us know what you like to work on, or check out the `issues page`_ for the list of known outstanding items.
+
+.. _Newcomers Guide: https://docs.sunpy.org/en/latest/dev_guide/contents/newcomers.html
+.. _issues page: https://github.com/sunpy/ndcube/issues
+
+Code of Conduct
+===============
+
+When you are interacting with the SunPy community you are asked to follow our `Code of Conduct`_.
+
+.. _Code of Conduct: https://sunpy.org/coc

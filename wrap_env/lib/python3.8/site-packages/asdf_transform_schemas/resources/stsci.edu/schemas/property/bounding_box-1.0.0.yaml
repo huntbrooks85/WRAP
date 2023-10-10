@@ -1,0 +1,111 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: "http://stsci.edu/schemas/asdf/transform/property/bounding_box-1.0.0"
+title: >
+  Bounding box for a model.
+
+description: |
+  This object contains the bounding box for a model, which defines
+  the domain of valid inputs to the model. The bounds for each input
+  is are listed as a map under the interval keyword as ordered pairs of
+  lower/upper bounds with key being the input name. If any model inputs
+  are to be ignored by the bounding box then they need to be listed under
+  the ignore keyword. Finally, the tuple representation's input ordering
+  can be listed under the order keyword, C for C-ordering, F for Fortran
+  ordering.
+
+examples:
+  -
+    - A 1D bounding box
+    - |
+      !transform/constant-1.4.0
+        value: 1
+        dimensions: 1
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x: [1.0, 2.0]
+  -
+    - A 2D bounding box
+    - |
+      !transform/constant-1.4.0
+        value: 1
+        dimensions: 2
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x: [1.0, 2.0]
+            y: [3.0, 4.0]
+          order: C
+  -
+    - A 3D bounding box
+    - |
+      !transform/concatenate-1.2.0
+        forward:
+          - !transform/concatenate-1.2.0
+            forward:
+              - !transform/shift-1.2.0
+                offset: 1.0
+              - !transform/shift-1.2.0
+                offset: 2.0
+          - !transform/shift-1.2.0
+            offset: 3.0
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x0: [1.0, 2.0]
+            x1: [3.0, 4.0]
+            x: [5.0, 6.0]
+          order: F
+  -
+    - A 3D bounding box with ignored inputs
+    - |
+      !transform/concatenate-1.2.0
+        forward:
+          - !transform/concatenate-1.2.0
+            forward:
+              - !transform/shift-1.2.0
+                offset: 1.0
+              - !transform/shift-1.2.0
+                offset: 2.0
+          - !transform/shift-1.2.0
+            offset: 3.0
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x: [1.0, 2.0]
+          ignore: [x0, x1]
+          order: F
+
+definitions:
+  bound:
+    anyOf:
+      - tag: tag:stsci.edu:asdf/unit/quantity-1.1.0
+      - type: number
+
+  interval:
+    type: array
+    minItems: 2
+    maxItems: 2
+    items:
+      - $ref: "#/definitions/bound"
+      - $ref: "#/definitions/bound"
+
+  ignore:
+    type: array
+    items:
+      type: string
+
+  order:
+    enum: ['C', 'F']
+
+type: object
+properties:
+  intervals:
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/interval"
+    minProperties: 1
+  ignore:
+    $ref: "#/definitions/ignore"
+  order:
+    $ref: "#/definitions/order"
+required: [intervals]
+...

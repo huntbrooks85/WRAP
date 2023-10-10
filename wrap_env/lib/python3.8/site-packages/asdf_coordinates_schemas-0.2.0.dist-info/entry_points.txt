@@ -1,0 +1,2 @@
+[asdf.resource_mappings]
+asdf_coordinates_schemas = asdf_coordinates_schemas.integration:get_resource_mappings

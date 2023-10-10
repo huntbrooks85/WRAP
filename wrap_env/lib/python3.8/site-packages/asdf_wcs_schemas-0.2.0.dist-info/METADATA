@@ -1,0 +1,73 @@
+Metadata-Version: 2.1
+Name: asdf-wcs-schemas
+Version: 0.2.0
+Summary: ASDF WCS schemas
+Author-email: The ASDF Developers <help@stsci.edu>
+License: Copyright (C) 2021 Association of Universities for Research in Astronomy (AURA)
+        
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+        
+            1. Redistributions of source code must retain the above copyright
+              notice, this list of conditions and the following disclaimer.
+        
+            2. Redistributions in binary form must reproduce the above
+              copyright notice, this list of conditions and the following
+              disclaimer in the documentation and/or other materials provided
+              with the distribution.
+        
+            3. The name of AURA and its representatives may not be used to
+              endorse or promote products derived from this software without
+              specific prior written permission.
+        
+        THIS SOFTWARE IS PROVIDED BY AURA ``AS IS'' AND ANY EXPRESS OR IMPLIED
+        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL AURA BE LIABLE FOR ANY DIRECT, INDIRECT,
+        INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+        BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+        OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+        ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+        TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+        USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+        DAMAGE.
+        
+Project-URL: tracker, https://github.com/asdf-format/asdf-wcs-schemas/issues
+Project-URL: documentation, https://asdf-wcs-schemas.readthedocs.io/en/stable
+Project-URL: repository, https://github.com/asdf-format/asdf-wcs-schemas
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Development Status :: 5 - Production/Stable
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: asdf-standard >=1.0.1
+Requires-Dist: asdf-transform-schemas >=0.3.0
+Requires-Dist: asdf-unit-schemas >=0.1.0
+Requires-Dist: importlib-resources >=3 ; python_version < "3.9"
+Provides-Extra: docs
+Requires-Dist: tomli ; extra == 'docs'
+Requires-Dist: sphinx ; extra == 'docs'
+Requires-Dist: sphinx-asdf >=0.1.3 ; extra == 'docs'
+Requires-Dist: sphinx-astropy ; extra == 'docs'
+Requires-Dist: astropy >=5.0.4 ; extra == 'docs'
+Requires-Dist: graphviz ; extra == 'docs'
+Requires-Dist: matplotlib ; extra == 'docs'
+Requires-Dist: docutils ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme ; extra == 'docs'
+Provides-Extra: test
+Requires-Dist: pytest >=4.6.0 ; extra == 'test'
+Requires-Dist: pytest-openfiles >=0.5.0 ; extra == 'test'
+Requires-Dist: asdf >=2.8.0 ; extra == 'test'
+Requires-Dist: asdf-astropy ; extra == 'test'
+
+# asdf-wcs-schemas
+![CI](https://github.com/asdf-format/asdf-wcs-schemas/workflows/CI/badge.svg)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+
+This package provides ASDF schemas for validating WCS tags. Users should not need to install this directly; instead, install an implementation package such as gwcs, which includes asdf-wcs-schemas as a dependency.
