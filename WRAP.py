@@ -3263,94 +3263,185 @@ def wrap_end(tab):
 #Sets the theme for WRAP
 sg.theme('LightGrey4')
 
-#                          GUI LAYOUT                           #
+#                        GUI LAYOUT                             #
 # ------------------------------------------------------------- #
-#Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-layout_single = [
-                  [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
-                  [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
-                  [sg.InputText(size=(18, 1), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(18, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(18, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
-                  
-                  [sg.Text('Output File Name', size=(50, 1), justification='center', font = ('Times New Roman', 22))],
-                  [sg.InputText(key = 'output', font = ('Times New Roman', 15), size = (70, 3), justification='center')],
+#Sets the layout if the user is not on a windows machine
+if platform != 'win32':
+  #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
+  layout_single = [
+                    [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
+                    [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
+                    [sg.InputText(size=(18, 1), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(18, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(18, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
+                    
+                    [sg.Text('Output File Name', size=(50, 1), justification='center', font = ('Times New Roman', 22))],
+                    [sg.InputText(key = 'output', font = ('Times New Roman', 15), size = (70, 3), justification='center')],
 
-                  [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],   
-                  [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 22), size = (9, 2))],
-                  [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 22), size = (10, 2))],
-                  [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 22), size = (10, 2))],
-                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+                    [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],   
+                    [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 22), size = (9, 2))],
+                    [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 22), size = (10, 2))],
+                    [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 22), size = (10, 2))],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
-                  [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
+                    [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
+
+                    [sg.Text("\u0332".join('Output'), size=(50, 1), justification='center', font = ('Times New Roman', 15))],
+                    [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_SINGLE, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
+
+  #Makes the drop down window for types of file in the multi-object search
+  filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
+  #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
+  layout_multi = [
+                  [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
+                  [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
+
+                  [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
+                  [sg.Text('RADIUS', font = ('Times New Roman', 22), size=(17, 1), justification='center'),              sg.Text('FILETYPE', font = ('Times New Roman', 22), size=(9, 1), justification='center'),               sg.Text('Output File Name', size=(25, 1), justification='center', font = ('Times New Roman', 22))],
+                  [sg.InputText(size=(22, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output2', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
+
+                  [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],
+                  [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 22), size = (9, 2))],
+                  [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 22), size = (10, 2))],
+                  [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc_multi', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 22), size = (10, 2))],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+
+                  [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
                   [sg.Text("\u0332".join('Output'), size=(50, 1), justification='center', font = ('Times New Roman', 15))],
-                  [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_SINGLE, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
+                  [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
-#Makes the drop down window for types of file in the multi-object search
-filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
-#Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-layout_multi = [
-                [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
-                [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
+  #Makes the general layout for WRAP
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
-                [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
-                [sg.Text('RADIUS', font = ('Times New Roman', 22), size=(17, 1), justification='center'),              sg.Text('FILETYPE', font = ('Times New Roman', 22), size=(9, 1), justification='center'),               sg.Text('Output File Name', size=(25, 1), justification='center', font = ('Times New Roman', 22))],
-                [sg.InputText(size=(22, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output2', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
+  #Generates the window based off the layouts above
+  window = sg.Window('WRAP', tab_layout, size = (550, 530), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  
+  #Makes lists for: catalog names, catalog functions, and fake variables
+  catalogs = ['catwise', 'AW',     'gaia', 
+              'VSA',     'UKIDSS', '2MASS', 
+              'ps',      'nsc',    'galex']
+  catalogs_multi = ['catwise_multi',  'AW_multi',     'gaia_multi', 
+                    'VSA_multi',      'UKIDSS_multi', '2MASS_multi', 
+                    'ps_multi',       'nsc_multi',    'galex_multi']
+  catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
+                  'VSA',           'UKIDSS',  '2MASS', 
+                  'PanSTARRS',     'NSC',     'GALEX']
+  catalog_functions = [catwise_image,   allwise_image,  gaia_image, 
+                      vsa_image,        ukidss_image,   twomass_image, 
+                      ps_image,         nsc_image,      galex_image]
 
-                [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],
-                [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 22), size = (9, 2))],
-                [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 22), size = (10, 2))],
-                [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'nsc_multi', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 22), size = (10, 2))],
-                [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+  #Defines all of the variable names
+  value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes'], 
+                ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes'], 
+                ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes'], 
+                ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes'], 
+                ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes'], 
+                ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes'], 
+                ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes'], 
+                ['nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes'],  
+                ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']]
 
-                [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
+  #Defines the header for the CSV file
+  header = ['input_ra', 'input_dec', 'input_radius', 
+            'cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes', 
+            'aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes', 
+            'gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes', 
+            'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes', 
+            'wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes', 
+            '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes', 
+            'ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes', 
+            'nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes',  
+            'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']
 
-                [sg.Text("\u0332".join('Output'), size=(50, 1), justification='center', font = ('Times New Roman', 15))],
-                [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
+#Sets the layout if the user is on a windows machine
+elif platform == 'win32':
+  #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
+  layout_single = [
+                    [sg.Text('RA', font = ('Times New Roman', 18), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 18), size=(10, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 18), size=(13, 1), justification='center')],
+                    [sg.Text('(Degrees)', font = ('Times New Roman', 16), size=(14, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 16), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 16), size=(16, 1), justification='center')],
+                    [sg.InputText(size=(15), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(15, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(15, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
+                    
+                    [sg.Text('Output File Name', size=(50, 1), justification='center', font = ('Times New Roman', 18))],
+                    [sg.InputText(key = 'output', font = ('Times New Roman', 15), size = (70, 3), justification='center')],
 
-#Makes the general layout for WRAP
-tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Single Obect Search'),
-                            sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Multi-Object Search')]], 
-                            tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
+                    [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 22))],   
+                    [sg.Checkbox('CatWISE 2020', key = 'catwise', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia', font = ('Times New Roman', 15), size = (9, 2))],
+                    [sg.Checkbox('VISTA', key = 'VSA', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS', font = ('Times New Roman', 15), size = (10, 2))],
+                    [sg.Checkbox('PanSTARRS', key = 'ps', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex', font = ('Times New Roman', 15), size = (10, 2))],
+                    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
 
-#Generates the window based off the layouts above
-window = sg.Window('WRAP', tab_layout, size = (550, 530), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+                    [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
 
-#Makes lists for: catalog names, catalog functions, and fake variables
-catalogs = ['catwise', 'AW',     'gaia', 
-            'VSA',     'UKIDSS', '2MASS', 
-            'ps',      'nsc',    'galex']
-catalogs_multi = ['catwise_multi',  'AW_multi',     'gaia_multi', 
-                  'VSA_multi',      'UKIDSS_multi', '2MASS_multi', 
-                  'ps_multi',       'nsc_multi',    'galex_multi']
-catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
-                'VSA',           'UKIDSS',  '2MASS', 
-                'PanSTARRS',     'NSC',     'GALEX']
-catalog_functions = [catwise_image,   allwise_image,  gaia_image, 
-                    vsa_image,        ukidss_image,   twomass_image, 
-                    ps_image,         nsc_image,      galex_image]
+                    [sg.Text("\u0332".join('Output'), size=(50, 1), justification='center', font = ('Times New Roman', 15))],
+                    [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_SINGLE, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
-#Defines all of the variable names
-value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes'], 
-              ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes'], 
-              ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes'], 
-              ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes'], 
-              ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes'], 
-              ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes'], 
-              ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes'], 
-              ['nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes'],  
-              ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']]
+  #Makes the drop down window for types of file in the multi-object search
+  filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
+  #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
+  layout_multi = [
+                  [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 18), size=(50, 1), justification='center')],
+                  [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 16), size=(50, 1), justification='center')],
+                  [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
 
-#Defines the header for the CSV file
-header = ['input_ra', 'input_dec', 'input_radius', 
-          'cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes', 
-          'aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes', 
-          'gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes', 
-          'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes', 
-          'wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes', 
-          '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes', 
-          'ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes', 
-          'nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes',  
-          'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']
+                  [sg.Text('RADIUS', font = ('Times New Roman', 16), size=(14, 1), justification='center'),              sg.Text('FILETYPE', font = ('Times New Roman', 16), size=(10, 1), justification='center'),               sg.Text('Output File Name', size=(26, 1), justification='center', font = ('Times New Roman', 16))],
+                  [sg.InputText(size=(16, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output2', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
+
+                  [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],
+                  [sg.Checkbox('CatWISE 2020', key = 'catwise_multi', font = ('Times New Roman', 15), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'AW_multi', font = ('Times New Roman', 15), size = (10, 2)),               sg.Checkbox('Gaia', key = 'gaia_multi', font = ('Times New Roman', 15), size = (9, 2))],
+                  [sg.Checkbox('VISTA', key = 'VSA_multi', font = ('Times New Roman', 15), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'UKIDSS_multi', font = ('Times New Roman', 15), size = (10, 2)),             sg.Checkbox('2MASS', key = '2MASS_multi', font = ('Times New Roman', 15), size = (10, 2))],
+                  [sg.Checkbox('PanSTARRS', key = 'ps_multi', font = ('Times New Roman', 15), size = (13, 2)),           sg.Checkbox('GALEX', key = 'galex_multi', font = ('Times New Roman', 15), size = (10, 2))],
+                  [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+
+                  [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')], 
+
+                  [sg.Text("\u0332".join('Output'), size=(50, 1), justification='center', font = ('Times New Roman', 15))],
+                  [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
+
+  #Makes the general layout for WRAP
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
+
+
+  #Generates the window based off the layouts above
+  window = sg.Window('WRAP', tab_layout, size = (550, 600), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+
+  #Makes lists for: catalog names, catalog functions, and fake variables
+  catalogs = ['catwise', 'AW', 'gaia', 
+              'VSA', 'UKIDSS', '2MASS', 
+              'ps', 'galex']
+  catalogs_multi = ['catwise_multi', 'AW_multi', 'gaia_multi', 
+                    'VSA_multi', 'UKIDSS_multi', '2MASS_multi', 
+                    'ps_multi', 'galex_multi']
+  catalog_names = ['CatWISE 2020', 'AllWISE', 'GAIA', 
+                   'VSA', 'UKIDSS', '2MASS', 
+                   'PanSTARRS', 'GALEX']
+  catalog_functions = [catwise_image, allwise_image, gaia_image, 
+                      vsa_image, ukidss_image, twomass_image, 
+                      ps_image, galex_image]
+
+  #Defines all of the variable names
+  value_names = [['cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes'], 
+                 ['aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes'], 
+                 ['gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes'], 
+                 ['vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes'], 
+                 ['wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes'], 
+                 ['2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes'], 
+                 ['ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes'], 
+                 ['galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']]
+
+  #Defines the header for the CSV file
+  header = ['input_ra', 'input_dec', 'input_radius', 
+            'cw_ra', 'cw_ra_e', 'cw_dec', 'cw_dec_e', 'cw_w1', 'cw_w1_e', 'cw_w2', 'cw_w2_e', 'cw_pmra', 'cw_pmra_e', 'cw_pmdec', 'cw_pmdec_e', 'cw_mjd', 'cw_catalog', 'cw_notes', 
+            'aw_ra', 'aw_ra_e', 'aw_dec', 'aw_dec_e', 'aw_w1', 'aw_w1_e', 'aw_w2', 'aw_w2_e', 'aw_w3', 'aw_w3_e', 'aw_w4', 'aw_w4_e', 'aw_pmra', 'aw_pmra_e', 'aw_pmdec', 'aw_pmdec_e', 'aw_catalog', 'aw_notes', 
+            'gaia_ra', 'gaia_ra_e', 'gaia_dec', 'gaia_dec_e', 'gaia_parallax', 'gaia_parallax_e', 'gaia_radv', 'gaia_radv_e', 'gaia_pmra', 'gaia_pmra_e', 'gaia_pmdec', 'gaia_pmdec_e', 'gaia_g', 'gaia_g_e', 'gaia_bp', 'gaia_bp_e', 'gaia_rp', 'gaia_rp_e', 'gaia_year', 'gaia_catalog', 'gaia_notes', 
+            'vsa_ra', 'vsa_dec', 'vsa_y', 'vsa_y_e', 'vsa_j', 'vsa_j_e', 'vsa_h', 'vsa_h_e', 'vsa_ks', 'vsa_ks_e', 'vsa_mjd_y', 'vsa_mjd_j', 'vsa_mjd_h', 'vsa_mjd_ks', 'vsa_catalog', 'vsa_notes', 
+            'wfcam_ra', 'wfcam_ra_e', 'wfcam_dec', 'wfcam_dec_e', 'wfcam_y', 'wfcam_y_e', 'wfcam_j', 'wfcam_j_e', 'wfcam_h', 'wfcam_h_e', 'wfcam_k', 'wfcam_k_e', 'wfcam_pmra', 'wfcam_pmra_e', 'wfcam_pmdec', 'wfcam_pmdec_e', 'wfcam_epoch', 'wfcam_catalog', 'wfcam_notes', 
+            '2mass_ra', '2mass_dec', '2mass_j', '2mass_j_e', '2mass_h', '2mass_h_e', '2mass_ks', '2mass_ks_e', '2mass_catalog', '2mass_notes', 
+            'ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes', 
+            'nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes',  
+            'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']
 
 #                             GUI                               #
 # ------------------------------------------------------------- #
@@ -3369,12 +3460,16 @@ while True:
         window['catwise'].update(True), window['AW'].update(True), window['gaia'].update(True)
         window['VSA'].update(True), window['UKIDSS'].update(True), window['2MASS'].update(True)
         window['ps'].update(True), window['galex'].update(True)
-        window['Uncheck_All'].update(False), window['nsc'].update(True)
+        window['Uncheck_All'].update(False)
+        if platform != 'win32':
+          window['nsc'].update(True)
     elif event == 'Uncheck_All':
         window['catwise'].update(False), window['AW'].update(False), window['gaia'].update(False)
         window['VSA'].update(False), window['UKIDSS'].update(False), window['2MASS'].update(False)
         window['ps'].update(False), window['galex'].update(False)
-        window['Check_All'].update(False),  window['nsc'].update(False)
+        window['Check_All'].update(False) 
+        if platform != 'win32':
+           window['nsc'].update(False)
 
     #Checks if the 'Run WRAP' button is clicked
     if event in (None, 'Run WRAP'):
