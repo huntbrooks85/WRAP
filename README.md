@@ -18,7 +18,7 @@
 *   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
 *   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
-<p> How to Start Program </p>
+<p><b>How to Start Program</b></p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
@@ -27,7 +27,7 @@
 loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at```, run the command ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass``` to fix the error
 5) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
-<p> How to Use WRAP </p>
+<p><b>How to Use WRAP</b></p>
 
 <pp> For Single Object Search </pp>
 1) Input the RA and DEC (in degrees) of the object being searched for
@@ -65,7 +65,7 @@ Mr. Dan Caselden -> dancaselden@gmail.com
 
 Slack Community: Email Mr. Hunter Brooks for a link to the slack community. 
 
-<h2> 📖 Acknowledgments </h2>
+<h2> 📖 Acknowledgments 📖 </h2>
 
 1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
 2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. 
