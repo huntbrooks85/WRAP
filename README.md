@@ -18,7 +18,7 @@
 *   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
 *   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
-<p><b>How to Start Program</b></p>
+<p><b><span style="font-size: 24px;">How to Start Program</span></b></p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
