@@ -11,14 +11,7 @@
 * Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 
 <h2> 🏆 Opening Application 🏆 </h2>
-
-*   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
-*   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
-*   Note 3: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
-*   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
-*   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
-
-<p><b>How to Start Program</b></p>
+<p><b>Program Setup</b></p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
@@ -51,6 +44,14 @@ loaded because running scripts is disabled on this system. For more information,
 8) Click on the your object when the image appears (if your object is not there click the red "Object Not Found" button)
 9) Repeat until every catalog image is shown and every object has been run though
 10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
+
+<p><b>Significant Details</b></p>
+*   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
+*   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
+*   Note 3: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
+*   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
+*   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
+
 
 <h2> 🌓 Sky Coverage 🌗 </h2>
 <p align="center">
