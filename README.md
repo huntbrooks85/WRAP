@@ -53,7 +53,7 @@ loaded because running scripts is disabled on this system. For more information,
 10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
 <h2> 🌓 Sky Coverage 🌗 </h2>
-![Alt Text](/Users/hunter_brooks8/Desktop/WRAP/NOTE/sky_coverage/Coverage_Map.pdf)
+![Simple Text](https://ibb.co/b3SLvGW)
 
 <h2> 📞 Support 📞 </h2>
 
