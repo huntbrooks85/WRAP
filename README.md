@@ -18,18 +18,18 @@
 *   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
 *   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
-<p><b><span style="font-size: 100px;">How to Start Program</span></b></p>
+<p><b>How to Start Program</b></p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
 3) Activate relavent virtual environment by typing ```source wrap_mac/bin/activate``` (MacOS) or ```wrap_windows\Scripts\activate``` (Windows)
 4) Windows may return the error: ```\wrap_windows\Scripts\activate cannot be
 loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at```, run the command ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass``` to fix the error
-5) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
+1) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
 <p><b>How to Use WRAP</b></p>
 
-<pp> For Single Object Search </pp>
+<pp><i>Single Object Search</i></pp>
 1) Input the RA and DEC (in degrees) of the object being searched for
 2) Input the radius (in arcsecs) around the RA and DEC that is being searched for
 3) Put in the output file name that you want, do not put a file type at the end (it always saves to a csv file)
@@ -40,7 +40,7 @@ loaded because running scripts is disabled on this system. For more information,
 8) Repeat until every catalog image is shown
 9) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
-<pp> For Multi-Object Search </pp>
+<pp><i>Multi-Object Search</i></pp>
 1) Click the "Browse" button and click on you file with a list of RA ("ra") and DEC's ("dec") (in degrees)
 2) Input the radius (in arcsecs) around the RA and DEC that is being searched for
 3) Click the "Filetype" browser and select the file type being used
