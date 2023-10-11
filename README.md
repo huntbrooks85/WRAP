@@ -2,7 +2,7 @@
 
 <p id="description"> The Wide-field Retrieval of Astrodata Program (WRAP) is a tool designed to aid the retrieval of photometric and astrometric data from a diverse range of ultraviolet, optical, and near-infrared catalogs. Users provide WRAP with Right Ascension (RA), Declination (DEC) coordinates and a search radius for their object of interest. The program then allows users to interactively select their object by clicking on it within catalog images. WRAP subsequently compiles and presents all relevant photometric and astrometric information gathered from the chosen catalogs in a CSV file, streamlining the data retrieval process.</p>
 
-<h2>🛠️ Installation Steps:</h2>
+<h2> 🛠️ Installation Steps 🛠️ </h2>
 
 ```
 -> Python 3.8.8 is Required
@@ -10,7 +10,7 @@
 * Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 * Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 
-<h2> 🏆 Opening Application: </h2>
+<h2> 🏆 Opening Application 🏆 </h2>
 
 *   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
 *   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
@@ -52,7 +52,10 @@ loaded because running scripts is disabled on this system. For more information,
 9) Repeat until every catalog image is shown and every object has been run though
 10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
-<h2> 📞 Support </h2>
+<h2> 🌓 Sky Coverage 🌗 </h2>
+![Alt Text](/Users/hunter_brooks8/Desktop/WRAP/NOTE/sky_coverage/Coverage_Map.pdf)
+
+<h2> 📞 Support 📞 </h2>
 
 Mr. Hunter Brooks -> hcb98@nau.edu
 Mr. Dan Caselden -> dancaselden@gmail.com
