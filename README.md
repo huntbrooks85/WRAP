@@ -54,7 +54,7 @@ loaded because running scripts is disabled on this system. For more information,
 
 <h2> 🌓 Sky Coverage 🌗 </h2>
 <p align="center">
-    <a href="https://ibb.co/1LGq00T"><img src="/Output/metadata/Coverage_Map-1.png" width="50%"></a> <br>
+    <a href="https://ibb.co/1LGq00T"><img src="/Output/metadata/Coverage_Map-1.png" width="75%"></a> <br>
     Sky-Coverage for the Catalogs Included in WRAP
 </p>
 
