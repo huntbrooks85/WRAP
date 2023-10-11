@@ -4,64 +4,28 @@
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. Python </p>
-
 ```
--> Python 3.8 or newer is needed for WRAP 
+-> Python 3.8.8 is Required
 ```
-* Python 3.8 link: https://www.python.org/downloads/release/python-388/
+* Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 * Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
-
-<p>2. Packages </p>
-
-```
--> numpy
--> pandas
--> pyvo==1.4 
--> astropy==5.2.2
--> truncate==0.11 
--> requests==2.28.1 
--> astroquery==0.4.6 
--> matplotlib==3.4.2
--> PySimpleGUI==4.60.5
--> beautifulsoup4==4.11.1
--> OpenCV-python==4.7.0.72
-```
-* None Windows Users
-```
--> astro-datalab== 2.20.1 
-```
-
-* PIP Installation Guide: https://pip.pypa.io/en/stable/installation/
-* How to Use PIP: https://packaging.python.org/en/latest/tutorials/installing-packages/
-
-<p>3. Fixing Astroquery Module </p>
-
-1) Open the "replacement_module" directory
-2) Copy the "core.py" file onto your Desktop
-3) Go to the file directory containing the UKIDSS astroquery files (example: "/User/anaconda3/lib/python3.8/site-packages/astroquery/ukidss")
-4) If you are struggling to find your file directory use these steps:
-   1) Type: ```python3```, in your terminal
-   2) Type: ```import astroquery```, in your terminal
-   3) Type: ```astroquery.__file__```, in your terminal
-   4) This will provide you with your astroquery file directory location
-   5) Leave the ```python3``` window by pressing "control + z"
-5) Open the "ukidss" folder in this directory, so that you can see the existing "core.py" file. 
-6) Replace the "core.py" file in the astroquery UKIDSS directory with the "core.py" file copied on your Desktop. 
 
 <h2> 🏆 Opening Application: </h2>
 
-*   Note 1: Only tested on MacOS Ventura 13.X and Windows 11, problems may occur for older versions of MacOS and Windows (needs to be tested on Linux)
+*   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
 *   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
 *   Note 3: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
 *   Note 4: The orientation for all of the catalogs is North pointed up and East pointing left. 
-*   Note 5: 2MASS can have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
+*   Note 5: 2MASS may have strange imaging cropping, this is a warning that it may happen and do not be alarmed by it. 
 
 <p> How to Start Program </p>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
-3) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
+3) Activate relavent virtual environment by typing ```source wrap_mac/bin/activate``` (MacOS) or ```wrap_windows\Scripts\activate``` (Windows)
+4) Windows may return the error: ```\wrap_windows\Scripts\activate cannot be
+loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at```, run the command ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass``` to fix the error
+5) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
 <p> How to Use WRAP </p>
 
