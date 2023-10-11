@@ -46,6 +46,7 @@ loaded because running scripts is disabled on this system. For more information,
 10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
 <p><b>Significant Details</b></p>
+
 *   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
 *   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
 *   Note 3: The window close button has been disabled, to close WRAP please click the red "Close WRAP" button at the bottom. 
