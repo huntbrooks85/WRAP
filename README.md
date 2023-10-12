@@ -1,7 +1,8 @@
-<h1 align="center" id="title">✨ WRAP ✨</h1>
 <p align="center">
     <a href="https://ibb.co/qWk2pMr"><img src="/Output/metadata/LOGO.png" width="25%"></a> <br>
 </p>
+
+<h1 align="center" id="title">✨ WRAP ✨</h1>
 
 <p id="description"> The Wide-field Retrieval of Astrodata Program (WRAP) is a tool designed to aid the retrieval of photometric and astrometric data from a diverse range of ultraviolet, optical, and near-infrared catalogs. Users provide WRAP with Right Ascension (RA), Declination (DEC) coordinates and a search radius for their object of interest. The program then allows users to interactively select their object by clicking on it within catalog images. WRAP subsequently compiles and presents all relevant photometric and astrometric information gathered from the chosen catalogs in a CSV file, streamlining the data retrieval process.</p>
 
