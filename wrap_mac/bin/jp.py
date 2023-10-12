@@ -1,4 +1,4 @@
-#!/Users/hunter_brooks8/Documents/GitHub/WRAP/APP_CODE/myenv/bin/python3.8
+#!/Users/hunter_brooks8/Documents/GitHub/WRAP/wrap_mac/bin/python3.8
 
 import sys
 import json

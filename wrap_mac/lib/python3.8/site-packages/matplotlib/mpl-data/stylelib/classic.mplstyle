@@ -207,7 +207,7 @@ axes.formatter.offset_threshold : 2      # When useoffset is True, the offset
                                          # at least this number of significant
                                          # digits from tick labels.
 
-axes.unicode_minus  : True    # use Unicode for the minus symbol
+axes.unicode_minus  : True    # use unicode for the minus symbol
                               # rather than hyphen.  See
                               # https://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
 axes.prop_cycle    : cycler('color', 'bgrcmyk')
@@ -307,8 +307,6 @@ legend.edgecolor     : inherit   # legend edge color (when 'inherit' uses axes.e
 # See https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
 figure.titlesize : medium     # size of the figure title
 figure.titleweight : normal   # weight of the figure title
-figure.labelsize:   medium    # size of the figure label
-figure.labelweight: normal    # weight of the figure label
 figure.figsize   : 8, 6    # figure size in inches
 figure.dpi       : 80      # figure dots per inch
 figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
@@ -331,7 +329,7 @@ figure.subplot.hspace  : 0.2    # the amount of height reserved for space betwee
 ### IMAGES
 image.aspect : equal             # equal | auto | a number
 image.interpolation  : bilinear  # see help(imshow) for options
-image.cmap   : jet               # gray | jet | ...
+image.cmap   : jet               # gray | jet etc...
 image.lut    : 256               # the size of the colormap lookup table
 image.origin : upper             # lower | upper
 image.resample  : False

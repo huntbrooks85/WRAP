@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/hunter_brooks8/Documents/GitHub/WRAP/APP_CODE/myenv"
+VIRTUAL_ENV="/Users/hunter_brooks8/Documents/GitHub/WRAP/wrap_mac"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -54,8 +54,8 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
-    if [ "x(myenv) " != x ] ; then
-	PS1="(myenv) ${PS1:-}"
+    if [ "x(wrap_mac) " != x ] ; then
+	PS1="(wrap_mac) ${PS1:-}"
     else
     if [ "`basename \"$VIRTUAL_ENV\"`" = "__" ] ; then
         # special case for Aspen magic directories
