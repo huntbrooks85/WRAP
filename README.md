@@ -6,7 +6,9 @@
 
 <p id="description"> The Wide-field Retrieval of Astrodata Program (WRAP) is a tool designed to aid the retrieval of photometric and astrometric data from a diverse range of ultraviolet, optical, and near-infrared catalogs. Users provide WRAP with Right Ascension (RA), Declination (DEC) coordinates and a search radius for their object of interest. The program then allows users to interactively select their object by clicking on it within catalog images. WRAP subsequently compiles and presents all relevant photometric and astrometric information gathered from the chosen catalogs in a CSV file, streamlining the data retrieval process.</p>
 
-<h2> 🛠️ Installation 🛠️ </h2>
+<div align="center">
+  <h2>🛠️ Installation 🛠️</h2>
+</div>
 
 ```
 -> Python 3.8.8 is Required
@@ -14,8 +16,13 @@
 * Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
 * Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
 
+<div align="center">
 <h2> 🏆 Opening Application 🏆 </h2>
+</div>
+
+<div align="center">
 <p><b>Program Setup</b></p>
+</div>
 
 1) Open terminal 
 2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
@@ -24,7 +31,9 @@
 loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at```, run the command ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass``` to fix the error
 1) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
+<div align="center">
 <p><b>How to Use WRAP</b></p>
+</div>
 
 <pp><i>Single Object Search</i></pp>
 1) Input the RA and DEC (in degrees) of the object being searched for
@@ -49,7 +58,9 @@ loaded because running scripts is disabled on this system. For more information,
 9) Repeat until every catalog image is shown and every object has been run though
 10) All data is saved to a csv file with your file output name in the "Output" folder (if no output name was put it will default to "WRAP_output.csv")
 
+<div align="center">
 <p><b>Significant Details</b></p>
+</div>
 
 *   Note 1: Only tested on MacOS >13 and Windows >10, problems may occur for older versions of MacOS and Windows (IS NOT SUPPORTED ON LINUX)
 *   Note 2: Windows does not support the astro-datalab package, therefore Windows does not have the Noirlab Source Catalog option. 
@@ -59,19 +70,24 @@ loaded because running scripts is disabled on this system. For more information,
 
 
 <h2> 🌓 Sky Coverage 🌗 </h2>
+</div>
 <p align="center">
     <a href="https://ibb.co/GQkGgNN"><img src="/Output/metadata/Coverage_Map-1.png" width="100%"></a> <br>
     Sky-Coverage for the Catalogs Included in WRAP
 </p>
 
+<div align="center">
 <h2> 📞 Support 📞 </h2>
+</div>
 
 Mr. Hunter Brooks -> hcb98@nau.edu
 Mr. Dan Caselden -> dancaselden@gmail.com
 
 Slack Community: Email Mr. Hunter Brooks for a link to the slack community. 
 
+<div align="center">
 <h2> 📖 Acknowledgments 📖 </h2>
+</div>
 
 1) If you were to publish any of the data gathered by WRAP please make sure that you are correctly acknowledging where the data comes from. Below is a thank you for all of the hard scientists that made all of the catalogs in WRAP. 
 2)  Alonside using the correct acknowledgments for each catalog please cite Brook et al. (2023), in prep. when using WRAP for any publication. 
