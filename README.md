@@ -60,7 +60,7 @@ loaded because running scripts is disabled on this system. For more information,
 
 <h2> 🌓 Sky Coverage 🌗 </h2>
 <p align="center">
-    <a href="https://ibb.co/GQkGgNN"><img src="/Output/metadata/Coverage_Map-1.png" width="85%"></a> <br>
+    <a href="https://ibb.co/GQkGgNN"><img src="/Output/metadata/Coverage_Map-1.png" width="100%"></a> <br>
     Sky-Coverage for the Catalogs Included in WRAP
 </p>
 
