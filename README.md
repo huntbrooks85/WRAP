@@ -10,26 +10,35 @@
   <h2>🛠️ Installation 🛠️</h2>
 </div>
 
-```
--> Python 3.8.8 is Required
-```
-* Python 3.8.8 link: https://www.python.org/downloads/release/python-388/
-* Python Installation Guide: https://wiki.python.org/moin/BeginnersGuide/Download
+<div align="center">
+<p><b>Program Setup</b></p>
+</div>
+
+<pp><b>🐍 Anaconda Environment 🐍</b><pp>
+**Note**: Making use of an Anaconda (Conda) environment is highly recommended due to potential compatibility issues with older Python and pip packages when using WRAP.
+
+1. **Download Anaconda Navigator**: To get started, please visit [Anaconda's official website](https://www.anaconda.com) and download the version of Anaconda Navigator that matches your operating system.
+
+2. **Access Anaconda Environments**: After downloading and installing Anaconda Navigator, launch the application. In the Navigator's main window, you will find an "Environments" option on the left. Click on it to access your Conda environments.
+
+3. **Create a New Conda Environment**: In the "Environments" section, you will see a plus sign labeled "Create." Click on it to create a new Conda environment.
+
+4. **Customize Environment Settings**: Give your new environment a name of your choice (e.g., "WRAP"). Next, select a Python version that is closest to Python 3.8 (e.g., 3.8.18). Then, click the "Create" button to create the environment.
+
+5. **Environment Creation**: The environment creation process may take a while, as Conda will install the necessary packages and dependencies for WRAP.
+
+6. **Activate Your Conda Environment**: Once the environment is successfully created, you can activate it in your terminal. Open your terminal and enter the following command, replacing `*conda name*` with the name you chose for your environment:
+   ```bash
+   conda activate *conda name*
+
+<pp><b>PIP Installations</b><pp>
+How to use PIP
 
 <div align="center">
 <h2> 🏆 Opening Application 🏆 </h2>
 </div>
 
-<div align="center">
-<p><b>Program Setup</b></p>
-</div>
-
-1) Open terminal 
-2) Go to the file directory that contains "WRAP.py" (example: "cd /Users/hunter/Desktop/WRAP")
-3) Activate relavent virtual environment by typing ```source wrap_mac/bin/activate``` (MacOS) or ```wrap_windows\Scripts\activate``` (Windows)
-4) Windows may return the error: ```\wrap_windows\Scripts\activate cannot be
-loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at```, run the command ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass``` to fix the error
-1) Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
+Type ```python3 WRAP.py``` (MacOS) or ```python3 .\WRAP.py``` (Windows) into the terminal
 
 <div align="center">
 <p><b>How to Use WRAP</b></p>

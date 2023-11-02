@@ -38,6 +38,7 @@ from astropy.table import Table
 import matplotlib.pyplot as plt
 from astroquery.gaia import Gaia
 from matplotlib import transforms
+from astropy.utils.data import conf
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
 from astroquery.ukidss import Ukidss
@@ -698,7 +699,7 @@ def gaia_image(ra, dec, radius):
   #Download the W1 and W2 images
   file_allwise_w1, file_allwise_w2 = download_file(w1_allwise_image_url, cache=True), download_file(w2_allwise_image_url, cache=True)
   data_allwise_w2, data_allwise_w1 = fits.getdata(file_allwise_w2), fits.getdata(file_allwise_w1)
-
+  
   #Find the location of all the object found in GAIA in the radius choosen by the user 
   location_data = gaia_table(ra, dec, radius)
   object_year = location_data['ref_epoch'].tolist()
@@ -978,7 +979,7 @@ def gaia_table(ra, dec, radius):
   ")=1"
 
   #Run this SQL quiery into the online GAIA database
-  job = Gaia.launch_job_async(query)
+  job = Gaia.launch_job(query)
   results = job.get_results()
   return results
 
@@ -3260,7 +3261,7 @@ def wrap_end(tab):
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Sets the theme for WRAP
-sg.theme('LightGrey4')
+sg.theme('DarkBrown6')
 
 #                        GUI LAYOUT                             #
 # ------------------------------------------------------------- #
@@ -3309,8 +3310,8 @@ if platform != 'win32':
                   [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
   #Makes the general layout for WRAP
-  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Single Obect Search'),
-                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Multi-Object Search')]], 
                               tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
   #Generates the window based off the layouts above
@@ -3398,8 +3399,8 @@ elif platform == 'win32':
                   [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
   #Makes the general layout for WRAP
-  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Single Obect Search'),
-                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#FBF5EE',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Multi-Object Search')]], 
                               tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
 
