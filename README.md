@@ -4,12 +4,26 @@
 
 <h1 align="center" id="title"> 💫✨ WRAP ✨💫 </h1>
 <div align="center">
-<p id="description"> The Wide-field Retrieval of Astrodata Program (WRAP) is a versatile tool designed to simplify the retrieval of photometric and astrometric data from a wide range of ultraviolet, optical, and near-infrared catalogs. Users input Right Ascension (RA) and Declination (DEC) coordinates, along with a search radius for their object of interest. The program then enables users to interactively select their object by simply clicking on it within catalog images. WRAP efficiently compiles and presents all pertinent photometric and astrometric information obtained from the selected catalogs, making it accessible in a convenient CSV file. This streamlines the data retrieval process, enhancing the user's experience</p>
+<p id="description"> The <b>Wide-field Retrieval of Astrodata Program (WRAP)</b> is a versatile tool designed to simplify the retrieval of photometric and astrometric data from a wide range of ultraviolet, optical, and near-infrared catalogs. Users input Right Ascension (RA) and Declination (DEC) coordinates, along with a search radius for their object of interest. The program then enables users to interactively select their object by simply clicking on it within catalog images. WRAP efficiently compiles and presents all pertinent photometric and astrometric information obtained from the selected catalogs, making it accessible in a convenient CSV file. This streamlines the data retrieval process, enhancing the user's experience</p>
 </div>
 
 <div align="center">
   <h2>🛠️ Installation 🛠️</h2>
 </div>
+
+<div align="center">
+<pp><b>🦾 Installing Git 🦾</b><pp>
+</div>
+<div align="center">
+<pp><b>-----------------------------------------</b><pp>
+</div>
+
+1. **Download Git**: To get started, you'll need to install Git, which is a version control system. You can download the official Git installer for your operating system from [Git's official website](https://git-scm.com/downloads).
+
+2. **Verification**: After installation, you can verify that Git is properly installed by opening a terminal or command prompt and running the following command:  
+```bash
+   git --version
+   ```
 
 <div align="center">
 <pp><b>🐍 Anaconda Environment 🐍</b><pp>

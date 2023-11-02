@@ -42,6 +42,7 @@ from astropy.utils.data import conf
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
 from astroquery.ukidss import Ukidss
+from matplotlib.widgets import Cursor
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord
 from matplotlib.transforms import Affine2D
@@ -194,6 +195,11 @@ def allwise_image(ra, dec, radius):
   # figure.canvas.set_window_title('AllWISE Search')
   mng = pyplot.get_current_fig_manager()
   mng.window.resizable(False, False)
+  
+  #Makes a cursor to aid the User
+  cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+  annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+  annotation.set_visible(False)
 
   #Make checkbuttons with all of the different image bands
   rax = plt.axes([0.045, 0.4, 0.115, 0.1])
@@ -482,6 +488,11 @@ def catwise_image(ra, dec, radius):
   # figure.canvas.set_window_title('CatWISE Search')
   mng = pyplot.get_current_fig_manager()
   mng.window.resizable(False, False)
+  
+  #Makes a cursor to aid the User
+  cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+  annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+  annotation.set_visible(False)
 
   #Make checkbuttons with all of the different image bands
   rax = plt.axes([0.045, 0.4, 0.115, 0.08])
@@ -679,7 +690,7 @@ def gaia_image(ra, dec, radius):
   plt.rcParams['toolbar'] = 'None'
   matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
-  # blockPrint()
+  blockPrint()
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1 and W2 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
@@ -774,6 +785,11 @@ def gaia_image(ra, dec, radius):
   # figure.canvas.set_window_title('Gaia Search')
   mng = pyplot.get_current_fig_manager()
   mng.window.resizable(False, False)
+  
+  #Makes a cursor to aid the User
+  cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+  annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+  annotation.set_visible(False)
 
   #Make checkbuttons with all of the different image bands
   rax = plt.axes([0.045, 0.4, 0.115, 0.08])
@@ -966,7 +982,7 @@ def gaia_image(ra, dec, radius):
 def gaia_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
 
-  # blockPrint()
+  blockPrint()
 
   #Makes the SQL code to run it into the GAIA search
   query = "SELECT TOP 2000 \
@@ -1104,6 +1120,11 @@ def galex_image(ra, dec, radius_use):
         # figure.canvas.set_window_title('GALEX Search')
         mng = pyplot.get_current_fig_manager()
         mng.window.resizable(False, False)
+        
+        #Makes a cursor to aid the User
+        cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+        annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+        annotation.set_visible(False)
 
         #Adds a slider for the scaling of the image
         freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
@@ -1391,6 +1412,11 @@ def nsc_image(ra, dec, radius):
         # figure.canvas.set_window_title('NSC Search')
         mng = pyplot.get_current_fig_manager()
         mng.window.resizable(False, False)
+        
+        #Makes a cursor to aid the User
+        cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+        annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+        annotation.set_visible(False)
 
         #Make checkbuttons with all of the different image bands
         rax = plt.axes([0.045, 0.4, 0.12, 0.14])
@@ -1673,6 +1699,13 @@ def ps_image(ra, dec, radius):
           y_list.pop(ra_location)
           y_list_e.pop(ra_location)
 
+      if len(ra_list) == 0: 
+        ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+        ps_ra, ps_dec = ra, dec
+        plt.close('all')
+        plt.figure().clear()
+        return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'Image Found but Array is Null'
+
       #Gets the headers from the images
       hdu_r, hdu_i, hdu_z, hdu_y = fits.open(file_ps_r)[0], fits.open(file_ps_i)[0], fits.open(file_ps_z)[0], fits.open(file_ps_y)[0]
       wcs1 = WCS(hdu_r.header)
@@ -1738,6 +1771,11 @@ def ps_image(ra, dec, radius):
       # figure.canvas.set_window_title('PanSTARRS Search')
       mng = pyplot.get_current_fig_manager()
       mng.window.resizable(False, False)
+      
+      #Makes a cursor to aid the User
+      cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+      annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+      annotation.set_visible(False)
 
       #Make checkbuttons with all of the different image bands
       rax = plt.axes([0.045, 0.4, 0.115, 0.1])
@@ -2071,6 +2109,11 @@ def twomass_image(ra, dec, radius):
     # figure.canvas.set_window_title('2MASS Search')
     mng = pyplot.get_current_fig_manager()
     mng.window.resizable(False, False)
+    
+    #Makes a cursor to aid the User
+    cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+    annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+    annotation.set_visible(False)
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
@@ -2266,7 +2309,7 @@ def ukidss_image(ra, dec, radius):
     plt.rcParams['toolbar'] = 'None'
     matplotlib.use("TkAgg")
     plt.style.use('Solarize_Light2')
-    blockPrint()
+    # blockPrint()
     
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
@@ -2372,6 +2415,7 @@ def ukidss_image(ra, dec, radius):
 
             #Finds the camera orientation
             cam_type = hdu_j.header['CAMNUM']
+            print(cam_type)
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
             shape = min(cutout_UHS.shape)
@@ -2417,7 +2461,7 @@ def ukidss_image(ra, dec, radius):
             # Normalize the image and plots it
             init_top, init_bot = 95, 45
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(cutout_UHS.data, init_bot), vmax = np.nanpercentile(cutout_UHS.data, init_top))
-            ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin='lower')
+            ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin = 'lower')
 
             # Formats the window correctly
             fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
@@ -2467,6 +2511,11 @@ def ukidss_image(ra, dec, radius):
         # figure.canvas.set_window_title('WFCAM Search')
         mng = pyplot.get_current_fig_manager()
         mng.window.resizable(False, False)
+        
+        #Makes a cursor to aid the User
+        cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+        annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+        annotation.set_visible(False)
 
         #Make checkbuttons with all of the different image bands
         default = [True]
@@ -2565,9 +2614,9 @@ def ukidss_image(ra, dec, radius):
                 #Finds which axes was clicked
                 click_axes = str(location[n])
                 if data != 'UHSDR1':
-                    click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+                    click_axes = click_axes.split('AxesSubplot', 2)[0]
                 else: 
-                    click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+                    click_axes = click_axes.split('AxesSubplot', 2)[0]
 
                 #Checks if the image was clicked
                 if click_axes == '':
@@ -2700,7 +2749,7 @@ def ukidss_image(ra, dec, radius):
 def ukidss_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''
 
-    blockPrint()
+    # blockPrint()
 
     #Find the table of all the objects found in UKIDSS in the radius choosen by the user
     program_list = Ukidss.list_catalogs()
@@ -2832,6 +2881,11 @@ def vsa_image(ra, dec, radius):
     # figure.canvas.set_window_title('VISTA Search')
     mng = pyplot.get_current_fig_manager()
     mng.window.resizable(False, False)
+    
+    #Makes a cursor to aid the User
+    cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+    annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+    annotation.set_visible(False)
 
     #Make checkbuttons with all of the different image bands
     rax = plt.axes([0.045, 0.4, 0.105, 0.12])
