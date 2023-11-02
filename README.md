@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://ibb.co/qWk2pMr"><img src="/Output/metadata/LOGO.png" width="50%"></a> <br>
+    <a href="https://ibb.co/9WGmwZV"><img src="/Output/metadata/LOGO.png" width="50%"></a> <br>
 </p>
 
 <h1 align="center" id="title"> 💫✨ WRAP ✨💫 </h1>
