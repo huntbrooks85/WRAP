@@ -284,7 +284,7 @@ def allwise_image(ra, dec, radius):
       click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
       #Checks if the image was clicked
-      if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+      if click_axes == '':
           
         #Makes a pop-up window with success text
         plt.clf()
@@ -572,7 +572,7 @@ def catwise_image(ra, dec, radius):
       click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
       #Checks if the image was clicked
-      if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+      if click_axes == '':
         #Makes a pop-up window with success text
         plt.clf()
         plt.close('all')
@@ -678,7 +678,7 @@ def gaia_image(ra, dec, radius):
   plt.rcParams['toolbar'] = 'None'
   matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
-  blockPrint()
+  # blockPrint()
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1 and W2 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
@@ -864,7 +864,7 @@ def gaia_image(ra, dec, radius):
       click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
       #Checks if the image was clicked
-      if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+      if click_axes == '':
         #Makes a pop-up window with success text
         plt.clf()
         plt.close('all')
@@ -965,7 +965,7 @@ def gaia_image(ra, dec, radius):
 def gaia_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
 
-  blockPrint()
+  # blockPrint()
 
   #Makes the SQL code to run it into the GAIA search
   query = "SELECT TOP 2000 \
@@ -1157,7 +1157,7 @@ def galex_image(ra, dec, radius_use):
                 click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
                 #Checks if the image was clicked
-                if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+                if click_axes == '':
                     #Makes a pop-up window with success text
                     plt.clf()
                     plt.close('all')
@@ -1481,7 +1481,7 @@ def nsc_image(ra, dec, radius):
                 click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
                 #Checks if the image was clicked
-                if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+                if click_axes == '':
                     #Makes a pop-up window with success text
                     plt.clf()
                     plt.close('all')
@@ -1828,7 +1828,7 @@ def ps_image(ra, dec, radius):
           click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
           #Checks if the image was clicked
-          if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+          if click_axes == '':
             #Makes a pop-up window with success text
             plt.clf()
             plt.close('all')
@@ -2158,7 +2158,7 @@ def twomass_image(ra, dec, radius):
         click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
         #Checks if the image was clicked
-        if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+        if click_axes == '':
           #Makes a pop-up window with success text
           plt.clf()
           plt.close('all')
@@ -2252,7 +2252,7 @@ def twomass_table(ra, dec, radius):
   location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = (radius - 1) * u.arcsec)
   return location_data
 
-#                       UKIDSS SEARCH                           #
+#                        WFCAM SEARCH                           #
 # ------------------------------------------------------------- #
 def ukidss_image(ra, dec, radius): 
     ''' First, it gets the images from the WFCAM API from the WFCAM Archive and downloads the images. 
@@ -2568,9 +2568,8 @@ def ukidss_image(ra, dec, radius):
                 else: 
                     click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
-                print(click_axes)
                 #Checks if the image was clicked
-                if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+                if click_axes == '':
                     #Makes a pop-up window with success text
                     plt.clf()
                     plt.close('all')
@@ -2923,7 +2922,7 @@ def vsa_image(ra, dec, radius):
         click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
 
         #Checks if the image was clicked
-        if click_axes == 'WCSAxes(0.0315789,0.151034;0.936842x0.613793)':
+        if click_axes == '':
 
           #Makes a pop-up window with success text
           plt.clf()
@@ -3120,7 +3119,7 @@ def single_tab_check():
     fake_list.append(2)
 
   #Checks if the RADIUS tab is entered with a number
-  if values['RADIUS'].isnumeric() == False:
+  if values['RADIUS'].isnumeric() == False or (int(values['RADIUS']) > 500) == True or (int(values['RADIUS']) < 100) == True:
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
     sg.cprint('Please enter a Correct radius!                                                                                    ', c='wheat4', end='', key = ML_KEY_SINGLE)
     sg.cprint('------------------------------------------------                                                                  ', c='wheat4', key = ML_KEY_SINGLE)
@@ -3188,7 +3187,7 @@ def multi_tab_check():
     sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
 
   #Checks if the RADIUS tab is entered
-  if values['RADIUS_multi'].isnumeric() == False:
+  if values['RADIUS_multi'].isnumeric() == False or (int(values['RADIUS_multi']) > 500) == True or (int(values['RADIUS_multi']) < 100) == True:
     sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
     sg.cprint('Please enter a correct radius value!                                                                 ', c='wheat4', end='', key = ML_KEY_MULTI)
     sg.cprint('------------------------------------------------                                                     ', c='wheat4', key = ML_KEY_MULTI)
