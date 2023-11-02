@@ -44,13 +44,15 @@
 <p><i>MacOS</i></p>
 
 1. Once the conda environment is activated, go to your directory containing the WRAP contents (e.g., "cd Documents/GitHub/WRAP").
-2. Run the command:
+2. Enter the "pip_module" directory (e.g., "cd pip_module")
+3. Run the command:
    ```bash
    pip install -r requirements-mac.txt
 
 <ppp><i>Windows</i><ppp>
 1. Once the conda environment is activated, go to your directory containing the WRAP contents (e.g., "cd Documents/GitHub/WRAP").
-2. Run the command:
+2. Enter the "pip_module" directory (e.g., "cd pip_module")
+3. Run the command:
    ```bash
    pip install -r requirements-windows.txt
 
