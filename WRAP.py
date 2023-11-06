@@ -3315,14 +3315,15 @@ def wrap_end(tab):
   sg.cprint('------------------------------------------------                                                                                                               ', c='wheat4', end='', key = tab)
 
 #Sets the theme for WRAP
-sg.theme('DarkBrown6')
+sg.theme('LightBrown3')
 
 #                        GUI LAYOUT                             #
 # ------------------------------------------------------------- #
 #Sets the layout if the user is not on a windows machine
 if platform != 'win32':
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-  layout_single = [
+  layout_single = [[sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+                   
                     [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
                     [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
                     [sg.InputText(size=(18, 1), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(18, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(18, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
@@ -3344,7 +3345,8 @@ if platform != 'win32':
   #Makes the drop down window for types of file in the multi-object search
   filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-  layout_multi = [
+  layout_multi = [[sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+                  
                   [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
                   [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
 
@@ -3364,12 +3366,12 @@ if platform != 'win32':
                   [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
   #Makes the general layout for WRAP
-  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Single Obect Search'),
-                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Multi-Object Search')]], 
-                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#9C873E', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
   #Generates the window based off the layouts above
-  window = sg.Window('WRAP', tab_layout, size = (550, 530), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  window = sg.Window('WRAP', tab_layout, size = (550, 600), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
   
   #Makes lists for: catalog names, catalog functions, and fake variables
   catalogs = ['catwise', 'AW',     'gaia', 
@@ -3433,7 +3435,8 @@ elif platform == 'win32':
   #Makes the drop down window for types of file in the multi-object search
   filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-  layout_multi = [
+  layout_multi = [[sg.Image(filename = ('Output/metadata/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(6, 1), font = ('Ink Free', 45)),                 sg.Image(filename = 'Output/metadata/BYW_Logo.png', size = (205, 95))],
+                  
                   [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 18), size=(50, 1), justification='center')],
                   [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 16), size=(50, 1), justification='center')],
                   [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
@@ -3453,13 +3456,13 @@ elif platform == 'win32':
                   [sg.Multiline(size=(85, 6), write_only=(True), key=ML_KEY_MULTI, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)]]
 
   #Makes the general layout for WRAP
-  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Single Obect Search'),
-                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#7c5c4c',   element_justification= 'center',     key = 'Multi-Object Search')]], 
-                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#979793', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
+  tab_layout = [[sg.TabGroup([[sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Single Obect Search'),
+                              sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+                              tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#9C873E', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')]] 
 
 
   #Generates the window based off the layouts above
-  window = sg.Window('WRAP', tab_layout, size = (550, 600), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  window = sg.Window('WRAP', tab_layout, size = (550, 680), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
 
   #Makes lists for: catalog names, catalog functions, and fake variables
   catalogs = ['catwise', 'AW', 'gaia', 
