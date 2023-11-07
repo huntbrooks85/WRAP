@@ -383,7 +383,8 @@ def allwise_table(ra, dec, radius):
   blockPrint()
  
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'allwise_p3as_psd', spatial = 'Box', width = (radius - 1) * u.arcsec)
+  location_data = Irsa.query_region(
+    coord.SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5'), catalog='allwise_p3as_psd', spatial='Cone', radius=(radius - 1) * u.arcsec)
   return location_data
 
 #                      CATWISE SEARCH                           #
@@ -674,7 +675,8 @@ def catwise_table(ra, dec, radius):
   enablePrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg,u.deg), frame='fk5'), catalog='catwise_2020', spatial='Box', width = (radius - 4) * u.arcsec)
+  location_data = Irsa.query_region(
+    coord.SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5'), catalog='catwise_2020', spatial='Cone', radius=(radius - 1) * u.arcsec)
   return location_data
 
 #                         GAIA SEARCH                           #
@@ -1608,8 +1610,8 @@ def nsc_table(ra, dec, radius):
     query = " \
     SELECT ra, dec, gmag, gerr, rmag, rerr, imag, ierr, zmag, zerr, umag, uerr, ymag, yerr, pmra, pmraerr, pmdec, pmdecerr, raerr, decerr, mjd  \
     FROM nsc_dr2.object \
-    WHERE ra > " + str((ra - ((radius/7200) - 0.000547778))) + " and ra < " + str((ra + ((radius/7200) - 0.000547778))) + " " \
-    "AND dec > " + str((dec - ((radius/7200) - 0.000547778))) + " and dec < " + str((dec + ((radius/7200) - 0.000547778))) + " " \
+    WHERE ra > " + str((ra - ((radius/7200) - 0.0001))) + " and ra < " + str((ra + ((radius/7200) - 0.0001))) + " " \
+    "AND dec > " + str((dec - ((radius/7200) - 0.0001))) + " and dec < " + str((dec + ((radius/7200) - 0.0001))) + " " \
     ""
 
     #Run this SQL quiery into the online NSC database
@@ -2348,6 +2350,7 @@ def ukidss_image(ra, dec, radius):
             J_list, J_list_e = table['jAperMag3'].tolist(), table['jAperMag3Err'].tolist()
         
         else:
+          if len(url_J) > 0 and len(url_H) > 0 and len(url_K) > 0 and len(url_Y) > 0: 
             #Downloading the fits images
             file_ukidss_J, file_ukidss_H, file_ukidss_K, file_ukidss_Y = download_file(url_J[0], cache=True), download_file(url_H[0], cache=True), download_file(url_K[0], cache=True), download_file(url_Y[0], cache=True)
             data_ukidss_J, data_ukidss_H, data_ukidss_K, data_ukidss_Y = fits.getdata(file_ukidss_J), fits.getdata(file_ukidss_H), fits.getdata(file_ukidss_K), fits.getdata(file_ukidss_Y)
@@ -2387,6 +2390,11 @@ def ukidss_image(ra, dec, radius):
             pmra_list, pmra_list_e = table['muRa'].tolist(), table['sigMuRa'].tolist()
             pmdec_list, pmdec_list_e = table['muDec'].tolist(), table['sigMuDec'].tolist()
             enablePrint()
+          else: 
+            J_mag, ra_wfcam, J_e, dec_wfcam = np.nan, np.nan, np.nan, np.nan
+            text = 'Image Not Found'
+            ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+            return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, data, text
 
         #Defining a mouse click as an event on the plot
         location = []
