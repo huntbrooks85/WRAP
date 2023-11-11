@@ -2295,7 +2295,7 @@ def twomass_table(ra, dec, radius):
   blockPrint()
 
   #Uses astroquery to find all objects in the radius
-  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit = (u.deg,u.deg), frame = 'fk5'), catalog = 'fp_psc', spatial = 'Box', width = (radius - 1) * u.arcsec)
+  location_data = Irsa.query_region(coord.SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5'), catalog='fp_psc', spatial='Cone', radius=(radius - 1) * u.arcsec)
   return location_data
 
 #                        WFCAM SEARCH                           #
@@ -2311,7 +2311,7 @@ def ukidss_image(ra, dec, radius):
     plt.rcParams['toolbar'] = 'None'
     matplotlib.use("TkAgg")
     plt.style.use('Solarize_Light2')
-    # blockPrint()
+    blockPrint()
     
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
@@ -2423,7 +2423,6 @@ def ukidss_image(ra, dec, radius):
 
             #Finds the camera orientation
             cam_type = hdu_j.header['CAMNUM']
-            print(cam_type)
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
             shape = min(cutout_UHS.shape)
@@ -2431,45 +2430,56 @@ def ukidss_image(ra, dec, radius):
 
             #Converts the ra
             ra_dec_pixel = wcs.world_to_pixel_values(object_ra, object_dec)
-
+            
+            # Finds the radius size in pixels
+            pixel_radius = 2.5*radius
             if cam_type == 1: 
                 #Makes the dec negative
-                minus_dec = [(-x + shape) for x in ra_dec_pixel[1]]
+                total_data = np.rot90(cutout_UHS.data, 3)
+                if total_data.shape[1] < total_data.shape[0]:
+                  minus_dec = [(-x + total_data.shape[1]) for x in ra_dec_pixel[1]]
+                else:
+                  minus_dec = [(-x + pixel_radius) for x in ra_dec_pixel[1]]
                 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(minus_dec, ra_dec_pixel[0], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
-                total_data = np.rot90(cutout_UHS.data, 3)
-                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, max(cutout_UHS.shape))
+                x_lower, x_upper = (total_data.shape[1] - pixel_radius) + pixel_radius, -(pixel_radius - total_data.shape[1])
+                y_lower, y_upper = total_data.shape[0] - pixel_radius, total_data.shape[0]
 
             elif cam_type == 2:
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
-                plt.xlim(0, max(cutout_UHS.shape))
-                plt.ylim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
+                x_lower, x_upper = 0, pixel_radius
+                y_lower, y_upper = pixel_radius, 0
 
             elif cam_type == 3:
                 #Makes the ra negative
-                minus_ra = [(-x + shape) for x in ra_dec_pixel[0]]
+                total_data = np.rot90(cutout_UHS.data)
+                if total_data.shape[0] < total_data.shape[1]:
+                  minus_ra = [(-x + total_data.shape[0]) for x in ra_dec_pixel[0]]
+                else:
+                  minus_ra = [(-x + pixel_radius) for x in ra_dec_pixel[0]]
 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
-                total_data = np.rot90(cutout_UHS.data)
-                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, max(cutout_UHS.shape))
+                x_lower, x_upper = pixel_radius, 0
+                y_lower, y_upper = total_data.shape[0] - pixel_radius, total_data.shape[0]
                 
             elif cam_type == 4: 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
-                plt.xlim(min(cutout_UHS.shape), (min(cutout_UHS.shape) - max(cutout_UHS.shape)))
-                plt.ylim(0, max(cutout_UHS.shape))
+                x_lower, x_upper = pixel_radius, 0
+                y_lower, y_upper = 0, pixel_radius
 
             # Normalize the image and plots it
             init_top, init_bot = 95, 45
             norm1_w1 = matplotlib.colors.Normalize(vmin = np.nanpercentile(cutout_UHS.data, init_bot), vmax = np.nanpercentile(cutout_UHS.data, init_top))
-            ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin = 'lower')
+            print(total_data.shape)
+            ax.imshow(total_data, cmap = 'Greys', norm = norm1_w1, origin = 'upper')
+            plt.xlim(x_lower, x_upper)
+            plt.ylim(y_lower, y_upper)
 
             # Formats the window correctly
             fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
@@ -2622,7 +2632,7 @@ def ukidss_image(ra, dec, radius):
                 #Finds which axes was clicked
                 click_axes = str(location[n])
                 if data != 'UHSDR1':
-                    click_axes = click_axes.split('AxesSubplot', 2)[0]
+                    click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
                 else: 
                     click_axes = click_axes.split('AxesSubplot', 2)[0]
 
@@ -2757,7 +2767,7 @@ def ukidss_image(ra, dec, radius):
 def ukidss_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''
 
-    # blockPrint()
+    blockPrint()
 
     #Find the table of all the objects found in UKIDSS in the radius choosen by the user
     program_list = Ukidss.list_catalogs()
@@ -2793,7 +2803,7 @@ def vsa_image(ra, dec, radius):
   blockPrint()
 
   #Obtains all of the urls in J, H, and K from VSA
-  database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIKINGDR5', 'VIDEODR6', 'ULTRAVISTADR4']
+  database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIDEODR6', 'ULTRAVISTADR4']
   for img in database_list:
     url_J, url_H, url_Ks = [Vsa.get_image_list(
       SkyCoord(ra, dec, unit = (u.deg, u.deg), frame = 'fk5'),
