@@ -2311,7 +2311,7 @@ def ukidss_image(ra, dec, radius):
     plt.rcParams['toolbar'] = 'None'
     matplotlib.use("TkAgg")
     plt.style.use('Solarize_Light2')
-    # blockPrint()
+    blockPrint()
     
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
@@ -2423,7 +2423,6 @@ def ukidss_image(ra, dec, radius):
 
             #Finds the camera orientation
             cam_type = hdu_j.header['CAMNUM']
-            print(cam_type)
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
             shape = min(cutout_UHS.shape)
@@ -2768,7 +2767,7 @@ def ukidss_image(ra, dec, radius):
 def ukidss_table(ra, dec, radius): 
     '''Find all the objects in the radius defined by the user'''
 
-    # blockPrint()
+    blockPrint()
 
     #Find the table of all the objects found in UKIDSS in the radius choosen by the user
     program_list = Ukidss.list_catalogs()
