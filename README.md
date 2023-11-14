@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://ibb.co/9WGmwZV"><img src="/Output/metadata/LOGO.png" width="50%"></a> <br>
+    <a href="https://ibb.co/9WGmwZV"><img src="/Source_Code/Output/metadata/LOGO.png" width="50%"></a> <br>
 </p>
 
 <h1 align="center" id="title"> 💫✨ WRAP ✨💫 </h1>
@@ -129,7 +129,7 @@ To open the application, type the following command into your terminal:
 </div>
 
 <p align="center">
-  <a href="https://ibb.co/GQkGgNN"><img src="/Output/metadata/Coverage_Map-1.png" width="100%"></a> <br>
+  <a href="https://ibb.co/GQkGgNN"><img src="/Source_Code/Output/metadata/Coverage_Map-1.png" width="100%"></a> <br>
   Sky-Coverage for the Catalogs Included in WRAP
 </p>
 
