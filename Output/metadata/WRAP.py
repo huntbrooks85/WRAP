@@ -2463,7 +2463,7 @@ def ukidss_image(ra, dec, radius):
 
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[1], minus_ra, s = circle_size, edgecolor = '#40E842', facecolor = 'none')
-                x_lower, x_upper = pixel_radius, 0
+                x_lower, x_upper = total_data.shape[1], -(pixel_radius - total_data.shape[1])
                 y_lower, y_upper = total_data.shape[0] - pixel_radius, total_data.shape[0]
                 
             elif cam_type == 4: 
