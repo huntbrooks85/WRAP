@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
 # WRAP v1.0.0
-# By Hunter Brooks, at NAU, Flagstaff: October 4, 2023
+# By Hunter Brooks, at NAU, Flagstaff: November 13, 2023
 #
 # Purpose: Gathers photometry and astrometry from various 
 #          ultra-violet, optical, and near-infrared catalogs 
@@ -99,11 +99,11 @@ def allwise_image(ra, dec, radius):
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
   allwise_metadata = requests.get(metadata_allwise_link)
-  open(str(directory) + '/Output/metadata/AllWISE_metadata.txt', 'wb').write(allwise_metadata.content)
+  open(str(directory) + 'AllWISE_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
   w1_finder, w2_finder, w3_finder, w4_finder = 'W1 Coadd', 'W2 Coadd', 'W3 Coadd', 'W4 Coadd'
-  with open(str(directory) + '/Output/metadata/AllWISE_metadata.txt', 'r') as fp:
+  with open(str(directory) + 'AllWISE_metadata.txt', 'r') as fp:
    lines = fp.readlines()
    for line in lines:
       if line.find(w1_finder) != -1:
@@ -405,11 +405,11 @@ def catwise_image(ra, dec, radius):
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
   allwise_metadata = requests.get(metadata_allwise_link)
-  open(str(directory) + '/Output/metadata/catwise_metadata.txt', 'wb').write(allwise_metadata.content)
+  open(str(directory) + 'catwise_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
   w1_finder, w2_finder = 'W1 Coadd', 'W2 Coadd'
-  with open(str(directory) + '/Output/metadata/catwise_metadata.txt', 'r') as fp:
+  with open(str(directory) + 'catwise_metadata.txt', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
       if line.find(w1_finder) != -1:
@@ -697,11 +697,11 @@ def gaia_image(ra, dec, radius):
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1 and W2 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
   allwise_metadata = requests.get(metadata_allwise_link)
-  open(str(directory) + '/Output/metadata/gaia_metadata.txt', 'wb').write(allwise_metadata.content)
+  open(str(directory) + 'gaia_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
   w1_finder, w2_finder, w3_finder, w4_finder = 'W1 Coadd', 'W2 Coadd', 'W3 Coadd', 'W4 Coadd'
-  with open(str(directory) + '/Output/metadata/gaia_metadata.txt', 'r') as fp:
+  with open(str(directory) + 'gaia_metadata.txt', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
       if line.find(w1_finder) != -1:
@@ -1643,12 +1643,12 @@ def ps_image(ra, dec, radius):
   #Find the panstarr metadata for the image API
   ps_image_url = 'http://ps1images.stsci.edu/cgi-bin/ps1cutouts?pos=' + str(ra) + str(new_dec)  + '&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size=' + str(radius * 4) + '&output_size=0&verbose=0&autoscale=99.500000&catlist='
   allwise_metadata = requests.get(ps_image_url)
-  open(str(directory) + '/Output/metadata/ps_metadata.txt', 'wb').write(allwise_metadata.content)
+  open(str(directory) + 'ps_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With the metadata from panstarrs find the image API in r band
   r_finder= 'amp;'
   r_finder_list = []
-  with open(str(directory) + '/Output/metadata/ps_metadata.txt', 'r') as fp:
+  with open(str(directory) + 'ps_metadata.txt', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
       if line.find(r_finder) != -1:
@@ -1991,12 +1991,12 @@ def twomass_image(ra, dec, radius):
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_2mass_link = 'https://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
   twomass_metadata = requests.get(metadata_2mass_link)
-  open(str(directory) + '/Output/metadata/TWOMASS_metadata.txt', 'wb').write(twomass_metadata.content)
+  open(str(directory) + 'TWOMASS_metadata.txt', 'wb').write(twomass_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
   J_finder, h_finder, k_finder = 'All-Sky Release Survey J-Band Atlas Image', 'All-Sky Release Survey H-Band Atlas Image', 'All-Sky Release Survey K-Band Atlas Image'
   j_twomass_image_url_list, h_twomass_image_url_list, k_twomass_image_url_list = [], [], []
-  with open(str(directory) + '/Output/metadata/TWOMASS_metadata.txt', 'r') as fp:
+  with open(str(directory) + 'TWOMASS_metadata.txt', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
       if line.find(J_finder) != -1:
@@ -3161,7 +3161,8 @@ def single_object_search():
         output = values['output']
 
       #Writes the CSV file with the photometry and astrometry gathered
-      myFile = open(str(directory) + '/Output/' + str(output) + '.csv', 'w')
+      new_directory = (directory.split('Output/')[0]) + 'Output/'
+      myFile = open(str(new_directory) + str(output) + '.csv', 'w')
       writer = csv.writer(myFile)
       flat_photometry_list = [item for sublist in photometry for item in sublist]
       flat_photometry_name_list = [item for sublist in photometry_name for item in sublist]
