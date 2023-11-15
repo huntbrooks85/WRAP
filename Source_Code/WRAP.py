@@ -3432,7 +3432,7 @@ if platform != 'win32':
 #Sets the layout if the user is on a windows machine
 elif platform == 'win32':
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-  layout_single = [
+  layout_single = [[sg.Image(filename = (str(directory) + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(6, 1), font = ('Ink Free', 45)),                 sg.Image(filename = str(directory) + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                     [sg.Text('RA', font = ('Times New Roman', 18), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 18), size=(10, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 18), size=(13, 1), justification='center')],
                     [sg.Text('(Degrees)', font = ('Times New Roman', 16), size=(14, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 16), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 16), size=(16, 1), justification='center')],
                     [sg.InputText(size=(15), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(15, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(15, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
