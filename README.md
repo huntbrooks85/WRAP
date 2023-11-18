@@ -4,15 +4,20 @@
 
 <h1 align="center" id="title"> 💫✨ WRAP ✨💫 </h1>
 <div align="center">
+
+<div align="center">
+  <b><a href="https://hcb985.wixsite.com/wrap-byw">WRAP Website</a></b>
+</div>
+
 <p id="description"> The <b>Wide-field Retrieval of Astrodata Program (WRAP)</b> is a versatile tool designed to simplify the retrieval of photometric and astrometric data from a wide range of ultraviolet, optical, and near-infrared catalogs. Users input Right Ascension (RA) and Declination (DEC) coordinates, along with a search radius for their object of interest. The program then enables users to interactively select their object by simply clicking on it within catalog images. WRAP efficiently compiles and presents all pertinent photometric and astrometric information obtained from the selected catalogs, making it accessible in a convenient CSV file. This streamlines the data retrieval process, enhancing the user's experience</p>
 </div>
 
 <div align="center">
-  **WRAP Website:** [https://hcb985.wixsite.com/wrap-byw](https://hcb985.wixsite.com/wrap-byw)
+  <h2>🛠️ Installation For Source Code 🛠️</h2>
 </div>
 
 <div align="center">
-  <h2>🛠️ Installation For Source Code 🛠️</h2>
+  <b>THIS IS ONLY FOR THE SOURCE CODE, NOT THE MACOS/WINDOWS APPLICATION</b>
 </div>
 
 <div align="center">
@@ -74,14 +79,26 @@
    ```bash
    pip install -r requirements-windows.txt
 
+
 <div align="center">
-  <h2>🏆 Opening Application 🏆</h2>
+<pp><b> Opening WRAP </b><pp>
+</div>
+<div align="center">
+<pp><b>-----------------------------------------</b><pp>
 </div>
 
 To open the application, type the following command into your terminal:
 
 - For MacOS: `python3 WRAP.py`
 - For Windows: `python3 .\WRAP.py`
+
+<div align="center">
+  <h2>🏆 Using WRAP 🏆</h2>
+</div>
+
+<div align="center">
+  <b><a href="https://hcb985.wixsite.com/wrap-byw">WRAP Website</a></b>
+</div>
 
 <div align="center">
   <p><b>How to Use WRAP</b></p>
@@ -120,7 +137,7 @@ To open the application, type the following command into your terminal:
   <p>-----------------------------------------</p>
 </div>
 
-- **Note 1**: Only tested on MacOS >13 and Windows >10; problems may occur for older versions of MacOS and Windows ***(NOT SUPPORTED ON LINUX)***.
+- **Note 1**: Only tested on MacOS >11 and Windows >8; problems may occur for older versions of MacOS and Windows ***(NOT SUPPORTED ON LINUX)***.
 - **Note 2**: Windows does not support the astro-datalab package; therefore, Windows does not have the Noirlab Source Catalog option.
 - **Note 3**: The window close button has been disabled; to close WRAP, please click the red "Close WRAP" button at the bottom.
 - **Note 4**: The orientation for all of the catalogs is North pointed up and East pointing left.
@@ -143,9 +160,6 @@ To open the application, type the following command into your terminal:
 
 - **Mr. Hunter Brooks**
   - Email: hcb98@nau.edu
-
-- **Mr. Dan Caselden**
-  - Email: dancaselden@gmail.com
 
 <div align="center">
   <h2>📖 Acknowledgments 📖</h2>
