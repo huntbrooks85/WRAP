@@ -2101,8 +2101,8 @@ def twomass_image(ra, dec, radius):
               + 'K Date: ' + str(date_k) + ' (YYMMDD)  \n', fontdict = fontdict_1, y = 1.04)
     plt.grid(linewidth = 0)
     shape = max(cutout_j.shape)
-    plt.xlim((cutout_j.shape[1]), (cutout_j.shape[1]))
-    plt.ylim((cutout_j.shape[0]), (cutout_j.shape[0]))
+    plt.xlim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
+    plt.ylim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
     figure = plt.gcf()
     if platform != 'win32':
       figure.set_size_inches(4.75, 6.95)
