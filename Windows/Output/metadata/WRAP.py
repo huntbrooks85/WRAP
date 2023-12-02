@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
 # WRAP v1.0.0
-# By Hunter Brooks, at NAU, Flagstaff: November 13, 2023
+# By Hunter Brooks, at NAU, Flagstaff: December 1, 2023
 #
 # Purpose: Gathers photometry and astrometry from various 
 #          ultra-violet, optical, and near-infrared catalogs 
@@ -17,12 +17,10 @@ import sys,os
 import astropy
 import requests
 import truncate
-import astroquery
 import webbrowser
 import matplotlib
 import numpy as np
 import pandas as pd
-from PIL import Image
 from astropy import wcs
 from sys import platform
 from pyvo.dal import sia
@@ -31,6 +29,7 @@ import matplotlib.cm as cm
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.io import ascii
+from astropy.time import Time
 from matplotlib import pyplot
 from bs4 import BeautifulSoup
 from astroquery.vsa import Vsa
@@ -61,6 +60,7 @@ from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormali
 # ------------------------------------------------------------- #
 executable_path = sys.executable
 directory = os.path.dirname(executable_path)
+directory = directory.split('WRAP.app', 2)[0]
 # ------------------------------------------------------------- #
 
 #Does not load these packages if the user is on a Windows machine
@@ -99,7 +99,15 @@ def allwise_image(ra, dec, radius):
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
-  allwise_metadata = requests.get(metadata_allwise_link)
+  try:
+    allwise_metadata = requests.get(metadata_allwise_link)
+  except: 
+    ra_aw_e, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_allwise = ra
+    dec_allwise = dec
+    plt.close('all')
+    plt.figure().clear()
+    return ra_allwise, ra_aw_e, dec_allwise, dec_aw_e, w1, w1_sigma, w2, w2_sigma, w3, w3_sigma, w4, w4_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, 'AllWISE Source Catalog', 'AllWISE is Having Maintenance'
   open(str(directory) + '/Output/metadata/AllWISE_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
@@ -405,7 +413,16 @@ def catwise_image(ra, dec, radius):
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
-  allwise_metadata = requests.get(metadata_allwise_link)
+  try:
+    allwise_metadata = requests.get(metadata_allwise_link)
+  except: 
+    mjd, ra_cw_e, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_catwise = ra
+    dec_catwise = dec
+    shape_x, shape_y = total_data.shape[0], total_data.shape[1]
+    plt.close('all')
+    plt.figure().clear()
+    return ra_catwise, ra_cw_e, dec_catwise, dec_cw_e, w1, w1_sigma, w2, w2_sigma, pmra, pmra_sigma, pmdec, pmdec_sigma, mjd, 'CatWISE 2020 Catalog', 'CatWISE is Having Maintenance'
   open(str(directory) + '/Output/metadata/catwise_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
@@ -697,7 +714,15 @@ def gaia_image(ra, dec, radius):
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1 and W2 images
   metadata_allwise_link = 'http://irsa.ipac.caltech.edu/ibe/sia/wise/allwise/p3am_cdd?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
-  allwise_metadata = requests.get(metadata_allwise_link)
+  try:
+    allwise_metadata = requests.get(metadata_allwise_link)
+  except: 
+    ra_gaia_e, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_gaia = ra
+    dec_gaia = dec
+    plt.close('all')
+    plt.figure().clear()
+    return ra_gaia, ra_gaia_e, dec_gaia, dec_gaia_e, par, par_e, rad, rad_e, pmra, pmra_e, pmdec, pmdec_e, g, g_e, bp, bp_e, rp, rp_e, year, 'GAIA DR3 Archive', 'GAIA is Having Maintenance'
   open(str(directory) + '/Output/metadata/gaia_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
@@ -1018,9 +1043,16 @@ def galex_image(ra, dec, radius_use):
 
     blockPrint()
     #Obtains all of the observations from MAST
-    obs_table = Observations.query_region(str(ra) + ' ' + str(dec), radius = (radius_use/1800))
+    try:
+      obs_table = Observations.query_region(str(ra) + ' ' + str(dec), radius = (radius_use/1800))
+    except: 
+      fuv, fuv_e, nuv, nuv_e = np.nan, np.nan, np.nan, np.nan
+      ra_galex, dec_galex = ra, dec
+      plt.close('all')
+      plt.figure().clear()
+      return ra_galex, dec_galex, fuv, fuv_e, nuv, nuv_e, 'MAST GALEX Data Release 7', 'GALEX is Having Maintenance'
     obs_table = pd.DataFrame(data = np.array(obs_table))
-
+    
     #Finds only the GALEX images
     telescope = obs_table['obs_collection'].tolist()
     for p in range(len(telescope)):
@@ -1290,7 +1322,12 @@ def nsc_image(ra, dec, radius):
 
     #Defines the catalog that is searched
     DEF_ACCESS_URL = "https://datalab.noirlab.edu/sia/des_dr1"
-    svc = sia.SIAService(DEF_ACCESS_URL)
+    try:
+      svc = sia.SIAService(DEF_ACCESS_URL)
+    except: 
+      ra_nsc_e, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      ra_nsc, dec_nsc = ra, dec
+      return ra_nsc, ra_nsc_e, dec_nsc, dec_nsc_e, g, g_e, r, r_e, i, i_e, z, z_e, u_mag, u_mag_e, y, y_e, pmra, pmra_e, pmdec, pmdec_e, mjd, 'NoirLab Source Catalog Data Release 2', 'NSC is Having Maintenance'
 
     #Finds all of the image urls for the ra, dec, and radius given
     imgTable = svc.search((ra,dec), (radius/3600)).to_table()
@@ -1399,6 +1436,7 @@ def nsc_image(ra, dec, radius):
         ax.imshow(total_data.data, cmap = 'Greys', norm = norm1_total)
 
         #Makes the figure look pretty
+        pixel_radius = 3.785*radius
         plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
         plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
         fontdict_1 = {'family':'Times New Roman','color':'k','size':11, 'style':'italic'}
@@ -1409,8 +1447,8 @@ def nsc_image(ra, dec, radius):
                    + 'Y Date: ' + str(date_Y) + ' (Y-M-D)\n', fontdict = fontdict_1, y = 1.04)
         plt.grid(linewidth = 0)
         figure = plt.gcf()
-        plt.xlim(min(total_data.shape), (min(total_data.shape) - max(total_data.shape)))
-        plt.ylim(0, max(total_data.shape))
+        plt.xlim(pixel_radius, 0)
+        plt.ylim(0, pixel_radius)
         figure.set_size_inches(4.75, 7.35)
         # figure.canvas.set_window_title('NSC Search')
         mng = pyplot.get_current_fig_manager()
@@ -1643,7 +1681,14 @@ def ps_image(ra, dec, radius):
 
   #Find the panstarr metadata for the image API
   ps_image_url = 'http://ps1images.stsci.edu/cgi-bin/ps1cutouts?pos=' + str(ra) + str(new_dec)  + '&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size=' + str(radius * 4) + '&output_size=0&verbose=0&autoscale=99.500000&catlist='
-  allwise_metadata = requests.get(ps_image_url)
+  try:
+    allwise_metadata = requests.get(ps_image_url)
+  except: 
+    ps_ra_e, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ps_ra, ps_dec = ra, dec
+    plt.close('all')
+    plt.figure().clear()
+    return ps_ra, ps_ra_e, ps_dec, ps_dec_e, g, g_e, r, r_e, i, i_e, z, z_e, y, y_e, mjd, 'PanSTARRS Data Release 2', 'PanSTARRS is having Maintenance'
   open(str(directory) + '/Output/metadata/ps_metadata.txt', 'wb').write(allwise_metadata.content)
 
   #With the metadata from panstarrs find the image API in r band
@@ -1726,8 +1771,16 @@ def ps_image(ra, dec, radius):
       enablePrint()
 
       #Gets the dates that each image was taken
-      date_r, date_i, date_z, date_y = hdu_r.header[8].split('T', 2)[0], hdu_i.header[8].split('T', 2)[0], hdu_z.header[8].split('T', 2)[0], hdu_y.header[8].split('T', 2)[0]
-
+      def mjd_to_date(mjd):
+        time = Time(mjd, format='mjd')
+        iso_date = time.iso
+        return iso_date
+      
+      date_r = (mjd_to_date(hdu_r.header['MJD-OBS'])).split(' ', 2)[0]
+      date_i = (mjd_to_date(hdu_i.header['MJD-OBS'])).split(' ', 2)[0]
+      date_z = (mjd_to_date(hdu_z.header['MJD-OBS'])).split(' ', 2)[0]
+      date_y = (mjd_to_date(hdu_y.header['MJD-OBS'])).split(' ', 2)[0]
+  
       #Defining a mouse click as an event on the plot
       location = []
       plt.rcParams["figure.figsize"] = [8, 8]
@@ -1991,7 +2044,14 @@ def twomass_image(ra, dec, radius):
 
   #Finds all the metadata that relates to the ra and dec searched, mostly to find the APIs for the W1, W2, W3, and W4 images
   metadata_2mass_link = 'https://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia?POS=' + str(ra) + ',' + str(dec) + '&SIZE=' + str(radius/3600)
-  twomass_metadata = requests.get(metadata_2mass_link)
+  try:
+    twomass_metadata = requests.get(metadata_2mass_link)
+  except: 
+    j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_2mass, dec_2mass = ra, dec
+    plt.close('all')
+    plt.figure().clear()
+    return ra_2mass, dec_2mass, j, j_e, h, h_e, ks, ks_e, '2MASS All-Sky Point Source Catalog', '2MASS is Having Maintenance'
   open(str(directory) + '/Output/metadata/TWOMASS_metadata.txt', 'wb').write(twomass_metadata.content)
 
   #With this metadata it finds the API link for the W1 and W2 images
@@ -2101,9 +2161,11 @@ def twomass_image(ra, dec, radius):
               + 'J Date: ' + str(date_j) + ' (YYMMDD)  ' + '  H Date: ' + str(date_h) + ' (YYMMDD)\n'
               + 'K Date: ' + str(date_k) + ' (YYMMDD)  \n', fontdict = fontdict_1, y = 1.04)
     plt.grid(linewidth = 0)
-    shape = max(cutout_j.shape)
-    plt.xlim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
-    plt.ylim((min(cutout_j.shape) - max(cutout_j.shape)), min(cutout_j.shape))
+    shape_x = cutout_j.shape[1]
+    shape_y = cutout_j.shape[0]
+    plt.xlim(shape_x - radius, radius + (shape_x - radius))
+    plt.ylim(shape_y - radius, radius + (shape_y - radius))
+    
     figure = plt.gcf()
     if platform != 'win32':
       figure.set_size_inches(4.75, 6.95)
@@ -2314,6 +2376,14 @@ def ukidss_image(ra, dec, radius):
     plt.style.use('Solarize_Light2')
     blockPrint()
     
+    try:
+      url_J = Ukidss.get_image_list(SkyCoord(1, 1, unit = (u.deg, u.deg), frame = 'fk5'), image_width = (150) * u.arcsec, image_height = (150) * u.arcsec, waveband = 'J', database = 'UHSDR1', programme_id = 'UHSDR1')
+    except: 
+      ra_wfcam_e, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+      ra_wfcam = ra
+      dec_wfcam = dec
+      return ra_wfcam, ra_wfcam_e, dec_wfcam, dec_wfcam_e, Y_mag, Y_e, J_mag, J_e, H_mag, H_e, K_mag, K_e, pmra, pmra_e, pmdec, pmdec_e, epoch, 'WFCAM', 'WFCAM is Having Maintenance'
+    
     #Obtains all of the urls in J, H, and K from UKIDSS
     database_list = ['UKIDSSDR11PLUS', 'UHSDR1']
     catalo = ['LAS', 'UHSDR1']
@@ -2424,6 +2494,7 @@ def ukidss_image(ra, dec, radius):
 
             #Finds the camera orientation
             cam_type = hdu_j.header['CAMNUM']
+            print(cam_type)
 
             #Obtains the shape of the cutout and sets the circle size for the scatter plot
             shape = min(cutout_UHS.shape)
@@ -2451,8 +2522,8 @@ def ukidss_image(ra, dec, radius):
                 #Plots the correctly orientated image
                 scatter = ax.scatter(ra_dec_pixel[0], ra_dec_pixel[1], s = circle_size, edgecolor = '#40E842', facecolor = 'none')
                 total_data = cutout_UHS.data
-                x_lower, x_upper = -(pixel_radius - total_data.shape[1]), total_data.shape[1]
-                y_lower, y_upper = total_data.shape[0], (pixel_radius - total_data.shape[0])
+                x_lower, x_upper = 0, total_data.shape[0] + (pixel_radius - total_data.shape[0])
+                y_lower, y_upper = total_data.shape[1] + (total_data.shape[1] - pixel_radius), (total_data.shape[1] - pixel_radius)
 
             elif cam_type == 3:
                 #Makes the ra negative
@@ -2802,6 +2873,13 @@ def vsa_image(ra, dec, radius):
   matplotlib.use("TkAgg")
   plt.style.use('Solarize_Light2')
   blockPrint()
+  
+  try:
+    url_J = Vsa.get_image_list(SkyCoord(1, 1, unit = (u.deg, u.deg), frame = 'fk5'), image_width = 150 * u.arcsec, waveband = 'J', database = 'VHSDR6')
+  except: 
+    ymjd, jmjd, hmjd, ksmjd, y, y_e, j, j_e, h, h_e, ks, ks_e = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    ra_vsa, dec_vsa = ra, dec
+    return ra_vsa, dec_vsa, y, y_e, j, j_e, h, h_e, ks, ks_e, ymjd, jmjd, hmjd, ksmjd, 'VSA', 'VSA is Having Maintenance'
 
   #Obtains all of the urls in J, H, and K from VSA
   database_list = ['VHSDR6', 'VVVDR5', 'VMCDR6', 'VIDEODR6', 'ULTRAVISTADR4']
@@ -3162,7 +3240,8 @@ def single_object_search():
         output = values['output']
 
       #Writes the CSV file with the photometry and astrometry gathered
-      myFile = open(str(directory) + '/Output/' + str(output) + '.csv', 'w')
+      new_directory = (directory.split('Output/')[0]) + '/Output/'
+      myFile = open(str(new_directory) + str(output) + '.csv', 'w')
       writer = csv.writer(myFile)
       flat_photometry_list = [item for sublist in photometry for item in sublist]
       flat_photometry_name_list = [item for sublist in photometry_name for item in sublist]
@@ -3341,7 +3420,7 @@ sg.theme('LightBrown3')
 #Sets the layout if the user is not on a windows machine
 if platform != 'win32':
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
-  layout_single = [[sg.Image(filename = (str(directory) + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = str(directory) + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
+  layout_single = [[sg.Image(filename = (str(directory) + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(6, 1), font = ('Chalkduster', 45)),                 sg.Image(filename = str(directory) + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                    
                     [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
                     [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
@@ -3364,7 +3443,7 @@ if platform != 'win32':
   #Makes the drop down window for types of file in the multi-object search
   filetype_list = ['CSV', 'FITS', 'ASCII', 'IPAC']
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
-  layout_multi = [[sg.Image(filename = (str(directory) + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = str(directory) + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
+  layout_multi = [[sg.Image(filename = (str(directory) + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                    sg.Text('WRAP', justification='center', size=(6, 1), font = ('Chalkduster', 45)),                 sg.Image(filename = str(directory) + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                   
                   [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
                   [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
@@ -3518,7 +3597,7 @@ elif platform == 'win32':
             'ps_ra', 'ps_ra_e', 'ps_dec', 'ps_dec_e', 'ps_g', 'ps_g_e', 'ps_r', 'ps_r_e', 'ps_i', 'ps_i_e', 'ps_z', 'ps_z_e', 'ps_y', 'ps_y_e', 'ps_mjd', 'ps_catalog', 'ps_notes', 
             'nsc_ra', 'nsc_ra_e', 'nsc_dec', 'nsc_dec_e', 'nsc_g', 'nsc_g_e', 'nsc_r', 'nsc_r_e', 'nsc_i', 'nsc_i_e', 'nsc_z', 'nsc_z_e', 'nsc_u', 'nsc_u_e', 'nsc_y', 'nsc_y_e', 'nsc_pmra', 'nsc_pmra_e', 'nsc_pmdec', 'nsc_pmdec_e', 'nsc_mjd', 'nsc_catalog', 'nsc_notes',  
             'galex_ra', 'galex_dec', 'galex_fuv', 'galex_fuv_e', 'galex_nuv', 'galex_nuv_e', 'galex_catalog', 'galex_notes']
-
+  
 #                             GUI                               #
 # ------------------------------------------------------------- #
 #Keeps the window open
@@ -3627,7 +3706,7 @@ while True:
           output = values['output2']
 
         #Makes the CSV file and writes the header
-        myFile = open(str(directory) + '/Output/' + str(output) + '.csv', 'w')
+        myFile = open('Output/' + str(output) + '.csv', 'w')
         writer = csv.writer(myFile)
         writer.writerow(header)
         
