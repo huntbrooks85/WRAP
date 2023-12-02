@@ -59,8 +59,7 @@ from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormali
 # Gets the file location of the WRAP app
 # ------------------------------------------------------------- #
 executable_path = sys.executable
-directory = os.path.dirname(executable_path)
-directory = directory.split('WRAP.app', 2)[0]
+directory = os.path.dirname(executable_path) + '/'
 # ------------------------------------------------------------- #
 
 #Does not load these packages if the user is on a Windows machine
