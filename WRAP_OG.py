@@ -7,53 +7,38 @@
 #          given a RA, DEC, and Radius by the user
 #-----------------------------------------------------------------------#
 
-
 # Import all needed packages.
 # ------------------------------------------------------------- #
 import cv2
 import csv
 import math
-import time
 import sys,os
-import astropy
 import requests
-import truncate
 import webbrowser
 import matplotlib
 import numpy as np
 import pandas as pd
-from astropy import wcs
 from sys import platform
 from pyvo.dal import sia
 import PySimpleGUI as sg
-import matplotlib.cm as cm
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.io import ascii
 from astropy.time import Time
 from matplotlib import pyplot
-from bs4 import BeautifulSoup
 from astroquery.vsa import Vsa
 from astropy import units as u
-from astropy.table import Table
 import matplotlib.pyplot as plt
 from astroquery.gaia import Gaia
-from matplotlib import transforms
-from astropy.utils.data import conf
 from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
 from astroquery.ukidss import Ukidss
 from matplotlib.widgets import Cursor
 from astroquery.ipac.irsa import Irsa
 from astropy.coordinates import SkyCoord
-from matplotlib.transforms import Affine2D
-from matplotlib.transforms import Affine2D
 from astropy.utils.data import download_file
-from astropy.visualization.wcsaxes import WCSAxes
-from astropy.visualization import astropy_mpl_style
-from astroquery.mast import Observations, MastMissions, Catalogs
+from astroquery.mast import Observations, Catalogs
 from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureManager
 from astropy.visualization import (PercentileInterval, SinhStretch, ImageNormalize)
 # ------------------------------------------------------------- #
 
@@ -690,7 +675,7 @@ def catwise_image(ra, dec, radius):
 def catwise_table(ra, dec, radius): 
   '''Find all the objects in the radius defined by the user'''
 
-  enablePrint()
+  blockPrint()  
 
   #Uses astroquery to find all objects in the radius
   location_data = Irsa.query_region(
