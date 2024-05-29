@@ -16,11 +16,11 @@
 </div>
 
 <div align="center">
-  <h2>🛠️ Installation For Source Code 🛠️</h2>
+  <h2>🛠️ Installation 🛠️</h2>
 </div>
 
 <div align="center">
-  <b>THIS IS ONLY FOR THE SOURCE CODE, NOT THE MACOS/WINDOWS APPLICATION</b>
+  <b>APPLICATION SUPPORT HAS BEEN REMOVED IN WRAP v2.0.0</b>
 </div>
 
 <div align="center">
@@ -92,8 +92,10 @@
 
 To open the application, type the following command into your terminal:
 
-- For MacOS: `python3 WRAP.py`
-- For Windows: `python3 .\WRAP.py`
+**Note that the "python" command might change on how python is installed on your machine**
+
+- For MacOS: `python WRAP.py`
+- For Windows: `python .\WRAP.py`
 
 <div align="center">
   <h2>🏆 Using WRAP 🏆</h2>
@@ -144,7 +146,7 @@ To open the application, type the following command into your terminal:
 - **Note 2**: Windows does not support the astro-datalab package; therefore, Windows does not have the Noirlab Source Catalog option.
 - **Note 3**: The window close button has been disabled; to close WRAP, please click the red "Close WRAP" button at the bottom.
 - **Note 4**: The orientation for all of the catalogs is North pointed up and East pointing left.
-- **Note 5**: 2MASS may have strange imaging cropping; this is a warning that it may happen, so do not be alarmed by it.
+- **Note 5**: Catalog imaging may have strange croppings; this is a warning that it may happen, do not be alarmed by it this is simplfy cropping by the edge of the detector.
 
 
 
@@ -170,5 +172,5 @@ To open the application, type the following command into your terminal:
 
 1. If you intend to publish any of the data gathered by WRAP, please ensure that you correctly acknowledge the sources of the data. 
 
-2. In addition to using the correct acknowledgments for each catalog, please cite "Brook et al. (2023), in prep." when using WRAP for any publication.
+2. In addition to using the correct acknowledgments for each catalog, please cite [Brook et al. (2023)](https://ui.adsabs.harvard.edu/abs/2023RNAAS...7..272B/abstract) when using WRAP for any publication.
 
