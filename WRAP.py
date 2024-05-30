@@ -29,6 +29,7 @@ import webbrowser
 from PIL import Image
 from sys import platform
 from pyvo.dal import sia
+from bs4 import BeautifulSoup
 
 # Image Plotting Packagaes
 import matplotlib
@@ -42,15 +43,17 @@ from astropy.io import fits
 from astropy.io import ascii
 from astropy.time import Time
 from astropy import units as u
+from astropy.nddata import Cutout2D
 import astropy.coordinates as coord
 from astropy.coordinates import SkyCoord
 from astropy.utils.data import download_file
 
 # Image and Table Quering Packages
-from astroquery.skyview import SkyView
-from astroquery.vizier import Vizier
 from astroquery.vsa import Vsa
 from astroquery.eso import Eso
+from astroquery.vizier import Vizier
+from astroquery.skyview import SkyView
+
 
 # NOIRLab Source Catatlog Package
 if platform != 'win32':
@@ -100,10 +103,12 @@ def wrap_not_found(catalog, tab):
 def wrap_end(tab):
   '''The print function for when all catalogs have been searched'''
 
+  print('')
   print('#------------------------------------------------#')
   print('All Catalogs Have Been Searched')
   print('Finished Running WRAP')
   print('#------------------------------------------------#')
+  print('')
 # ------------------------------------------------------------- #
 
 
@@ -127,44 +132,34 @@ def image_query(ra, dec, radius, catalog):
 
   elif catalog == 'VSA':
     try:
-      # Define the list of databases to search
-      database_list = ['VHSDR4', 'VVVDR4', 'VMCDR4', 'VIDEODR5']
-      urls_J, urls_H, urls_K = [], [], []
+      Vsa.clear_cache()
+      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR6')
+      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR6')
+      url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR6')
       
-      # Perform the image queries
-      for db in database_list:
-        coord = SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs')
-        urls_J = Vsa.get_image_list(coord, image_width=radius * u.arcsec, waveband='J', database=db)
-        urls_H = Vsa.get_image_list(coord, image_width=radius * u.arcsec, waveband='H', database=db)
-        urls_K = Vsa.get_image_list(coord, image_width=radius * u.arcsec, waveband='Ks', database=db)
-        
-        # Check if any images were found in the current database
-        if urls_J and urls_H and urls_K:
-          break
-
-      # If no images were found in any database
-      if not urls_J or not urls_H or not urls_K:
-        return 0, 0
-
-      # Download the images
-      file_vsa_J = download_file(urls_J[0], cache=True)
-      file_vsa_H = download_file(urls_H[0], cache=True)
-      file_vsa_K = download_file(urls_K[0], cache=True)
-
-      # Read the image data
-      data_vsa_J = fits.getdata(file_vsa_J)
-      data_vsa_H = fits.getdata(file_vsa_H)
-      data_vsa_K = fits.getdata(file_vsa_K)
-
-      # Get WCS information from the J band image
+      temp_J = url_J[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+      temp_H = url_H[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+      temp_K = url_K[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+      
+      response_J, response_H, response_K = requests.get(temp_J), requests.get(temp_H), requests.get(temp_K)
+      soup_J, soup_H, soup_K = BeautifulSoup(response_J.content, 'html.parser'), BeautifulSoup(response_H.content, 'html.parser'), BeautifulSoup(response_K.content, 'html.parser')
+      link_tag_J, link_tag_H, link_tag_K = soup_J.find('a', href=True, text="download FITS file"), soup_H.find('a', href=True, text="download FITS file"), soup_K.find('a', href=True, text="download FITS file")
+      fits_link_J, fits_link_H, fits_link_K = link_tag_J['href'], link_tag_H['href'], link_tag_K['href']
+      
+      file_vsa_J, file_vsa_H, file_vsa_K = download_file(fits_link_J, cache = False), download_file(fits_link_H, cache = False), download_file(fits_link_K, cache = False)
+      data_vsa_J, data_vsa_H, data_vsa_K = fits.getdata(file_vsa_J), fits.getdata(file_vsa_H), fits.getdata(file_vsa_K)
+      
       hdu_j = fits.open(file_vsa_J)[1]
-      wcs = WCS(hdu_j.header)
-
-      return [data_vsa_J, data_vsa_H, data_vsa_K], wcs
-
-    except Exception as e:
-      # Log the exception for debugging
-      print(f"Error occurred: {e}")
+      w = WCS(hdu_j.header)
+      
+      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
+      size = u.Quantity([radius, radius], u.arcsec)
+      cutout_j = Cutout2D(data_vsa_J, position, size, wcs = w.celestial)
+      cutout_h = Cutout2D(data_vsa_H, position, size, wcs = w.celestial)
+      cutout_ks = Cutout2D(data_vsa_K, position, size, wcs = w.celestial)
+      
+      return [cutout_j.data, cutout_h.data, cutout_ks.data], w
+    except: 
       return 0, 0
 
   elif catalog == 'PS2':
@@ -271,10 +266,10 @@ def image_query(ra, dec, radius, catalog):
     except: 
       return 0, 0
 
-def table_query(ra, dec, radius, catalog, catalog_cols):
+def table_query(ra, dec, radius, catalog):
   # blockPrint()  # Suppress print statements during execution
 
-  if catalog not in ['VSA', 'NSC']:
+  if catalog != 'NSC':
     try:
       # Set row limit for Vizier query
       Vizier.ROW_LIMIT = -1  # Adjust as necessary
@@ -286,20 +281,6 @@ def table_query(ra, dec, radius, catalog, catalog_cols):
         return 0  # Return 0 if no results are found
       return result
     except:
-      return 0  # Return 0 in case of any exceptions
-
-  elif catalog == 'VSA':
-    try:
-      # Define lists of VHS-related catalogs and their corresponding databases
-      catalog_list = ['VHS', 'VVV', 'VMC', 'VIKING', 'VIDEO']
-      database_list = ['VHSDR4', 'VVVDR4', 'VMCDR4', 'VIKINGDR4', 'VIDEODR5']
-      for i in range(len(catalog_list)):
-        # Query each VHS-related catalog
-        table = Vsa.query_region(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5'), radius=((radius / 2) - 1) * u.arcsec, programme_id=catalog_list[i], database=database_list[i])
-        if len(table) > 0:
-          return table  # Return the first non-empty result
-    except Exception as e:
-      print(f"An error occurred: {e}")
       return 0  # Return 0 in case of any exceptions
 
   elif catalog == 'NSC':
@@ -326,12 +307,8 @@ def table_query(ra, dec, radius, catalog, catalog_cols):
 def image_plot(ra, dec, radius, catalog_info): 
   # Perform image and table queries
   images, w = image_query(ra, dec, radius, catalog_info['image_id'])
-  table = table_query(ra, dec, radius, catalog_info['table_id'], catalog_info['table_header'])
+  table = table_query(ra, dec, radius, catalog_info['table_id'])
   enablePrint()  # Enable printing
-  
-  print(images)
-  print(w)
-  print(table)
 
   # Check if queries returned valid results
   try: 
@@ -342,16 +319,16 @@ def image_plot(ra, dec, radius, catalog_info):
 
     # Create a new figure with WCS projection
     fig_1, ax = plt.subplots(subplot_kw={'projection': w})
-    fig_1.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0)
+    fig_1.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
     
     # Hide axis ticks and labels
     plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
     plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
-    plt.suptitle(f'{catalog_info["name"]} Search', fontsize=35, y=0.96, fontfamily='Times New Roman')
+    plt.suptitle(f'{catalog_info["name"]} Search', fontsize=35, y=0.98, fontfamily='Times New Roman')
     
     plt.grid(linewidth=0)
     figure = plt.gcf()
-    figure.set_size_inches(4.75, 7)
+    figure.set_size_inches(4.75, 6)
 
     # Extract object coordinates from the table
     try: 
@@ -411,7 +388,7 @@ def image_plot(ra, dec, radius, catalog_info):
     text_box = TextBox(axbox, 'Notes:', initial=text, textalignment="center")
 
     # Create a button for "Object Not Found"
-    axes_button = plt.axes([0.04, 0.755, 0.92, 0.04])
+    axes_button = plt.axes([0.04, 0.855, 0.92, 0.04])
     close = Button(axes_button, 'Object Not Found', color='#E48671')
     
     #Make checkbuttons with all of the different image bands
@@ -512,7 +489,7 @@ def image_plot(ra, dec, radius, catalog_info):
         # Handle "Object Not Found" button click
         if click_axes == 'Axes(0.04,0.755;0.92x0.04)':
           next_window()
-          return 0
+          return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
         
         # Handle circle size slider adjustment
         if click_axes == 'Axes(0.25,0.055;0.65x0.03)': 
@@ -536,13 +513,16 @@ def image_plot(ra, dec, radius, catalog_info):
               col_data = table[f'{col_name}'].tolist()
               table_data.append(col_data[list_location])              
           next_window()
-          return table_data
+          return table_data + [text_list[text_max]]
       
       elif press is None:
-          next_window()
-          return 0
-  except: 
-    return 0
+        next_window()
+        return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
+  except Exception as e: 
+    print('#------------------------------------------------#')
+    print("Please Report This Error to GitHub:", e)
+    print('#------------------------------------------------#')
+    return len(catalog_info['table_header'])*[np.nan] + ['Catalog Data Not Retrieved']
 
 def next_window(): 
   # Clear the current figure and close all plots
@@ -613,7 +593,7 @@ def single_object_search():
         wrap_found(catalog_info[q]['name'], ML_KEY_SINGLE)
 
     #Writes all of the data gathered into a csv file 
-    if q == 8 and len(photometry) > 3:
+    if q == 8:
       #Makes the output file name
       if values['output'] == '':
         output = 'WRAP_output'
@@ -775,15 +755,15 @@ ML_KEY_MULTI  = '-ML2-' + sg.WRITE_ONLY_KEY
 
 # Relevent Catalog Information for Query
 catalog_info = [
-  {"name": "CatWISE"  , "table_id": "II/365/catwise", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'W1mproPM', 'W2mproPM', 'e_W1mproPM', 'e_W2mproPM', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                          , 'image_id': ['WISE 3.4', 'WISE 4.6']                        , 'image_selection': [True, True]                    , 'image_names': ['W1', 'W2']             , 'table_header': ['CW_RA', 'CW_DEC', 'CW_RA_E', 'CW_DEC_E', 'CW_W1', 'CW_W2', 'CW_W1_E', 'CW_W2_E', 'CW_PMRA', 'CW_PMDEC', 'CW_PMRA_E', 'CW_PMDEC_E']},
-  {"name": "AllWISE"  , "table_id": "II/328/allwise", 'table_data': ['RAJ2000', 'DEJ2000', 'W1mag', 'W2mag', 'W3mag', 'W4mag', 'e_W1mag', 'e_W2mag', 'e_W3mag', 'e_W4mag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                        , 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['AW_RA', 'AW_DEC', 'AW_W1', 'AW_W2', 'AW_W3', 'AW_W4', 'AW_W1_E', 'AW_W2_E', 'AW_W3_E', 'AW_W4_E', 'AW_PMRA', 'AW_PMDEC', 'AW_PMRA_E', 'AW_PMDEC_E']},
-  {"name": "Gaia"     , "table_id": "I/350/gaiaedr3", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'Gmag', 'BPmag', 'RPmag', 'e_Gmag', 'e_BPmag', 'e_RPmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE', 'Plx', 'RVDR2', 'e_Plx', 'e_RVDR2'], 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['GAIA_RA', 'GAIA_DEC', 'GAIA_RA_E', 'GAIA_DEC_E', 'GAIA_G', 'GAIA_BP', 'GAIA_RP', 'GAIA_G_E', 'GAIA_BP_E', 'GAIA_RP_E', 'GAIA_PMRA', 'GAIA_PMDEC', 'GAIA_PMRA_E', 'GAIA_PMDEC_E', 'GAIA_PLX', 'GAIA_RV', 'GAIA_PLX_E', 'GAIA_RV_E']},
-  {"name": "VSA"      , "table_id": "VSA"           , 'table_data': ['ra', 'dec', 'yAperMag3', 'jAperMag3', 'hAperMag3', 'ksAperMag3', 'yAperMag3Err', 'jAperMag3Err', 'hAperMag3Err', 'ksAperMag3Err', 'yMjd', 'jMjd', 'hMjd', 'ksMjd']              , 'image_id': 'VSA'                                           , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['VSA_RA', 'VSA_DEC', 'VSA_Y', 'VSA_J', 'VSA_H', 'VSA_KS', 'VSA_Y_E', 'VSA_J_E', 'VSA_H_E', 'VSA_KS_E', 'VSA_Y_MJD', 'VSA_J_MJD', 'VSA_H_MJD', 'VSA_KS_MJD']}, 
-  {"name": "WFCAM"    , "table_id": "II/319"        , 'table_data': ['RAJ2000', 'DEJ2000', 'e_RAJ2000', 'e_DEJ2000', 'Ymag', 'Jmag1', 'Jmag2', 'Hmag', 'Kmag', 'e_Ymag', 'e_Jmag1', 'e_Jmag2', 'e_Hmag', 'e_Kmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE'], 'image_id': ['UKIDSS-Y', 'UKIDSS-J', 'UKIDSS-H', 'UKIDSS-K'], 'image_selection': [False, True, False, True]      , 'image_names': ['Y', 'J', 'H', 'K']     , 'table_header': ['WFCAM_RA', 'WFCAM_DEC', 'WFCAM_RA_E', 'WFCAM_DEC_E', 'WFCAM_Y', 'WFCAM_J1', 'WFCAM_J2', 'WFCAM_H', 'WFCAM_K', 'WFCAM_Y_E', 'WFCAM_J1_E', 'WFCAM_J2_E', 'WFCAM_H_E', 'WFCAM_K_E', 'WFCAM_PMRA', 'WFCAM_PMDE', 'WFCAM_PMRA_E', 'WFCAM_PMDEC_E']},
-  {"name": "2MASS"    , "table_id": "II/246/out"    , 'table_data': ['RAJ2000', 'DEJ2000', 'Jmag', 'Hmag', 'Kmag', 'Jcmsig', 'Hcmsig', 'Kcmsig']                                                                                                      , 'image_id': ['2MASS-J', '2MASS-H', '2MASS-K']               , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['2MASS_RA', '2MASS_DEC', '2MASS_J', '2MASS_H', '2MASS_K', '2MASS_J_E', '2MASS_H_E', '2MASS_K_E']},
-  {"name": "PanSTARRS", "table_id": "II/349/ps1"    , 'table_data': ['RAJ2000', 'DEJ2000', 'e_RAJ2000', 'e_DEJ2000', 'gmag', 'rmag', 'imag', 'zmag', 'ymag', 'e_gmag', 'e_rmag', 'e_imag', 'e_zmag', 'e_ymag']                                        , 'image_id': 'PS2'                                           , 'image_selection': [True, True, False, False]      , 'image_names': ['r', 'i', 'z', 'y']     , 'table_header': ['PS_RA', 'PS_DEC', 'PS_RA_E', 'PS_DEC_E', 'PS_G', 'PS_R', 'PS_I', 'PS_Z', 'PS_Y', 'PS_G_E', 'PS_R_E', 'PS_I_E', 'PS_Z_E', 'PS_Y_E']}, 
-  {"name": "NSC"      , "table_id": "NSC"           , 'table_data': ['ra', 'dec', 'raerr', 'decerr', 'gmag', 'rmag', 'imag', 'zmag', 'umag', 'ymag', 'gerr', 'rerr', 'ierr', 'zerr', 'uerr', 'yerr', 'pmra', 'pmdec', 'pmraerr', 'pmdecerr', 'mjd']   , 'image_id': 'NSC'                                           , 'image_selection': [False, True, True, True, False], 'image_names': ['g', 'r', 'i', 'z', 'Y'], 'table_header': ['NSC_RA', 'NSC_DEC', 'NSC_RA_E', 'NSC_DEC_E', 'NSC_G', 'NSC_R', 'NSC_I', 'NSC_Z', 'NSC_U', 'NSC_Y', 'NSC_G_E', 'NSC_R_E', 'NSC_I_E', 'NSC_Z_E', 'NSC_U_E', 'NSC_Y_E', 'NSC_PMRA', 'NSC_PMDEC', 'NSC_PMRA_E', 'NSC_PMDEC_E', 'NSC_MJD']}, 
-  {"name": "GALEX"    , "table_id": "II/312/ais"    , 'table_data': ['RAJ2000', 'DEJ2000', 'FUV', 'NUV', 'e_FUV', 'e_NUV']                                                                                                                            , 'image_id': ['GALEX Near UV', 'GALEX Far UV']               , 'image_selection': [True, True]                    , 'image_names': ['NUV', 'FUV']           , 'table_header': ['GALEX_RA', 'GALEX_DEC', 'GALEX_FUV', 'GALEX_NUV', 'GALEX_FUV_E', 'GALEX_NUV_E']}
+  {"name": "CatWISE"  , "table_id": "II/365/catwise", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'W1mproPM', 'W2mproPM', 'e_W1mproPM', 'e_W2mproPM', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                          , 'image_id': ['WISE 3.4', 'WISE 4.6']                        , 'image_selection': [True, True]                    , 'image_names': ['W1', 'W2']             , 'table_header': ['CW_RA', 'CW_DEC', 'CW_RA_E', 'CW_DEC_E', 'CW_W1', 'CW_W2', 'CW_W1_E', 'CW_W2_E', 'CW_PMRA', 'CW_PMDEC', 'CW_PMRA_E', 'CW_PMDEC_E', 'CW_NOTES']},
+  {"name": "AllWISE"  , "table_id": "II/328/allwise", 'table_data': ['RAJ2000', 'DEJ2000', 'W1mag', 'W2mag', 'W3mag', 'W4mag', 'e_W1mag', 'e_W2mag', 'e_W3mag', 'e_W4mag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                        , 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['AW_RA', 'AW_DEC', 'AW_W1', 'AW_W2', 'AW_W3', 'AW_W4', 'AW_W1_E', 'AW_W2_E', 'AW_W3_E', 'AW_W4_E', 'AW_PMRA', 'AW_PMDEC', 'AW_PMRA_E', 'AW_PMDEC_E', 'AW_NOTES']},
+  {"name": "Gaia"     , "table_id": "I/350/gaiaedr3", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'Gmag', 'BPmag', 'RPmag', 'e_Gmag', 'e_BPmag', 'e_RPmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE', 'Plx', 'RVDR2', 'e_Plx', 'e_RVDR2'], 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['GAIA_RA', 'GAIA_DEC', 'GAIA_RA_E', 'GAIA_DEC_E', 'GAIA_G', 'GAIA_BP', 'GAIA_RP', 'GAIA_G_E', 'GAIA_BP_E', 'GAIA_RP_E', 'GAIA_PMRA', 'GAIA_PMDEC', 'GAIA_PMRA_E', 'GAIA_PMDEC_E', 'GAIA_PLX', 'GAIA_RV', 'GAIA_PLX_E', 'GAIA_RV_E', 'GAIA_NOTES']},
+  {"name": "VSA"      , "table_id": "II/367/vhs_dr5", 'table_data': ['RAJ2000', 'DEJ2000', 'Jap3', 'Hap3', 'Ksap3', 'e_Jap3', 'e_Hap3', 'e_Ksap3']                                                                                                    , 'image_id': 'VSA'                                           , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['VSA_RA', 'VSA_DEC', 'VSA_J', 'VSA_H', 'VSA_K', 'VSA_J_E', 'VSA_H_E', 'VSA_K_E', 'VSA_NOTES']}, 
+  {"name": "WFCAM"    , "table_id": "II/319"        , 'table_data': ['RAJ2000', 'DEJ2000', 'e_RAJ2000', 'e_DEJ2000', 'Ymag', 'Jmag1', 'Jmag2', 'Hmag', 'Kmag', 'e_Ymag', 'e_Jmag1', 'e_Jmag2', 'e_Hmag', 'e_Kmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE'], 'image_id': ['UKIDSS-Y', 'UKIDSS-J', 'UKIDSS-H', 'UKIDSS-K'], 'image_selection': [False, True, False, True]      , 'image_names': ['Y', 'J', 'H', 'K']     , 'table_header': ['WFCAM_RA', 'WFCAM_DEC', 'WFCAM_RA_E', 'WFCAM_DEC_E', 'WFCAM_Y', 'WFCAM_J1', 'WFCAM_J2', 'WFCAM_H', 'WFCAM_K', 'WFCAM_Y_E', 'WFCAM_J1_E', 'WFCAM_J2_E', 'WFCAM_H_E', 'WFCAM_K_E', 'WFCAM_PMRA', 'WFCAM_PMDE', 'WFCAM_PMRA_E', 'WFCAM_PMDEC_E', 'WFCAM_NOTES']},
+  {"name": "2MASS"    , "table_id": "II/246/out"    , 'table_data': ['RAJ2000', 'DEJ2000', 'Jmag', 'Hmag', 'Kmag', 'Jcmsig', 'Hcmsig', 'Kcmsig']                                                                                                      , 'image_id': ['2MASS-J', '2MASS-H', '2MASS-K']               , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['2MASS_RA', '2MASS_DEC', '2MASS_J', '2MASS_H', '2MASS_K', '2MASS_J_E', '2MASS_H_E', '2MASS_K_E', '2MASS_NOTES']},
+  {"name": "PanSTARRS", "table_id": "II/349/ps1"    , 'table_data': ['RAJ2000', 'DEJ2000', 'e_RAJ2000', 'e_DEJ2000', 'gmag', 'rmag', 'imag', 'zmag', 'ymag', 'e_gmag', 'e_rmag', 'e_imag', 'e_zmag', 'e_ymag']                                        , 'image_id': 'PS2'                                           , 'image_selection': [True, True, False, False]      , 'image_names': ['r', 'i', 'z', 'y']     , 'table_header': ['PS_RA', 'PS_DEC', 'PS_RA_E', 'PS_DEC_E', 'PS_G', 'PS_R', 'PS_I', 'PS_Z', 'PS_Y', 'PS_G_E', 'PS_R_E', 'PS_I_E', 'PS_Z_E', 'PS_Y_E', 'PS_NOTES']}, 
+  {"name": "NSC"      , "table_id": "NSC"           , 'table_data': ['ra', 'dec', 'raerr', 'decerr', 'gmag', 'rmag', 'imag', 'zmag', 'umag', 'ymag', 'gerr', 'rerr', 'ierr', 'zerr', 'uerr', 'yerr', 'pmra', 'pmdec', 'pmraerr', 'pmdecerr', 'mjd']   , 'image_id': 'NSC'                                           , 'image_selection': [False, True, True, True, False], 'image_names': ['g', 'r', 'i', 'z', 'Y'], 'table_header': ['NSC_RA', 'NSC_DEC', 'NSC_RA_E', 'NSC_DEC_E', 'NSC_G', 'NSC_R', 'NSC_I', 'NSC_Z', 'NSC_U', 'NSC_Y', 'NSC_G_E', 'NSC_R_E', 'NSC_I_E', 'NSC_Z_E', 'NSC_U_E', 'NSC_Y_E', 'NSC_PMRA', 'NSC_PMDEC', 'NSC_PMRA_E', 'NSC_PMDEC_E', 'NSC_MJD', 'NSC_NOTES']}, 
+  {"name": "GALEX"    , "table_id": "II/312/ais"    , 'table_data': ['RAJ2000', 'DEJ2000', 'FUV', 'NUV', 'e_FUV', 'e_NUV']                                                                                                                            , 'image_id': ['GALEX Near UV', 'GALEX Far UV']               , 'image_selection': [True, True]                    , 'image_names': ['NUV', 'FUV']           , 'table_header': ['GALEX_RA', 'GALEX_DEC', 'GALEX_FUV', 'GALEX_NUV', 'GALEX_FUV_E', 'GALEX_NUV_E', 'GALEX_NOTES']}
 ]
 
 #Makes the drop down window for types of file in the multi-object search
@@ -835,6 +815,59 @@ if platform != 'win32':
     [sg.Checkbox('CatWISE 2020', key = 'MULTI_CatWISE', font = ('Times New Roman', 22), size = (14, 2)),          sg.Checkbox('AllWISE', key = 'MULTI_AllWISE', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'MULTI_Gaia', font = ('Times New Roman', 22), size = (9, 2))],
     [sg.Checkbox('VISTA', key = 'MULTI_VSA', font = ('Times New Roman', 22), size = (9, 2)),                      sg.Checkbox('WFCAM', key = 'MULTI_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),                   sg.Checkbox('2MASS', key = 'MULTI_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
     [sg.Checkbox('PanSTARRS', key = 'MULTI_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'MULTI_NSC', font = ('Times New Roman', 22), size = (8, 2)),                        sg.Checkbox('GALEX', key = 'MULTI_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
+    
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+
+    [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
+                  ]
+
+  #Makes the general layout for WRAP
+  tab_layout = [[sg.TabGroup([[
+    sg.Tab('Single Object',   layout_single,       title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Single Obect Search'),
+    sg.Tab('Multi-Object',    layout_multi,        title_color='#F9F8F3',          background_color='#eeeccb',   element_justification= 'center',     key = 'Multi-Object Search')]], 
+    tab_location='centertop', title_color='Black', tab_background_color='#F9F8F3', selected_title_color='Black', selected_background_color='#9C873E', border_width = 6, font = ('Times New Roman', 18), enable_events = True, key = 'tab_group'), sg.Button('Close')
+              ]] 
+
+  #Generates the window based off the layouts above
+  window = sg.Window('WRAP', tab_layout, size = (550, 535), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
+  
+if platform == 'win32':  
+  #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
+  layout_single = [
+    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+                   
+    [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
+    [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
+    [sg.InputText(size=(18, 1), key = 'RA', font = ('Times New Roman', 15)),                        sg.InputText(size=(18, 2), key = 'DEC', font = ('Times New Roman', 15)),                          sg.InputText(size=(18, 2), key = 'RADIUS', font = ('Times New Roman', 15))],
+                    
+    [sg.Text('Output File Name', size=(50, 1), justification='center', font = ('Times New Roman', 22))],
+    [sg.InputText(key = 'output', font = ('Times New Roman', 15), size = (70, 3), justification='center')],
+
+    [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],   
+    [sg.Checkbox('CatWISE 2020', key = 'SINGLE_CatWISE', font = ('Times New Roman', 22), size = (14, 2)),   sg.Checkbox('AllWISE', key = 'SINGLE_AllWISE', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'SINGLE_Gaia', font = ('Times New Roman', 22), size = (9, 2))],
+    [sg.Checkbox('VISTA', key = 'SINGLE_VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'SINGLE_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = 'SINGLE_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
+    [sg.Checkbox('PanSTARRS', key = 'SINGLE_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),    sg.Checkbox('GALEX', key = 'SINGLE_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
+    
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+
+    [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
+                  ]
+
+  #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
+  layout_multi = [
+    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+                  
+    [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
+    [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
+
+    [sg.FileBrowse('File Browser', size = (80, 1), key = 'file', file_types = [('CSV Files', '*.csv'), ('FITS Files', '*.fits'), ('ASCII Files', '*.txt'), ('IPAC Files', '*.txt')])],
+    [sg.Text('RADIUS', font = ('Times New Roman', 22), size=(17, 1), justification='center'),              sg.Text('FILETYPE', font = ('Times New Roman', 22), size=(9, 1), justification='center'),               sg.Text('Output File Name', size=(25, 1), justification='center', font = ('Times New Roman', 22))],
+    [sg.InputText(size=(22, 2), key = 'RADIUS_multi', font = ('Times New Roman', 15)),                     sg.Combo(filetype_list, size = (13), font = ('Times New Roman', 15), key = 'type'),                     sg.InputText(key = 'output2', font = ('Times New Roman', 15), size = (22, 2), justification='center')],
+
+    [sg.Text('Catalogs:', justification='center', size=(50, 1), font = ('Times New Roman', 25))],
+    [sg.Checkbox('CatWISE 2020', key = 'MULTI_CatWISE', font = ('Times New Roman', 22), size = (14, 2)),          sg.Checkbox('AllWISE', key = 'MULTI_AllWISE', font = ('Times New Roman', 22), size = (10, 2)),               sg.Checkbox('Gaia', key = 'MULTI_Gaia', font = ('Times New Roman', 22), size = (9, 2))],
+    [sg.Checkbox('VISTA', key = 'MULTI_VSA', font = ('Times New Roman', 22), size = (9, 2)),                      sg.Checkbox('WFCAM', key = 'MULTI_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),                   sg.Checkbox('2MASS', key = 'MULTI_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
+    [sg.Checkbox('PanSTARRS', key = 'MULTI_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('GALEX', key = 'MULTI_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
     
     [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
 
