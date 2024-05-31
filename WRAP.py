@@ -16,17 +16,14 @@ import PySimpleGUI as sg
 
 # Math Packages
 import math
-import pyvo
 import numpy as np
 import pandas as pd
 
 # System Packages
-import io
 import csv
 import sys,os
 import requests
 import webbrowser
-from PIL import Image
 from sys import platform
 from pyvo.dal import sia
 from bs4 import BeautifulSoup
@@ -44,21 +41,19 @@ from astropy.io import ascii
 from astropy.time import Time
 from astropy import units as u
 from astropy.nddata import Cutout2D
-import astropy.coordinates as coord
 from astropy.coordinates import SkyCoord
 from astropy.utils.data import download_file
 
 # Image and Table Quering Packages
 from astroquery.vsa import Vsa
-from astroquery.eso import Eso
 from astroquery.vizier import Vizier
 from astroquery.skyview import SkyView
 
 
 # NOIRLab Source Catatlog Package
 if platform != 'win32':
-    from dl.helpers.utils import convert
-    from dl import authClient as ac, queryClient as qc
+  from dl.helpers.utils import convert
+  from dl import authClient as ac, queryClient as qc
 # ------------------------------------------------------------- #
 
 
@@ -116,19 +111,26 @@ def wrap_end(tab):
 # WRAP QUERY FUNCTIONS
 # ------------------------------------------------------------- #
 def image_query(ra, dec, radius, catalog):
-  # blockPrint()  # Suppress print statements during execution
+  blockPrint()  # Suppress print statements during execution
 
   if catalog not in ['VSA', 'PS2', 'NSC']:  
     try: 
       # Clear SkyView cache and query images for non-VHS, PS2, and NSC catalogs
       SkyView.clear_cache()
-      radius_deg = radius/60 * u.arcmin # Convert radius to astropy units
+      radius_deg = radius * u.arcsec # Convert radius to astropy units
       images = SkyView.get_images(position=f'{ra}d {dec}d', coordinates='J2000', survey=catalog, radius=radius_deg)
       fits_header = images[0][0].header # Extract FITS header from the first image
       w = WCS(fits_header) # Create WCS object from the FITS header
-      return images, w
+      
+      image_cutout = []
+      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
+      size = u.Quantity([radius, radius], u.arcsec)
+      for image in images: 
+        image_cutout.append((Cutout2D(image[0].data, position, size, fill_value = np.nan, wcs = w.celestial)).data)
+        wcs_cropped = (Cutout2D(image[0].data, position, size, fill_value = np.nan, wcs = w.celestial)).wcs  
+      return image_cutout, wcs_cropped
     except: 
-      return 0
+      return 0, 0
 
   elif catalog == 'VSA':
     try:
@@ -267,16 +269,15 @@ def image_query(ra, dec, radius, catalog):
       return 0, 0
 
 def table_query(ra, dec, radius, catalog):
-  # blockPrint()  # Suppress print statements during execution
+  blockPrint()  # Suppress print statements during execution
 
   if catalog != 'NSC':
     try:
       # Set row limit for Vizier query
       Vizier.ROW_LIMIT = -1  # Adjust as necessary
-      coord = SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs')
+      coord = SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5')
       search_radius = radius * u.arcsec  # Convert radius to astropy units
-      # Query Vizier catalog with all columns
-      result = Vizier(columns=['**']).query_region(coord, radius=f'{radius}s', catalog=catalog)
+      result = Vizier(columns=['**']).query_region(coord, width = [search_radius, search_radius], catalog=catalog, frame = 'fk5') # Query Vizier catalog with all columns
       if len(result) == 0:
         return 0  # Return 0 if no results are found
       return result
@@ -305,223 +306,231 @@ def table_query(ra, dec, radius, catalog):
 # WRAP PLOTTING FUNCTIONS
 # ------------------------------------------------------------- #   
 def image_plot(ra, dec, radius, catalog_info): 
-  # Perform image and table queries
+# Perform image and table queries
   images, w = image_query(ra, dec, radius, catalog_info['image_id'])
   table = table_query(ra, dec, radius, catalog_info['table_id'])
   enablePrint()  # Enable printing
 
   # Check if queries returned valid results
-  try: 
-    # Configure plot appearance
-    plt.rcParams['toolbar'] = 'None'
-    plt.style.use('Solarize_Light2')
-    plt.rcParams["figure.figsize"] = [8, 8]
-
-    # Create a new figure with WCS projection
-    fig_1, ax = plt.subplots(subplot_kw={'projection': w})
-    fig_1.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
-    
-    # Hide axis ticks and labels
-    plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-    plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
-    plt.suptitle(f'{catalog_info["name"]} Search', fontsize=35, y=0.98, fontfamily='Times New Roman')
-    
-    plt.grid(linewidth=0)
-    figure = plt.gcf()
-    figure.set_size_inches(4.75, 6)
-
-    # Extract object coordinates from the table
+  if type(images) != int and type(w) != int and type(table) != int: 
     try: 
-      object_ra = table[0][catalog_info['table_data'][0]].tolist()
-      object_dec = table[0][catalog_info['table_data'][1]].tolist()
-    except:
-      object_ra = table[catalog_info['table_data'][0]].tolist()
-      object_dec = table[catalog_info['table_data'][1]].tolist()      
-    
-    # Combine image data
-    default = catalog_info['image_selection']
-    if isinstance(images[0], np.ndarray): 
-      total_data = np.zeros_like(images[0].data)
-      for index in range(len(images)):
-        if default[index] == True: 
-          total_data += images[index].data
-      max_shape = np.nanmax(total_data.shape)
-    else:
-      total_data = np.zeros_like(images[0][0].data)
-      for image in images:
-        index = images.index(image)
-        if default[index] == True: 
-          total_data += image[0].data
-      max_shape = np.nanmax(total_data.shape)
+      # Configure plot appearance
+      plt.rcParams['toolbar'] = 'None'
+      plt.style.use('Solarize_Light2')
+      plt.rcParams["figure.figsize"] = [8, 8]
+
+      # Create a new figure with WCS projection
+      fig_1, ax = plt.subplots(subplot_kw={'projection': w})
+      fig_1.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
+
+      # Hide axis ticks and labels
+      plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+      plt.tick_params(axis='y', which='both', bottom=False, top=False, labelbottom=False)
+      plt.suptitle(f'{catalog_info["name"]} Search', fontsize=35, y=0.98, fontfamily='Times New Roman')
       
-    plt.xlim(0, max_shape), plt.ylim(0, max_shape)    
-            
-    # Set initial circle size for scatter plot
-    circle_size = (radius * 3)
-    scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s=circle_size, edgecolor='#40E842', facecolor='none')
+      plt.grid(linewidth = 0)
+      figure = plt.gcf()
+      figure.set_size_inches(4.75, 6)
 
-    # Set initial normalization for image display
-    init_bot, init_top = 45, 95
-    norm1_total = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, init_bot), vmax=np.nanpercentile(total_data.data, init_top))
-    ax.imshow(total_data.data, cmap='Greys', norm=norm1_total)
-
-    # Create a cursor for the plot
-    cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
-    
-    # Create an annotation for mouse events
-    annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
-    annotation.set_visible(False)
-
-    # Create sliders for adjusting image stretch
-    freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
-    slider_top = Slider(ax=freq_top, label='Top Stretch:', valmin=50, valmax=100, valinit=init_top, color='#E48671')
-    freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
-    slider_bottom = Slider(ax=freq_bottom, label='Bottom Stretch:', valmin=0, valmax=50, valinit=init_bot, color='#E48671')
-
-    # Create slider for adjusting circle size
-    circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
-    circle_slider = Slider(ax=circle_slid_location, label='Circle Size:', valmin=(circle_size - 2.5*radius), valmax=(circle_size + 1*radius), valinit=circle_size, color='#E48671')
-
-    # Create a text box for notes
-    axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
-    text = ''
-    text_box = TextBox(axbox, 'Notes:', initial=text, textalignment="center")
-
-    # Create a button for "Object Not Found"
-    axes_button = plt.axes([0.04, 0.855, 0.92, 0.04])
-    close = Button(axes_button, 'Object Not Found', color='#E48671')
-    
-    #Make checkbuttons with all of the different image bands
-    rax = plt.axes([0.045, 0.4, 0.105, 0.12])
-    labels = catalog_info['image_names']
-    real_data = []
-    if isinstance(images[0], np.ndarray): 
-      for image in images:
-        real_data.append(image.data)
-    else:
-      for image in images:
-        real_data.append(image[0].data)
-    check = CheckButtons(rax, labels, default)
-
-    # Track mouse click locations
-    location = []
-    def mouse_event(event):
-      location.append(event.ydata)
-      location.append(event.xdata)
-      location.append(event.inaxes)
-    cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
-    
-    # Update image stretch based on slider values
-    def update_slider_stretch(val):
-      if isinstance(images[0], np.ndarray):
-        total_data = np.zeros_like(images[0].data)
-      else:
-        total_data = np.zeros_like(images[0][0].data)       
-        
-      for tf_ind in default: 
-        if tf_ind == False: 
-          pass
-        if tf_ind == True: 
-          index = default.index(tf_ind)
-          if isinstance(images[0], np.ndarray):
-            total_data += images[index].data
-          else:
-            total_data += images[index][0].data
-                  
-      norm1_w1 = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, slider_bottom.val), vmax=np.nanpercentile(total_data.data, slider_top.val))
-      ax.imshow(total_data.data, cmap='Greys', norm=norm1_w1)
-
-    # Update text from text box
-    text_list = [text]
-    def submit(expression):
-      text = expression
-      text_list.append(text)
+      # Extract object coordinates from the table
+      try: 
+        object_ra = table[0][catalog_info['table_data'][0]].tolist()
+        object_dec = table[0][catalog_info['table_data'][1]].tolist()
+      except:
+        object_ra = table[catalog_info['table_data'][0]].tolist()
+        object_dec = table[catalog_info['table_data'][1]].tolist()      
       
-    #Update the image depending on what the user chooses
-    def update_button(label):
-      '''Updates the list of activated images and updates the image the user can see'''
-
-      total_data = 0
-      for lab in labels:
-        if lab == label:
-          index = labels.index(lab)
-          if default[index] == False:
-            default[index] = True
-          elif default[index] == True: 
-            default[index] = False     
-            
-      if isinstance(images[0], np.ndarray):
+      # Combine image data
+      default = catalog_info['image_selection']
+      if isinstance(images[0], np.ndarray): 
         total_data = np.zeros_like(images[0].data)
-      else:
-        total_data = np.zeros_like(images[0][0].data)       
-        
-      for tf_ind in default: 
-        if tf_ind == False: 
-          pass
-        if tf_ind == True: 
-          index = default.index(tf_ind)
-          if isinstance(images[0], np.ndarray):
+        for index in range(len(images)):
+          if default[index] == True: 
             total_data += images[index].data
-          else:
-            total_data += images[index][0].data
+        max_shape = np.nanmax(total_data.shape)
+      else:
+        total_data = np.zeros_like(images[0][0].data)
+        for image in images:
+          index = images.index(image)
+          if default[index] == True: 
+            total_data += image[0].data
+        max_shape = np.nanmax(total_data.shape)
+              
+      # Set initial circle size for scatter plot
+      circle_size = (radius * 3)
+      scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_size, edgecolor='#40E842', facecolor='none')
+
+      # Set initial normalization for image display
+      init_bot, init_top = 45, 95
       norm1_total = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, init_bot), vmax=np.nanpercentile(total_data.data, init_top))
       ax.imshow(total_data.data, cmap='Greys', norm=norm1_total)
-
-    # Connect sliders and text box to their update functions
-    slider_top.on_changed(update_slider_stretch)
-    slider_bottom.on_changed(update_slider_stretch)
-    text_box.on_text_change(submit)
-    check.on_clicked(update_button)
-
-    # Main loop to handle user interactions
-    n = -1
-    while True: 
-      press = plt.waitforbuttonpress()
-      text_max = len(text_list) - 1
       
-      if press == False:
-        n += 3
+      if catalog_info['name'] == 'VSA': 
+        plt.xlim(0, max_shape), plt.ylim(max_shape, 0) 
+      elif catalog_info['name'] == 'GALEX' or catalog_info['name'] == 'NSC': 
+        plt.xlim(max_shape, 0), plt.ylim(0, max_shape) 
+      else: 
+        plt.xlim(0, max_shape), plt.ylim(0, max_shape) 
 
-        # Find which axes was clicked
-        click_axes = str(location[n])
-        click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+      # Create a cursor for the plot
+      cursor = Cursor(ax, useblit=True, color='red', linewidth=1)
+      
+      # Create an annotation for mouse events
+      annotation = ax.annotate('', xy=(0, 0), xytext=(20, -20), arrowprops=dict(arrowstyle='wedge'), fontsize=12, color='red')
+      annotation.set_visible(False)
+
+      # Create sliders for adjusting image stretch
+      freq_top = plt.axes([0.25, 0.12, 0.65, 0.03])
+      slider_top = Slider(ax=freq_top, label='Top Stretch:', valmin=50, valmax=100, valinit=init_top, color='#E48671')
+      freq_bottom = plt.axes([0.25, 0.087, 0.65, 0.03])
+      slider_bottom = Slider(ax=freq_bottom, label='Bottom Stretch:', valmin=0, valmax=50, valinit=init_bot, color='#E48671')
+
+      # Create slider for adjusting circle size
+      circle_slid_location = plt.axes([0.25, 0.055, 0.65, 0.03])
+      circle_slider = Slider(ax=circle_slid_location, label='Circle Size:', valmin=(circle_size - 2.5*radius), valmax=(circle_size + 1*radius), valinit=circle_size, color='#E48671')
+
+      # Create a text box for notes
+      axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
+      text = ''
+      text_box = TextBox(axbox, 'Notes:', initial=text, textalignment="center")
+
+      # Create a button for "Object Not Found"
+      axes_button = plt.axes([0.04, 0.855, 0.92, 0.04])
+      close = Button(axes_button, 'Object Not Found', color='#E48671')
+      
+      #Make checkbuttons with all of the different image bands
+      rax = plt.axes([0.045, 0.4, 0.105, 0.12])
+      labels = catalog_info['image_names']
+      real_data = []
+      if isinstance(images[0], np.ndarray): 
+        for image in images:
+          real_data.append(image.data)
+      else:
+        for image in images:
+          real_data.append(image[0].data)
+      check = CheckButtons(rax, labels, default)
+
+      # Track mouse click locations
+      location = []
+      def mouse_event(event):
+        location.append(event.ydata)
+        location.append(event.xdata)
+        location.append(event.inaxes)
+      cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
+      
+      # Update image stretch based on slider values
+      def update_slider_stretch(val):
+        if isinstance(images[0], np.ndarray):
+          total_data = np.zeros_like(images[0].data)
+        else:
+          total_data = np.zeros_like(images[0][0].data)       
+          
+        for tf_ind in default: 
+          if tf_ind == False: 
+            pass
+          if tf_ind == True: 
+            index = default.index(tf_ind)
+            if isinstance(images[0], np.ndarray):
+              total_data += images[index].data
+            else:
+              total_data += images[index][0].data
+                    
+        norm1_w1 = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, slider_bottom.val), vmax=np.nanpercentile(total_data.data, slider_top.val))
+        ax.imshow(total_data.data, cmap='Greys', norm=norm1_w1)
+
+      # Update text from text box
+      text_list = [text]
+      def submit(expression):
+        text = expression
+        text_list.append(text)
         
-        # Handle "Object Not Found" button click
-        if click_axes == 'Axes(0.04,0.755;0.92x0.04)':
+      #Update the image depending on what the user chooses
+      def update_button(label):
+        '''Updates the list of activated images and updates the image the user can see'''
+
+        total_data = 0
+        for lab in labels:
+          if lab == label:
+            index = labels.index(lab)
+            if default[index] == False:
+              default[index] = True
+            elif default[index] == True: 
+              default[index] = False     
+              
+        if isinstance(images[0], np.ndarray):
+          total_data = np.zeros_like(images[0].data)
+        else:
+          total_data = np.zeros_like(images[0][0].data)       
+          
+        for tf_ind in default: 
+          if tf_ind == False: 
+            pass
+          if tf_ind == True: 
+            index = default.index(tf_ind)
+            if isinstance(images[0], np.ndarray):
+              total_data += images[index].data
+            else:
+              total_data += images[index][0].data
+        norm1_total = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, init_bot), vmax=np.nanpercentile(total_data.data, init_top))
+        ax.imshow(total_data.data, cmap='Greys', norm=norm1_total)
+
+      # Connect sliders and text box to their update functions
+      slider_top.on_changed(update_slider_stretch)
+      slider_bottom.on_changed(update_slider_stretch)
+      text_box.on_text_change(submit)
+      check.on_clicked(update_button)
+
+      # Main loop to handle user interactions
+      n = -1
+      while True: 
+        press = plt.waitforbuttonpress()
+        text_max = len(text_list) - 1
+        
+        if press == False:
+          n += 3
+
+          # Find which axes was clicked
+          click_axes = str(location[n])
+          click_axes = click_axes.split('WCSAxesSubplot', 2)[0]
+          
+          # Handle "Object Not Found" button click
+          if click_axes == 'Axes(0.04,0.855;0.92x0.04)':
+            next_window()
+            return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
+          
+          # Handle circle size slider adjustment
+          if click_axes == 'Axes(0.25,0.055;0.65x0.03)': 
+            scatter.remove()
+            scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_slider.val, edgecolor='#40E842', facecolor='none')
+          
+          # Handle main plot click
+          if click_axes == '': 
+            # Find the closest point to the location clicked
+            coord = w.pixel_to_world_values(location[n-4], location[n-5])
+            distance = []
+            for i in range(len(object_ra)):
+              distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
+            list_location = distance.index(np.nanmin(distance))
+            table_data = []
+            for col_name in catalog_info['table_data']: 
+              try: 
+                col_data = table[0][f'{col_name}'].tolist()
+                table_data.append(col_data[list_location])
+              except: 
+                col_data = table[f'{col_name}'].tolist()
+                table_data.append(col_data[list_location])              
+            next_window()
+            return table_data + [text_list[text_max]]
+        
+        elif press is None:
           next_window()
           return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
-        
-        # Handle circle size slider adjustment
-        if click_axes == 'Axes(0.25,0.055;0.65x0.03)': 
-          scatter.remove()
-          scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('fk5'), s=circle_slider.val, edgecolor='#40E842', facecolor='none')
-        
-        # Handle main plot click
-        if click_axes == '': 
-          # Find the closest point to the location clicked
-          coord = w.pixel_to_world_values(location[n-4], location[n-5])
-          distance = []
-          for i in range(len(object_ra)):
-            distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
-          list_location = distance.index(np.nanmin(distance))
-          table_data = []
-          for col_name in catalog_info['table_data']: 
-            try: 
-              col_data = table[0][f'{col_name}'].tolist()
-              table_data.append(col_data[list_location])
-            except: 
-              col_data = table[f'{col_name}'].tolist()
-              table_data.append(col_data[list_location])              
-          next_window()
-          return table_data + [text_list[text_max]]
-      
-      elif press is None:
-        next_window()
-        return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
-  except Exception as e: 
-    print('#------------------------------------------------#')
-    print("Please Report This Error to GitHub:", e)
-    print('#------------------------------------------------#')
+    except Exception as e: 
+      print('#------------------------------------------------#')
+      print("Please Report This Error to GitHub:", e)
+      print('#------------------------------------------------#')
+      return len(catalog_info['table_header'])*[np.nan] + ['Catalog Data Not Retrieved']
+  else: 
     return len(catalog_info['table_header'])*[np.nan] + ['Catalog Data Not Retrieved']
 
 def next_window(): 
@@ -569,7 +578,8 @@ def single_object_search():
   Once all the data is recorded it it put into a CSV file for the user.'''
 
   #Runs the wiseview_link function
-  wiseview_link(ra_use, dec_use, radius_use)
+  if values['wiseview'] == True: 
+    wiseview_link(ra_use, dec_use, radius_use)
 
   #Creates fake list for the data and data names
   photometry = []
@@ -651,9 +661,6 @@ def multi_object_search():
     ra_use = ra_list[index]
     dec_use = dec_list[index]
     radius_use = int(values['RADIUS_multi'])
-    
-    print(ra_use)
-    print(dec_use)
 
     #Creates fake list for the data and data names
     photometry = []
@@ -662,7 +669,8 @@ def multi_object_search():
     photometry_name.append(['input_ra', 'input_dec', 'input_radius'])
 
     #Runs the wiseview_link function
-    wiseview_link(ra_use, dec_use, radius_use)
+    if values['wiseview_multi'] == True: 
+      wiseview_link(ra_use, dec_use, radius_use)
 
     for q in range(len(catalog_info)): 
 
@@ -757,7 +765,7 @@ ML_KEY_MULTI  = '-ML2-' + sg.WRITE_ONLY_KEY
 catalog_info = [
   {"name": "CatWISE"  , "table_id": "II/365/catwise", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'W1mproPM', 'W2mproPM', 'e_W1mproPM', 'e_W2mproPM', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                          , 'image_id': ['WISE 3.4', 'WISE 4.6']                        , 'image_selection': [True, True]                    , 'image_names': ['W1', 'W2']             , 'table_header': ['CW_RA', 'CW_DEC', 'CW_RA_E', 'CW_DEC_E', 'CW_W1', 'CW_W2', 'CW_W1_E', 'CW_W2_E', 'CW_PMRA', 'CW_PMDEC', 'CW_PMRA_E', 'CW_PMDEC_E', 'CW_NOTES']},
   {"name": "AllWISE"  , "table_id": "II/328/allwise", 'table_data': ['RAJ2000', 'DEJ2000', 'W1mag', 'W2mag', 'W3mag', 'W4mag', 'e_W1mag', 'e_W2mag', 'e_W3mag', 'e_W4mag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE']                                        , 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['AW_RA', 'AW_DEC', 'AW_W1', 'AW_W2', 'AW_W3', 'AW_W4', 'AW_W1_E', 'AW_W2_E', 'AW_W3_E', 'AW_W4_E', 'AW_PMRA', 'AW_PMDEC', 'AW_PMRA_E', 'AW_PMDEC_E', 'AW_NOTES']},
-  {"name": "Gaia"     , "table_id": "I/350/gaiaedr3", 'table_data': ['RA_ICRS', 'DE_ICRS', 'e_RA_ICRS', 'e_DE_ICRS', 'Gmag', 'BPmag', 'RPmag', 'e_Gmag', 'e_BPmag', 'e_RPmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE', 'Plx', 'RVDR2', 'e_Plx', 'e_RVDR2'], 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['GAIA_RA', 'GAIA_DEC', 'GAIA_RA_E', 'GAIA_DEC_E', 'GAIA_G', 'GAIA_BP', 'GAIA_RP', 'GAIA_G_E', 'GAIA_BP_E', 'GAIA_RP_E', 'GAIA_PMRA', 'GAIA_PMDEC', 'GAIA_PMRA_E', 'GAIA_PMDEC_E', 'GAIA_PLX', 'GAIA_RV', 'GAIA_PLX_E', 'GAIA_RV_E', 'GAIA_NOTES']},
+  {"name": "Gaia"     , "table_id": "I/350/gaiaedr3", 'table_data': ['RAJ2000', 'DEJ2000', 'e_RA_ICRS', 'e_DE_ICRS', 'Gmag', 'BPmag', 'RPmag', 'e_Gmag', 'e_BPmag', 'e_RPmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE', 'Plx', 'RVDR2', 'e_Plx', 'e_RVDR2'], 'image_id': ['WISE 3.4', 'WISE 4.6', 'WISE 12', 'WISE 22']  , 'image_selection': [True, True, False, False]      , 'image_names': ['W1', 'W2', 'W3', 'W4'] , 'table_header': ['GAIA_RA', 'GAIA_DEC', 'GAIA_RA_E', 'GAIA_DEC_E', 'GAIA_G', 'GAIA_BP', 'GAIA_RP', 'GAIA_G_E', 'GAIA_BP_E', 'GAIA_RP_E', 'GAIA_PMRA', 'GAIA_PMDEC', 'GAIA_PMRA_E', 'GAIA_PMDEC_E', 'GAIA_PLX', 'GAIA_RV', 'GAIA_PLX_E', 'GAIA_RV_E', 'GAIA_NOTES']},
   {"name": "VSA"      , "table_id": "II/367/vhs_dr5", 'table_data': ['RAJ2000', 'DEJ2000', 'Jap3', 'Hap3', 'Ksap3', 'e_Jap3', 'e_Hap3', 'e_Ksap3']                                                                                                    , 'image_id': 'VSA'                                           , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['VSA_RA', 'VSA_DEC', 'VSA_J', 'VSA_H', 'VSA_K', 'VSA_J_E', 'VSA_H_E', 'VSA_K_E', 'VSA_NOTES']}, 
   {"name": "WFCAM"    , "table_id": "II/319"        , 'table_data': ['RAJ2000', 'DEJ2000', 'e_RAJ2000', 'e_DEJ2000', 'Ymag', 'Jmag1', 'Jmag2', 'Hmag', 'Kmag', 'e_Ymag', 'e_Jmag1', 'e_Jmag2', 'e_Hmag', 'e_Kmag', 'pmRA', 'pmDE', 'e_pmRA', 'e_pmDE'], 'image_id': ['UKIDSS-Y', 'UKIDSS-J', 'UKIDSS-H', 'UKIDSS-K'], 'image_selection': [False, True, False, True]      , 'image_names': ['Y', 'J', 'H', 'K']     , 'table_header': ['WFCAM_RA', 'WFCAM_DEC', 'WFCAM_RA_E', 'WFCAM_DEC_E', 'WFCAM_Y', 'WFCAM_J1', 'WFCAM_J2', 'WFCAM_H', 'WFCAM_K', 'WFCAM_Y_E', 'WFCAM_J1_E', 'WFCAM_J2_E', 'WFCAM_H_E', 'WFCAM_K_E', 'WFCAM_PMRA', 'WFCAM_PMDE', 'WFCAM_PMRA_E', 'WFCAM_PMDEC_E', 'WFCAM_NOTES']},
   {"name": "2MASS"    , "table_id": "II/246/out"    , 'table_data': ['RAJ2000', 'DEJ2000', 'Jmag', 'Hmag', 'Kmag', 'Jcmsig', 'Hcmsig', 'Kcmsig']                                                                                                      , 'image_id': ['2MASS-J', '2MASS-H', '2MASS-K']               , 'image_selection': [True, False, True]             , 'image_names': ['J', 'H', 'K']          , 'table_header': ['2MASS_RA', '2MASS_DEC', '2MASS_J', '2MASS_H', '2MASS_K', '2MASS_J_E', '2MASS_H_E', '2MASS_K_E', '2MASS_NOTES']},
@@ -795,7 +803,7 @@ if platform != 'win32':
     [sg.Checkbox('VISTA', key = 'SINGLE_VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'SINGLE_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = 'SINGLE_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
     [sg.Checkbox('PanSTARRS', key = 'SINGLE_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'SINGLE_NSC', font = ('Times New Roman', 22), size = (8, 2)),                   sg.Checkbox('GALEX', key = 'SINGLE_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
     
-    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All'),                               sg.Checkbox('WiseView', enable_events=True, key='wiseview')],
 
     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
                   ]
@@ -816,7 +824,7 @@ if platform != 'win32':
     [sg.Checkbox('VISTA', key = 'MULTI_VSA', font = ('Times New Roman', 22), size = (9, 2)),                      sg.Checkbox('WFCAM', key = 'MULTI_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),                   sg.Checkbox('2MASS', key = 'MULTI_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
     [sg.Checkbox('PanSTARRS', key = 'MULTI_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('NSC', key = 'MULTI_NSC', font = ('Times New Roman', 22), size = (8, 2)),                        sg.Checkbox('GALEX', key = 'MULTI_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
     
-    [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi'),                               sg.Checkbox('WiseView', enable_events=True, key='wiseview_multi')],
 
     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
                   ]
@@ -848,7 +856,7 @@ if platform == 'win32':
     [sg.Checkbox('VISTA', key = 'SINGLE_VSA', font = ('Times New Roman', 22), size = (9, 2)),               sg.Checkbox('WFCAM', key = 'SINGLE_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),             sg.Checkbox('2MASS', key = 'SINGLE_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
     [sg.Checkbox('PanSTARRS', key = 'SINGLE_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),    sg.Checkbox('GALEX', key = 'SINGLE_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
     
-    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All')],
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All'),                               sg.Checkbox('WiseView', enable_events=True, key='wiseview')],
 
     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                   sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                         sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
                   ]
@@ -869,7 +877,7 @@ if platform == 'win32':
     [sg.Checkbox('VISTA', key = 'MULTI_VSA', font = ('Times New Roman', 22), size = (9, 2)),                      sg.Checkbox('WFCAM', key = 'MULTI_WFCAM', font = ('Times New Roman', 22), size = (10, 2)),                   sg.Checkbox('2MASS', key = 'MULTI_2MASS', font = ('Times New Roman', 22), size = (10, 2))],
     [sg.Checkbox('PanSTARRS', key = 'MULTI_PanSTARRS', font = ('Times New Roman', 22), size = (13, 2)),           sg.Checkbox('GALEX', key = 'MULTI_GALEX', font = ('Times New Roman', 22), size = (10, 2))],
     
-    [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi')],
+    [sg.Checkbox('Select All',   enable_events=True, key='Check_All_Multi'),                               sg.Checkbox('Deselect All', enable_events=True, key='Uncheck_All_Multi'),                               sg.Checkbox('WiseView', enable_events=True, key='wiseview_multi')],
 
     [sg.Button('Run WRAP', size = (17), button_color = '#95D49B'),                                         sg.Button('Help', size = (17), button_color = '#F7CC7C'),                                               sg.Button('Close WRAP', size = (17), button_color = '#E48671')]
                   ]
