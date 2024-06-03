@@ -16,12 +16,13 @@
 </div>
 
 <div align="center">
-  <h2>🛠️ Installation 🛠️</h2>
+  <b>APPLICATION SUPPORT HAS BEEN CHANGED TO BASH FILES THUS PYTHON VERSION 3.8 NEEDS TO BE INSTALLED BEFORE USING WRAP NO MATTER OF USE </b>
 </div>
 
 <div align="center">
-  <b>APPLICATION SUPPORT HAS BEEN REMOVED IN WRAP v2.0.0</b>
+  <h2>🛠️ Installation 🛠️</h2>
 </div>
+
 
 <div align="center">
 <pp><b>🦾 Installing Git 🦾</b><pp>

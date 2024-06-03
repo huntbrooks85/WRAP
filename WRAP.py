@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------#
-# WRAP v2.0.0
+# WRAP v1.5.0
 # By Hunter Brooks, at NAU, Flagstaff: May 27, 2024
 #
 # Purpose: Gathers photometry and astrometry from various 
@@ -134,33 +134,54 @@ def image_query(ra, dec, radius, catalog):
 
   elif catalog == 'VSA':
     try:
+      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
+      size = u.Quantity([radius, radius], u.arcsec)
+      
       Vsa.clear_cache()
-      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR6')
-      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR6')
-      url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR6')
+      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR5')
+      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR5')
+      url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR5')
       
       temp_J = url_J[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
-      temp_H = url_H[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
-      temp_K = url_K[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
-      
-      response_J, response_H, response_K = requests.get(temp_J), requests.get(temp_H), requests.get(temp_K)
-      soup_J, soup_H, soup_K = BeautifulSoup(response_J.content, 'html.parser'), BeautifulSoup(response_H.content, 'html.parser'), BeautifulSoup(response_K.content, 'html.parser')
-      link_tag_J, link_tag_H, link_tag_K = soup_J.find('a', href=True, text="download FITS file"), soup_H.find('a', href=True, text="download FITS file"), soup_K.find('a', href=True, text="download FITS file")
-      fits_link_J, fits_link_H, fits_link_K = link_tag_J['href'], link_tag_H['href'], link_tag_K['href']
-      
-      file_vsa_J, file_vsa_H, file_vsa_K = download_file(fits_link_J, cache = False), download_file(fits_link_H, cache = False), download_file(fits_link_K, cache = False)
-      data_vsa_J, data_vsa_H, data_vsa_K = fits.getdata(file_vsa_J), fits.getdata(file_vsa_H), fits.getdata(file_vsa_K)
+      response_J = requests.get(temp_J)
+      soup_J =  BeautifulSoup(response_J.content, 'html.parser')
+      link_tag_J = soup_J.find('a', href=True, text="download FITS file")
+      fits_link_J = link_tag_J['href']
+      file_vsa_J = download_file(fits_link_J, cache = False)
+      data_vsa_J = fits.getdata(file_vsa_J)
       
       hdu_j = fits.open(file_vsa_J)[1]
       w = WCS(hdu_j.header)
       
-      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
-      size = u.Quantity([radius, radius], u.arcsec)
-      cutout_j = Cutout2D(data_vsa_J, position, size, wcs = w.celestial)
-      cutout_h = Cutout2D(data_vsa_H, position, size, wcs = w.celestial)
-      cutout_ks = Cutout2D(data_vsa_K, position, size, wcs = w.celestial)
+      cutout_j = (Cutout2D(data_vsa_J, position, size, wcs = w.celestial)).data
       
-      return [cutout_j.data, cutout_h.data, cutout_ks.data], w
+      if len(url_H) == 0: 
+        temp_H = ''
+        cutout_h = np.zeros_like(cutout_j)
+      else: 
+        temp_H = url_H[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        response_H = requests.get(temp_H)
+        soup_H =  BeautifulSoup(response_H.content, 'html.parser')
+        link_tag_H = soup_H.find('a', href=True, text="download FITS file")
+        fits_link_H = link_tag_H['href']
+        file_vsa_H = download_file(fits_link_H, cache = False)
+        data_vsa_H = fits.getdata(file_vsa_H)
+        cutout_h = Cutout2D(data_vsa_H, position, size, wcs = w.celestial)
+        
+      if len(url_K) == 0: 
+        temp_K = ''
+        cutout_k = np.zeros_like(cutout_j)
+      else: 
+        temp_K = url_K[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        response_K = requests.get(temp_K)
+        soup_K =  BeautifulSoup(response_K.content, 'html.parser')
+        link_tag_K = soup_K.find('a', href=True, text="download FITS file")
+        fits_link_K = link_tag_K['href']
+        file_vsa_K = download_file(fits_link_K, cache = False)
+        data_vsa_K = fits.getdata(file_vsa_K)
+        cutout_ks = Cutout2D(data_vsa_K, position, size, wcs = w.celestial)
+
+      return [cutout_j, cutout_h, cutout_ks], w
     except: 
       return 0, 0
 
@@ -211,14 +232,13 @@ def image_query(ra, dec, radius, catalog):
   elif catalog == 'NSC':
     try: 
       #Defines the catalog that is searched
-      DEF_ACCESS_URL = "https://datalab.noirlab.edu/sia/des_dr1"
-      try:
-        svc = sia.SIAService(DEF_ACCESS_URL)
-      except: 
-        return 0, 0
+      DEF_ACCESS_URL = "https://datalab.noirlab.edu/sia/des_dr2"
+      svc = sia.SIAService(DEF_ACCESS_URL)
 
       #Finds all of the image urls for the ra, dec, and radius given
       imgTable = svc.search((ra,dec), (radius/3600)).to_table()
+      
+      print(imgTable)
 
       #Tests if any images were found
       if len(imgTable) > 0:
@@ -265,6 +285,8 @@ def image_query(ra, dec, radius, catalog):
         hdu_r = fits.open(file_allwise_r)[0]
         wcs = WCS(hdu_r.header)
         return [data_allwise_g, data_allwise_r, data_allwise_i, data_allwise_z, data_allwise_Y], wcs
+      else: 
+        return 0, 0
     except: 
       return 0, 0
 
@@ -274,10 +296,9 @@ def table_query(ra, dec, radius, catalog):
   if catalog != 'NSC':
     try:
       # Set row limit for Vizier query
-      Vizier.ROW_LIMIT = -1  # Adjust as necessary
       coord = SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='fk5')
       search_radius = radius * u.arcsec  # Convert radius to astropy units
-      result = Vizier(columns=['**']).query_region(coord, width = [search_radius, search_radius], catalog=catalog, frame = 'fk5') # Query Vizier catalog with all columns
+      result = Vizier(columns=['**'], row_limit = 1e10).query_region(coord, width=[search_radius, search_radius], catalog=catalog, frame = 'galactic') # Query Vizier catalog with all columns
       if len(result) == 0:
         return 0  # Return 0 if no results are found
       return result
@@ -306,7 +327,7 @@ def table_query(ra, dec, radius, catalog):
 # WRAP PLOTTING FUNCTIONS
 # ------------------------------------------------------------- #   
 def image_plot(ra, dec, radius, catalog_info): 
-# Perform image and table queries
+  # Perform image and table queries
   images, w = image_query(ra, dec, radius, catalog_info['image_id'])
   table = table_query(ra, dec, radius, catalog_info['table_id'])
   enablePrint()  # Enable printing
@@ -367,7 +388,7 @@ def image_plot(ra, dec, radius, catalog_info):
       
       if catalog_info['name'] == 'VSA': 
         plt.xlim(0, max_shape), plt.ylim(max_shape, 0) 
-      elif catalog_info['name'] == 'GALEX' or catalog_info['name'] == 'NSC': 
+      elif catalog_info['name'] == 'NSC': 
         plt.xlim(max_shape, 0), plt.ylim(0, max_shape) 
       else: 
         plt.xlim(0, max_shape), plt.ylim(0, max_shape) 
@@ -413,8 +434,8 @@ def image_plot(ra, dec, radius, catalog_info):
       # Track mouse click locations
       location = []
       def mouse_event(event):
-        location.append(event.ydata)
         location.append(event.xdata)
+        location.append(event.ydata)
         location.append(event.inaxes)
       cid = fig_1.canvas.mpl_connect('button_press_event', mouse_event)
       
@@ -496,7 +517,7 @@ def image_plot(ra, dec, radius, catalog_info):
           # Handle "Object Not Found" button click
           if click_axes == 'Axes(0.04,0.855;0.92x0.04)':
             next_window()
-            return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
+            return len(catalog_info['table_data'])*[np.nan] + [text_list[text_max]]
           
           # Handle circle size slider adjustment
           if click_axes == 'Axes(0.25,0.055;0.65x0.03)': 
@@ -506,7 +527,7 @@ def image_plot(ra, dec, radius, catalog_info):
           # Handle main plot click
           if click_axes == '': 
             # Find the closest point to the location clicked
-            coord = w.pixel_to_world_values(location[n-4], location[n-5])
+            coord = w.pixel_to_world_values(location[len(location) - 3], location[len(location) - 2])
             distance = []
             for i in range(len(object_ra)):
               distance.append(math.dist(coord, [float(object_ra[i]), float(object_dec[i])]))
@@ -524,14 +545,14 @@ def image_plot(ra, dec, radius, catalog_info):
         
         elif press is None:
           next_window()
-          return len(catalog_info['table_header'])*[np.nan] + [text_list[text_max]]
+          return len(catalog_info['table_data'])*[np.nan] + [text_list[text_max]]
     except Exception as e: 
       print('#------------------------------------------------#')
       print("Please Report This Error to GitHub:", e)
       print('#------------------------------------------------#')
-      return len(catalog_info['table_header'])*[np.nan] + ['Catalog Data Not Retrieved']
+      return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
   else: 
-    return len(catalog_info['table_header'])*[np.nan] + ['Catalog Data Not Retrieved']
+    return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
 
 def next_window(): 
   # Clear the current figure and close all plots
@@ -789,7 +810,7 @@ directory = (script_path.split('WRAP.py', 2))[0]
 if platform != 'win32':
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
   layout_single = [
-    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+    [sg.Image(filename = (directory + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = directory + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                    
     [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
     [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
@@ -810,7 +831,7 @@ if platform != 'win32':
 
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
   layout_multi = [
-    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+    [sg.Image(filename = (directory + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = directory + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                   
     [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
     [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
@@ -842,7 +863,7 @@ if platform != 'win32':
 if platform == 'win32':  
   #Makes the layout of WRAP for the single object search, by providing a location for: ra, dec, radius, output file name, catalogs, and output
   layout_single = [
-    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+    [sg.Image(filename = ( directory + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = directory + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                    
     [sg.Text('RA', font = ('Times New Roman', 22), size=(13, 1), justification='center'),           sg.Text('DEC', font = ('Times New Roman', 22), size=(13, 1), justification='center'),             sg.Text('RADIUS', font = ('Times New Roman', 22), size=(13, 1), justification='center')],
     [sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(18, 1), justification='center'),    sg.Text('(Degrees)', font = ('Times New Roman', 20), size=(11, 1), justification='center'),       sg.Text('(Arcsecs)', font = ('Times New Roman', 20), size=(20, 1), justification='center')],
@@ -863,7 +884,7 @@ if platform == 'win32':
 
   #Makes the layout of WRAP for the multi-object search, by providing a location for: file directory, radius, filetype, output file name, catalogs, and output
   layout_multi = [
-    [sg.Image(filename = ('Output/Metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = 'Output/Metadata/BYW_Logo.png', size = (205, 95))],
+    [sg.Image(filename = (directory + '/Output/metadata/WRAP_Logo.png'), size = (135, 95)),                         sg.Text('WRAP', justification='center', size=(5, 1), font = ('Chalkduster', 52)),                 sg.Image(filename = directory + '/Output/metadata/BYW_Logo.png', size = (205, 95))],
                   
     [sg.Text('FILE DIRECTORY', font = ('Times New Roman', 22), size=(50, 1), justification='center')],
     [sg.Text('(CSV, FITS, ASCII, IPAC)', font = ('Times New Roman', 20), size=(50, 1), justification='center')],
@@ -893,7 +914,9 @@ if platform == 'win32':
   window = sg.Window('WRAP', tab_layout, size = (550, 535), grab_anywhere=False, finalize=True, enable_close_attempted_event = True)
 # ------------------------------------------------------------- #
 
-
+print('#------------------------------------------------#')
+print('               Opening WRAP                       ')
+print('#------------------------------------------------#')
 
 # RUNNING WRAP GUI
 # ------------------------------------------------------------- #
