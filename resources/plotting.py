@@ -32,12 +32,11 @@ if platform != 'win32':
 # ------------------------------------------------------------- #   
 def image_plot(ra, dec, radius, catalog_info, table, images, w): 
   # Check if queries returned valid results
-  # matplotlib.use('TkAgg')
   if type(images) != int and type(w) != int and type(table) != int: 
     try: 
       # Configure plot appearance
       plt.rcParams['toolbar'] = 'None'
-      plt.style.use('Solarize_Light2')
+      plt.style.use('bmh')
       plt.rcParams["figure.figsize"] = [8, 8]
 
       # Create a new figure with WCS projection
@@ -79,14 +78,14 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
               
       # Set initial circle size for scatter plot
       circle_size = (radius * 3)
-      scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_size, edgecolor='#40E842', facecolor='none')
+      scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_size, linewidths=2, edgecolor='#40E842', facecolor='none')
 
       # Set initial normalization for image display
       init_bot, init_top = 45, 95
       norm1_total = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, init_bot), vmax=np.nanpercentile(total_data.data, init_top))
       ax.imshow(total_data.data, cmap='Greys', norm=norm1_total)
       
-      if catalog_info['name'] == 'VSA': 
+      if catalog_info['name'] == 'VISTA': 
         plt.xlim(0, max_shape), plt.ylim(max_shape, 0) 
       elif catalog_info['name'] == 'NSC': 
         plt.xlim(max_shape, 0), plt.ylim(0, max_shape) 
@@ -112,7 +111,7 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
 
       # Create a text box for notes
       axbox = plt.axes([0.15, 0.02, 0.8, 0.03])
-      text = ''
+      text = 'No Inputted Text'
       text_box = TextBox(axbox, 'Notes:', initial=text, textalignment="center")
 
       # Create a button for "Object Not Found"
@@ -222,7 +221,7 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
           # Handle circle size slider adjustment
           if click_axes == 'Axes(0.25,0.055;0.65x0.03)': 
             scatter.remove()
-            scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_slider.val, edgecolor='#40E842', facecolor='none')
+            scatter = ax.scatter(object_ra, object_dec, transform=ax.get_transform('icrs'), s=circle_slider.val, linewidth=2, edgecolor='#40E842', facecolor='none')
           
           # Handle main plot click
           if click_axes == '': 
@@ -247,13 +246,15 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
           next_window()
           return len(catalog_info['table_data'])*[np.nan] + [text_list[text_max]]
     except Exception as e: 
-      print('#------------------------------------------------#')
-      print("Please Report This Error to GitHub:", e)
-      print('#------------------------------------------------#')
       return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
   else: 
     return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
+# ------------------------------------------------------------- #
 
+
+
+# Pop-up window when plot is clicked
+# ------------------------------------------------------------- #
 def next_window(): 
   # Clear the current figure and close all plots
   plt.clf(), plt.close('all')
@@ -262,7 +263,7 @@ def next_window():
   plt.figure(1)
   
   # Display a message in the plot
-  plt.text(0.06, 0.25, 'Your Click Has Been Successfully Recorded! \n              Please Wait for the Next Catalog to Load!', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
+  plt.text(0.04, 0.4, 'Your Click Has Been Recorded \n       Loading Next Catalog', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
   
   # Set plot limits and disable the grid
   plt.xlim(0, 1), plt.ylim(0, 1), plt.grid(linewidth=0)
@@ -276,7 +277,7 @@ def next_window():
   
   # Get the current figure and set its size
   figure2 = plt.gcf()
-  figure2.set_size_inches(5.2, 1)
+  figure2.set_size_inches(3, 0.5)
   
   # Pause briefly to display the figure, then clear and close it
   plt.pause(0.1), plt.clf(), plt.close('all')

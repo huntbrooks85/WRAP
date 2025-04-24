@@ -41,9 +41,9 @@ if platform != 'win32':
 # WRAP QUERY FUNCTIONS
 # ------------------------------------------------------------- #
 def image_query(ra, dec, radius, catalog):
-  if catalog not in ['VSA', 'PS2', 'NSC']:  
+  if catalog not in ['VHS', 'PanSTARRS', 'NSC']:  
     try: 
-      # Clear SkyView cache and query images for non-VHS, PS2, and NSC catalogs
+      # Clear SkyView cache and query images for non-VHS, PanSTARRS, and NSC catalogs
       SkyView.clear_cache()
       radius_deg = radius * u.arcsec # Convert radius to astropy units
       images = SkyView.get_images(position=f'{ra}d {dec}d', coordinates='J2000', survey=catalog, radius=radius_deg)
@@ -60,14 +60,14 @@ def image_query(ra, dec, radius, catalog):
     except: 
       return 0, 0
 
-  elif catalog == 'VSA':
+  elif catalog == 'VHS':
     try:
       position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
       size = u.Quantity([radius, radius], u.arcsec)
       
       Vsa.clear_cache()
-      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR5')
-      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR5')
+      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J' , database='VHSDR5')
+      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H' , database='VHSDR5')
       url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR5')
       
       temp_J = url_J[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
@@ -113,15 +113,14 @@ def image_query(ra, dec, radius, catalog):
     except: 
       return 0, 0
 
-  elif catalog == 'PS2':
+  elif catalog == 'PanSTARRS':
     try:
-      # Construct URLs for PS2 image retrieval
+      # Construct URLs for PanSTARRS image retrieval
       new_dec = f'+{dec}' if dec > 0 else str(dec)
       ps_image_url = f'http://ps1images.stsci.edu/cgi-bin/ps1cutouts?pos={ra}{new_dec}&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size={radius * 4}&output_size=0&verbose=0&autoscale=99.500000&catlist='
       
       # Download metadata from the constructed URL
       allwise_metadata = requests.get(ps_image_url)
-      print(allwise_metadata)
       metadata_path = f'metadata/ps_metadata.txt'
       open(metadata_path, 'wb').write(allwise_metadata.content)
 
@@ -160,8 +159,6 @@ def image_query(ra, dec, radius, catalog):
 
       #Finds all of the image urls for the ra, dec, and radius given
       imgTable = svc.search((ra,dec), (radius/3600)).to_table()
-      
-      print(imgTable)
 
       #Tests if any images were found
       if len(imgTable) > 0:
@@ -212,3 +209,4 @@ def image_query(ra, dec, radius, catalog):
         return 0, 0
     except: 
       return 0, 0
+# ------------------------------------------------------------- #
