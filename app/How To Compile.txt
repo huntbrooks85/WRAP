@@ -1,0 +1,13 @@
+https://centerkey.com/mac/java/
+
+javac WRAP.java
+
+jar cmfv MainClass.txt WRAP.jar *.class
+
+jpackage \
+--name WRAP \
+--input . \
+--main-jar WRAP.jar \
+--resource-dir resources \
+--type pkg \
+--icon WRAPLogo.icns

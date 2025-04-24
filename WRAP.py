@@ -751,8 +751,8 @@ def multi_tab_table():
     #Reads in the file depending on the filetype
     if values['type'] == 'CSV':
       csv_table = pd.read_csv(values['file'])
-      ra_list = csv_table['ra'].tolist()
-      dec_list = csv_table['dec'].tolist()
+      ra_list = csv_table['RA'].tolist()
+      dec_list = csv_table['DEC'].tolist()
     if values['type'] == 'FITS':
       fits_table = fits.open(values['file'])
       fits_data = fits_table[1].data
