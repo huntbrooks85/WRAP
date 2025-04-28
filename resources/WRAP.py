@@ -80,7 +80,7 @@ def wrap(ra, dec, radius, catalog_list):
 # ------------------------------------------------------------- #   
 
 # ['VHS', 'UKIDSS']
-# wrap(1, 1, 150, ['NSC'])
+# wrap(1, 1, 150, ['PanSTARRS'])
 # Makes usable with Java frontend
 # ------------------------------------------------------------- #   
 if __name__ == "__main__":

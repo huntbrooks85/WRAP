@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -172,7 +171,7 @@ public class WRAP {
         JCheckBox checkBox2 = new JCheckBox("AllWISE");
         JCheckBox checkBox3 = new JCheckBox("Gaia");
         JCheckBox checkBox4 = new JCheckBox("VISTA");
-        JCheckBox checkBox5 = new JCheckBox("WFCAM");
+        JCheckBox checkBox5 = new JCheckBox("UKIDSS");
         JCheckBox checkBox6 = new JCheckBox("2MASS");
         JCheckBox checkBox7 = new JCheckBox("PanSTARRS");
         JCheckBox checkBox8 = new JCheckBox("NSC");
