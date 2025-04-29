@@ -10,7 +10,6 @@
 // Import AWT Packages
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -21,10 +20,10 @@ import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +31,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -93,11 +95,12 @@ public class WRAP {
         mainControlPanel.setBorder(BorderFactory.createTitledBorder("Input Requirements"));
 
         // RA, DEC, RADIUS Input Panel
-        JPanel coordsPanel = new JPanel(new GridLayout(1, 3));
+        // JPanel coordsPanel = new JPanel(new GridLayout(1, 3));
 
         // Creates RA Field with grey text in box
         JTextField raField = new JTextField("R.A.", 20);
         raField.setForeground(Color.GRAY);
+        raField.setBounds(10, 20, 100, 20);
         raField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -118,6 +121,7 @@ public class WRAP {
 
         // Creates DEC Field with grey text in box
         JTextField decField = new JTextField("Decl.", 20);
+        decField.setBounds(110, 20, 100, 20);
         decField.setForeground(Color.GRAY);
         decField.addFocusListener(new FocusAdapter() {
             @Override
@@ -140,6 +144,7 @@ public class WRAP {
         // Creates Radius Field with grey text in box
         JTextField radiusField = new JTextField("Search Radius", 20);
         radiusField.setForeground(Color.GRAY);
+        radiusField.setBounds(210, 20, 125, 20);
         radiusField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -157,28 +162,69 @@ public class WRAP {
                 }
             }
         });
+
+        // Creates a "Multiquery" checkbox area
+        JCheckBox checkboxmultiquery = new JCheckBox("Multi-Query");
+        checkboxmultiquery.setFont(new Font("Times New Roman", Font.PLAIN, 9));
+        checkboxmultiquery.setBounds(2, 155, 80, 20);
+        mainControlPanel.add(checkboxmultiquery);
+
+        // Listener to swap components
+        JTextField fileField = new JTextField("path/to/file.csv");
+        fileField.setForeground(Color.GRAY);
+        fileField.setBounds(10, 20, 150, 20);
+        fileField.setEditable(false);
+        fileField.setVisible(false);
         
-        // Adds RA, DEC, and RADIUS Fields to panel from above
-        coordsPanel.add(raField);
-        coordsPanel.add(decField);
-        coordsPanel.add(radiusField);
-        coordsPanel.setBounds(5, 20, 335, 25);
-        mainControlPanel.add(coordsPanel);
+        JButton browseButton = new JButton("Browse");
+        browseButton.setBounds(160, 20, 50, 20);
+        browseButton.setVisible(false);
+        
+        browseButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(mainControlPanel);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                if (fileField.getText().toLowerCase().endsWith(".csv")) {
+                    fileField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                }else{
+                    JOptionPane.showMessageDialog(fileField, "Input a CSV File", "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
+        checkboxmultiquery.addActionListener(e -> {
+            boolean selected = checkboxmultiquery.isSelected();
+            raField.setVisible(!selected);
+            decField.setVisible(!selected);
+            fileField.setVisible(selected);
+            browseButton.setVisible(selected);
+        
+            mainControlPanel.revalidate();
+            mainControlPanel.repaint();
+        });        
+
+        // Adds RA, DECL, RADIUS, and FILE Fields
+        mainControlPanel.add(raField);
+        mainControlPanel.add(decField);
+        mainControlPanel.add(radiusField);
+        mainControlPanel.add(fileField);
+        mainControlPanel.add(browseButton);
 
         // Catalog Panel with checkboxes
         JPanel catalogPanel = new JPanel(new GridLayout(0, 2));
         JCheckBox checkBox1 = new JCheckBox("CatWISE");
         JCheckBox checkBox2 = new JCheckBox("AllWISE");
         JCheckBox checkBox3 = new JCheckBox("Gaia");
-        // JCheckBox checkBox4 = new JCheckBox("VHS");
+        JCheckBox checkBox4 = new JCheckBox("VHS");
         JCheckBox checkBox5 = new JCheckBox("UKIDSS");
         JCheckBox checkBox6 = new JCheckBox("2MASS");
-        JCheckBox checkBox7 = new JCheckBox("PanSTARRS");
-        JCheckBox checkBox8 = new JCheckBox("NSC");
-        JCheckBox checkBox9 = new JCheckBox("GALEX");
+        JCheckBox checkBox7 = new JCheckBox("SDSS");
+        JCheckBox checkBox8 = new JCheckBox("PanSTARRS");
+        JCheckBox checkBox9 = new JCheckBox("NSC");
+        JCheckBox checkBox10 = new JCheckBox("GALEX");
 
         // Set horizontal alignment for the text in the checkboxes
-        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9};
+        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10};
         for (JCheckBox checkBox : checkboxes) {
             checkBox.setFont(new Font("Times New Roman", Font.PLAIN, 16));
             catalogPanel.add(checkBox);
@@ -204,8 +250,8 @@ public class WRAP {
 
         // Array or list to hold all catalog checkboxes
         JCheckBox[] catalogCheckboxes = {
-            checkBox1, checkBox2, checkBox3, checkBox5,
-            checkBox6, checkBox7, checkBox8, checkBox9
+            checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
+            checkBox6, checkBox7, checkBox8, checkBox9, checkBox10
         };
 
         // Select All listener
@@ -230,7 +276,7 @@ public class WRAP {
 
         // Creates a "WiseView" checkbox area
         JCheckBox checkboxwise = new JCheckBox("WiseView");
-        checkboxwise.setFont(new Font("Times New Roman", Font.PLAIN, 10));
+        checkboxwise.setFont(new Font("Times New Roman", Font.PLAIN, 9));
         checkboxwise.setBounds(2, 175, 80, 20);
         mainControlPanel.add(checkboxwise);
 
@@ -257,83 +303,84 @@ public class WRAP {
 
                 // Verifies that the RA, DEC, and RADIUS inputs are flaots
                 try {
-                    // Converts to floats
-                    Float raFloat = Float.parseFloat(raText);
-                    Float decFloat = Float.parseFloat(decText);
+                    // Checks if "WiseView" checkbox is on
+                    boolean wisevar = checkboxwise.isSelected();
+
+                    // Verify the RADIUS are within the given bounds
                     Float radiusFloat = Float.parseFloat(radiusText);
-
-                    // Verify the RA, DEC, and RADIUS are within the given bounds
-                    if (raFloat <= 360 && raFloat >= 0 && decFloat >= -90 && decFloat <= 90 && radiusFloat >= 50 && radiusFloat <= 500){
-
-                        // Runs the "WiseView" link if check box is true
-                        if (checkboxwise.isSelected()){
-                            try {
-                                URI uri = new URI("http://byw.tools/wiseview#ra=" + raText + "&dec=" + decText + "&size=" + radiusText + "&band=3&speed=164.06&minbright=-10.0000&maxbright=80&window=0.75&diff_window=1&linear=1&color=&zoom=8.5&border=1&gaia=1&invert=1&maxdyr=0&scandir=0&neowise=0&diff=0&outer_epochs=0&unique_window=1&smooth_scan=0&shift=0&pmra=0&pmdec=0&synth_a=0&synth_a_sub=0&synth_a_ra=&synth_a_dec=&synth_a_w1=&synth_a_w2=&synth_a_pmra=0&synth_a_pmdec=0&synth_a_mjd=&synth_b=0&synth_b_sub=0&synth_b_ra=&synth_b_dec=&synth_b_w1=&synth_b_w2=&synth_b_pmra=0&synth_b_pmdec=0&synth_b_mjd=&smdet_coadd_id=1863p620&smdet_mask_idx=3&smdet_obj_px=&smdet_obj_py=");
     
-                                if (Desktop.isDesktopSupported()) {
-                                    Desktop desktop = Desktop.getDesktop();
-                                    desktop.browse(uri);
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                    // Adds all checked catalogs to a master list
+                    List<String> selectedCheckboxes = new ArrayList<>();
+                    if (checkBox1.isSelected()) selectedCheckboxes.add("CatWISE");
+                    if (checkBox2.isSelected()) selectedCheckboxes.add("AllWISE");
+                    if (checkBox3.isSelected()) selectedCheckboxes.add("Gaia");
+                    if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
+                    if (checkBox5.isSelected()) selectedCheckboxes.add("UKIDSS");
+                    if (checkBox6.isSelected()) selectedCheckboxes.add("2MASS");
+                    if (checkBox7.isSelected()) selectedCheckboxes.add("SDSS");
+                    if (checkBox8.isSelected()) selectedCheckboxes.add("PanSTARRS");
+                    if (checkBox9.isSelected()) selectedCheckboxes.add("NSC");
+                    if (checkBox10.isSelected()) selectedCheckboxes.add("GALEX");
+
+                    // Checks if any catalog is selected
+                    if (selectedCheckboxes.isEmpty()) {
+                        JOptionPane.showMessageDialog(runbutton, "Select a Catalog!", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+
+                        boolean multivar = checkboxmultiquery.isSelected();
+
+                        // Use a relative path from the location of the JAR
+                        File scriptFile = new File(appDir, "/resources/WRAP.py");
+                        File pythonExec = new File(appDir, "/resources/wrapenv/bin/python3.8");
+
+                        // Add the command and needed information for "WRAP.py"
+                        List<String> command = new ArrayList<>();
+                        command.add(pythonExec.getAbsolutePath());
+                        command.add(scriptFile.getAbsolutePath());
+                        String csvpath = "";
+                        if (multivar){
+                            csvpath = fileField.getText();
+                            command.add(String.valueOf(csvpath));
+                            command.add(String.valueOf(0));
+                        }else{
+                            Float raFloat = Float.parseFloat(raText);
+                            Float decFloat = Float.parseFloat(decText);
+                            if (raFloat <= 360 && raFloat >= 0 && decFloat >= -90 && decFloat <= 90 && radiusFloat >= 50 && radiusFloat <= 500){
+                                command.add(String.valueOf(raFloat));
+                                command.add(String.valueOf(decFloat));
+                            } else{
+                                JOptionPane.showMessageDialog(runbutton, "Input Correct RA/Decl/Radius", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-    
-                        // Adds all checked catalogs to a master list
-                        List<String> selectedCheckboxes = new ArrayList<>();
-                        if (checkBox1.isSelected()) selectedCheckboxes.add("CatWISE");
-                        if (checkBox2.isSelected()) selectedCheckboxes.add("AllWISE");
-                        if (checkBox3.isSelected()) selectedCheckboxes.add("Gaia");
-                        // if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
-                        if (checkBox5.isSelected()) selectedCheckboxes.add("UKIDSS");
-                        if (checkBox6.isSelected()) selectedCheckboxes.add("2MASS");
-                        if (checkBox7.isSelected()) selectedCheckboxes.add("PanSTARRS");
-                        if (checkBox8.isSelected()) selectedCheckboxes.add("NSC");
-                        if (checkBox9.isSelected()) selectedCheckboxes.add("GALEX");
-    
-                        // Checks if any catalog is selected
-                        if (selectedCheckboxes.isEmpty()) {
-                            JOptionPane.showMessageDialog(runbutton, "Select a Catalog!", "Input Error", JOptionPane.ERROR_MESSAGE);
-                        } else {
+                        command.add(String.valueOf(radiusFloat));
+                        command.add(String.valueOf(multivar));
+                        command.add(String.valueOf(wisevar));
+                        command.addAll(selectedCheckboxes);
 
-                            // Use a relative path from the location of the JAR
-                            File scriptFile = new File(appDir, "/resources/WRAP.py");
-                            File pythonExec = new File(appDir, "/resources/wrapenv/bin/python3.8");
-    
-                            // Add the command and needed information for "WRAP.py"
-                            List<String> command = new ArrayList<>();
-                            command.add(pythonExec.getAbsolutePath());
-                            command.add(scriptFile.getAbsolutePath());
-                            command.add(String.valueOf(raFloat));
-                            command.add(String.valueOf(decFloat));
-                            command.add(String.valueOf(radiusFloat));
-                            command.addAll(selectedCheckboxes);
-    
-                            // Start the process
-                            ProcessBuilder pb = new ProcessBuilder(command);
-                            pb.redirectErrorStream(true);
-                            Process process = pb.start();
-    
-                            // Read output
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            StringBuilder output = new StringBuilder();
-                            String line;
-    
-                            while ((line = reader.readLine()) != null) {
-                                output.append(line);
-                            }
-    
-                            // Store the result in a variable
-                            String resultJson = output.toString();
-                            String filePrefix = "WRAP_Query_";
-                            String fileName = filePrefix + fileCount;
-                            
-                            // Stores user click data into left panel for tables
-                            fileLoaderPanel.loadJsonData(resultJson, fileName);
-                            fileCount++;
+                        
+
+                        // Start the process
+                        ProcessBuilder pb = new ProcessBuilder(command);
+                        pb.redirectErrorStream(true);
+                        Process process = pb.start();
+
+                        // Read output
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        StringBuilder output = new StringBuilder();
+                        String line;
+
+                        while ((line = reader.readLine()) != null) {
+                            output.append(line);
                         }
-                    } else{
-                        JOptionPane.showMessageDialog(runbutton, "Input Correct RA/Decl/Radius", "Input Error", JOptionPane.ERROR_MESSAGE);
+
+                        // Store the result in a variable
+                        String resultJson = output.toString();
+                        String filePrefix = "WRAP_Query_";
+                        String fileName = filePrefix + fileCount;
+                        
+                        // Stores user click data into left panel for tables
+                        fileLoaderPanel.loadJsonData(resultJson, fileName, multivar, csvpath);
+                        fileCount++;
                     }
 
                 } catch (Exception ex) {
@@ -441,7 +488,7 @@ public class WRAP {
 
         // Created to show the loaded data files from the user click data
         // ------------------------------------------------------------- //
-        public void loadJsonData(String jsonString, String tableName) {
+        public void loadJsonData(String jsonString, String tableName, Boolean multivar, String csvpath) {
             Map<String, String> tableMap = new LinkedHashMap<>();
             jsonString = jsonString.trim();
         
@@ -457,20 +504,43 @@ public class WRAP {
         
             // Split the clean string
             String[] parts = jsonString.split(",");
+
+            int rowCount = 0;
+            if (multivar){
+                try (BufferedReader br = new BufferedReader(new FileReader(csvpath))) {
+                    while (br.readLine() != null) {
+                        rowCount++;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                rowCount = 2;
+            }
         
             int total = parts.length;
-            if (total % 2 != 0) {
+            if (total % rowCount != 0) {
                 JOptionPane.showMessageDialog(this, "Data format error: uneven number of columns and values", "Load Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         
-            int half = total / 2;
-            for (int i = 0; i < half; i++) {
-                String key = parts[i].trim();
-                String value = parts[i + half].trim();
-                tableMap.put(key, value);
+            int columns = total / rowCount;
+            String[] keys = new String[columns];
+
+            // Extract keys from the first row
+            for (int i = 0; i < columns; i++) {
+                keys[i] = parts[i].trim();
             }
-        
+
+            // Loop through the remaining rows and fill in values
+            for (int row = 1; row < rowCount; row++) {
+                for (int col = 0; col < columns; col++) {
+                    String key = keys[col] + "_row" + (row - 1);  // e.g., input_ra_row0
+                    String value = parts[row * columns + col].trim();
+                    tableMap.put(key, value);
+                }
+            }
+
             tableData.put(tableName, tableMap);
             listModel.addElement(tableName);
         }      
@@ -502,6 +572,19 @@ public class WRAP {
                 String tableName = fileList.getSelectedValue();
                 Map<String, String> table = tableData.get(tableName);
 
+                // Reorganize keys by base name and row index
+                Map<Integer, Map<String, String>> rows = new TreeMap<>();
+                Set<String> baseKeys = new LinkedHashSet<>();
+
+                for (String fullKey : table.keySet()) {
+                    String[] parts = fullKey.split("_row");
+                    String baseKey = parts[0];
+                    int rowIndex = (parts.length > 1) ? Integer.parseInt(parts[1]) : 0;
+
+                    baseKeys.add(baseKey);
+                    rows.computeIfAbsent(rowIndex, k -> new LinkedHashMap<>()).put(baseKey, table.get(fullKey));
+                }
+
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setSelectedFile(new File(tableName + ".csv"));
                 int returnValue = fileChooser.showSaveDialog(this);
@@ -509,15 +592,19 @@ public class WRAP {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File saveFile = fileChooser.getSelectedFile();
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
-                        for (String key : table.keySet()) {
-                            writer.write(key + ",");
-                        }
+                        // Write header
+                        writer.write(String.join(",", baseKeys));
                         writer.newLine();
 
-                        for (String value : table.values()) {
-                            writer.write(value + ",");
+                        // Write rows
+                        for (Map<String, String> row : rows.values()) {
+                            List<String> values = new ArrayList<>();
+                            for (String key : baseKeys) {
+                                values.add(row.getOrDefault(key, ""));
+                            }
+                            writer.write(String.join(",", values));
+                            writer.newLine();
                         }
-                        writer.newLine();
 
                         JOptionPane.showMessageDialog(this, "File saved successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
                     } catch (IOException ex) {

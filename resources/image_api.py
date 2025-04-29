@@ -13,6 +13,7 @@ import numpy as np
 # System Packages
 import sys,os
 import requests
+from io import BytesIO
 from sys import platform
 from pyvo.dal import sia
 from bs4 import BeautifulSoup
@@ -70,7 +71,7 @@ def image_query(ra, dec, radius, catalog):
       url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H' , database='VHSDR5')
       url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR5')
       
-      temp_J = url_J[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+      temp_J = url_J[0].replace("http://vsa.roe.ac.uk/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
       response_J = requests.get(temp_J)
       soup_J =  BeautifulSoup(response_J.content, 'html.parser')
       link_tag_J = soup_J.find('a', href=True, text="download FITS file")
@@ -87,7 +88,7 @@ def image_query(ra, dec, radius, catalog):
         temp_H = ''
         cutout_h = np.zeros_like(cutout_j)
       else: 
-        temp_H = url_H[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        temp_H = url_H[0].replace("http://vsa.roe.ac.uk/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
         response_H = requests.get(temp_H)
         soup_H =  BeautifulSoup(response_H.content, 'html.parser')
         link_tag_H = soup_H.find('a', href=True, text="download FITS file")
@@ -100,7 +101,7 @@ def image_query(ra, dec, radius, catalog):
         temp_K = ''
         cutout_k = np.zeros_like(cutout_j)
       else: 
-        temp_K = url_K[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        temp_K = url_K[0].replace("http://vsa.roe.ac.uk/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
         response_K = requests.get(temp_K)
         soup_K =  BeautifulSoup(response_K.content, 'html.parser')
         link_tag_K = soup_K.find('a', href=True, text="download FITS file")
@@ -122,7 +123,9 @@ def image_query(ra, dec, radius, catalog):
       
       # Download metadata from the constructed URL
       allwise_metadata = requests.get(ps_image_url)
-      metadata_path = f'resources/metadata/ps_metadata.txt'
+      script_dir = os.path.dirname(os.path.abspath(__file__))
+      script_dir = script_dir.split('/WRAP.app/Contents/app/resources')[0]
+      metadata_path = f'{script_dir}/ps_metadata.txt'
       open(metadata_path, 'wb').write(allwise_metadata.content)
 
       # Parse metadata to find image links

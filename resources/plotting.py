@@ -215,7 +215,6 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
           
           # Handle "Object Not Found" button click
           if click_axes == 'Axes(0.04,0.855;0.92x0.04)':
-            next_window()
             return len(catalog_info['table_data'])*[np.nan] + [text_list[text_max]]
           
           # Handle circle size slider adjustment
@@ -239,47 +238,12 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
               except: 
                 col_data = table[f'{col_name}'].tolist()
                 table_data.append(col_data[list_location]) 
-            next_window()             
             return table_data + [text_list[text_max]]
         
         elif press is None:
-          next_window()
           return len(catalog_info['table_data'])*[np.nan] + [text_list[text_max]]
     except Exception as e: 
       return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
   else: 
     return len(catalog_info['table_data'])*[np.nan] + ['Catalog Data Not Retrieved']
-# ------------------------------------------------------------- #
-
-
-
-# Pop-up window when plot is clicked
-# ------------------------------------------------------------- #
-def next_window(): 
-  # Clear the current figure and close all plots
-  plt.clf(), plt.close('all')
-  
-  # Create a new figure
-  plt.figure(1)
-  
-  # Display a message in the plot
-  plt.text(0.04, 0.4, 'Your Click Has Been Recorded \n       Loading Next Catalog', style='oblique', bbox={'facecolor': '#40E842', 'alpha': 1, 'pad': 10})
-  
-  # Set plot limits and disable the grid
-  plt.xlim(0, 1), plt.ylim(0, 1), plt.grid(linewidth=0)
-  
-  # Get current axis and hide the tick labels and ticks
-  ax = plt.gca()
-  ax.xaxis.set_tick_params(labelbottom=False)
-  ax.yaxis.set_tick_params(labelleft=False)
-  ax.set_xticks([])
-  ax.set_yticks([])
-  
-  # Get the current figure and set its size
-  figure2 = plt.gcf()
-  figure2.set_size_inches(3, 0.5)
-  
-  # Pause briefly to display the figure, then clear and close it
-  plt.pause(0.1), plt.clf(), plt.close('all')
-  return
 # ------------------------------------------------------------- #

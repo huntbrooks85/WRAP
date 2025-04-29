@@ -7,6 +7,10 @@
 
 How to Use WRAP:
 # -------------- #
+
+
+SINGLE-QUERY: 
+# -------------- #
 1. Input the Right Ascension (R.A.) and 
     Declination (Decl.) of the object being 
       searched for in degrees.
@@ -24,6 +28,28 @@ How to Use WRAP:
 9. Your query will be save on the left 
     "Table List" panel, click "Save" 
       to save as a csv file
+
+
+
+MULTI-QUERY: 
+# -------------- #   
+1. Select the "Multi-Query" checkbox.
+2. Input csv file, R.A. column needs to be named 
+    "input_ra" and Decl. column needs to be named 
+      "input_dec", the file must be a csv.
+3. Input search radius in arcseconds
+4. Select the catalogs to be searched through.
+5. Click the "Run" button.
+6. Your standard web browser will open with 
+    WiseView to assist you in finding your 
+      object (If WiseView Button Selected).
+7. Click on your object when the image appears 
+      (if your object is not there, 
+        click the red "Object Not Found" button).
+8. Repeat these steps until every catalog image is shown.
+9. Your query will be save on the left 
+    "Table List" panel, click "Save" 
+      to save as a csv file   
 # -------------- #
 
 
