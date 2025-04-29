@@ -59,17 +59,6 @@
 - **Note 3**: The orientation for all of the catalogs is North pointed up and East pointing left.
 - **Note 4**: Catalog imaging may have strange croppings; this is a warning that it may happen, do not be alarmed by it this is simplfy cropping at the edge of the detector.
 
-
-
-<div align="center">
-  <h2>🌓 Sky Coverage 🌗</h2>
-</div>
-
-<p align="center">
-  <a href="https://ibb.co/GQkGgNN"><img src="/Icons/Coverage_Map-1.png" width="100%"></a> <br>
-  Sky-Coverage for the Catalogs Included in WRAP
-</p>
-
 <div align="center">
   <h2>📞 Support 📞</h2>
 </div>
