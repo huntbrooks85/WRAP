@@ -28,6 +28,7 @@
 <div align="left">
   <p><b>Single-Query:</b></p>
 </div>
+
 1. Input the Right Ascension (R.A.) and Declination (Decl.) of the object being searched for in degrees.
 2. Input the search radius in arcseconds around the R.A. and Decl.
 4. Select the catalogs to be searched through.
@@ -40,6 +41,7 @@
 <div align="left">
   <p><b>Multi-Query:</b></p>
 </div>
+
 1. Select the "Multi-Query" checkbox.
 2. Input csv file, R.A. column needs to be named "input_ra" and Decl. column needs to be named "input_dec", the file must be a csv.
 3. Input search radius in arcseconds
