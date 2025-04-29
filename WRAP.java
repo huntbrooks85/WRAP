@@ -170,7 +170,7 @@ public class WRAP {
         JCheckBox checkBox1 = new JCheckBox("CatWISE");
         JCheckBox checkBox2 = new JCheckBox("AllWISE");
         JCheckBox checkBox3 = new JCheckBox("Gaia");
-        JCheckBox checkBox4 = new JCheckBox("VISTA");
+        // JCheckBox checkBox4 = new JCheckBox("VHS");
         JCheckBox checkBox5 = new JCheckBox("UKIDSS");
         JCheckBox checkBox6 = new JCheckBox("2MASS");
         JCheckBox checkBox7 = new JCheckBox("PanSTARRS");
@@ -178,7 +178,7 @@ public class WRAP {
         JCheckBox checkBox9 = new JCheckBox("GALEX");
 
         // Set horizontal alignment for the text in the checkboxes
-        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9};
+        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9};
         for (JCheckBox checkBox : checkboxes) {
             checkBox.setFont(new Font("Times New Roman", Font.PLAIN, 16));
             catalogPanel.add(checkBox);
@@ -204,7 +204,7 @@ public class WRAP {
 
         // Array or list to hold all catalog checkboxes
         JCheckBox[] catalogCheckboxes = {
-            checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
+            checkBox1, checkBox2, checkBox3, checkBox5,
             checkBox6, checkBox7, checkBox8, checkBox9
         };
 
@@ -284,7 +284,7 @@ public class WRAP {
                         if (checkBox1.isSelected()) selectedCheckboxes.add("CatWISE");
                         if (checkBox2.isSelected()) selectedCheckboxes.add("AllWISE");
                         if (checkBox3.isSelected()) selectedCheckboxes.add("Gaia");
-                        if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
+                        // if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
                         if (checkBox5.isSelected()) selectedCheckboxes.add("UKIDSS");
                         if (checkBox6.isSelected()) selectedCheckboxes.add("2MASS");
                         if (checkBox7.isSelected()) selectedCheckboxes.add("PanSTARRS");

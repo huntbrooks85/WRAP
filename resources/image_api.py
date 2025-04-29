@@ -70,7 +70,7 @@ def image_query(ra, dec, radius, catalog):
       url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H' , database='VHSDR5')
       url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR5')
       
-      temp_J = url_J[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+      temp_J = url_J[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
       response_J = requests.get(temp_J)
       soup_J =  BeautifulSoup(response_J.content, 'html.parser')
       link_tag_J = soup_J.find('a', href=True, text="download FITS file")
@@ -87,7 +87,7 @@ def image_query(ra, dec, radius, catalog):
         temp_H = ''
         cutout_h = np.zeros_like(cutout_j)
       else: 
-        temp_H = url_H[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        temp_H = url_H[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
         response_H = requests.get(temp_H)
         soup_H =  BeautifulSoup(response_H.content, 'html.parser')
         link_tag_H = soup_H.find('a', href=True, text="download FITS file")
@@ -100,7 +100,7 @@ def image_query(ra, dec, radius, catalog):
         temp_K = ''
         cutout_k = np.zeros_like(cutout_j)
       else: 
-        temp_K = url_K[0].replace("http://horus.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
+        temp_K = url_K[0].replace("http://vsa.roe.ac.uk/wsa/cgi-bin/getFImage.cgi?file=", "http://vsa.roe.ac.uk/cgi-bin/getImage.cgi?file=")
         response_K = requests.get(temp_K)
         soup_K =  BeautifulSoup(response_K.content, 'html.parser')
         link_tag_K = soup_K.find('a', href=True, text="download FITS file")
@@ -117,11 +117,12 @@ def image_query(ra, dec, radius, catalog):
     try:
       # Construct URLs for PanSTARRS image retrieval
       new_dec = f'+{dec}' if dec > 0 else str(dec)
-      ps_image_url = f'http://ps1images.stsci.edu/cgi-bin/ps1cutouts?pos={ra}{new_dec}&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size={radius * 4}&output_size=0&verbose=0&autoscale=99.500000&catlist='
+      # print(new_dec)
+      ps_image_url = f'http://ps1images.stsci.edu/cgi-bin/ps1cutouts?pos={ra}{new_dec}&filter=color&filter=g&filter=r&filter=i&filter=z&filter=y&filetypes=stack&auxiliary=data&size={int(radius)*4}&output_size=0&verbose=0&autoscale=99.500000&catlist='
       
       # Download metadata from the constructed URL
       allwise_metadata = requests.get(ps_image_url)
-      metadata_path = f'metadata/ps_metadata.txt'
+      metadata_path = f'resources/metadata/ps_metadata.txt'
       open(metadata_path, 'wb').write(allwise_metadata.content)
 
       # Parse metadata to find image links
@@ -158,7 +159,8 @@ def image_query(ra, dec, radius, catalog):
       svc = sia.SIAService(DEF_ACCESS_URL)
 
       #Finds all of the image urls for the ra, dec, and radius given
-      imgTable = svc.search((ra,dec), (radius/3600)).to_table()
+      imgTable = svc.search((ra,dec), float(radius/3600)).to_table()
+      print(imgTable)
 
       #Tests if any images were found
       if len(imgTable) > 0:

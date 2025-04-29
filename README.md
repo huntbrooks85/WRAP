@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://ibb.co/9WGmwZV"><img src="/metadata/LOGO.png" width="50%"></a> <br>
+    <a href="https://ibb.co/9WGmwZV"><img src="/Icons/LOGO.png" width="50%"></a> <br>
 </p>
 
 <h1 align="center" id="title"> 💫✨ WRAP ✨💫 </h1>
@@ -45,7 +45,7 @@
 </div>
 
 <p align="center">
-  <a href="https://ibb.co/GQkGgNN"><img src="/metadata/Coverage_Map-1.png" width="100%"></a> <br>
+  <a href="https://ibb.co/GQkGgNN"><img src="/Icons/Coverage_Map-1.png" width="100%"></a> <br>
   Sky-Coverage for the Catalogs Included in WRAP
 </p>
 
