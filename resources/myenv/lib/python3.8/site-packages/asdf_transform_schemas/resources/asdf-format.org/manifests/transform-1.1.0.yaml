@@ -1,0 +1,669 @@
+id: asdf://asdf-format.org/transform/manifests/transform-1.1.0
+extension_uri: asdf://asdf-format.org/transform/extensions/transform-1.1.0
+title: Transform extension 1.1.0
+description: |-
+  A set of tags for serializing data transforms.
+tags:
+- tag_uri: tag:stsci.edu:asdf/transform/add-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/add-1.1.0
+  title: Perform a list of subtransforms in parallel and then add their results together.
+  description: |-
+    Each of the subtransforms must have the same number of inputs and
+    outputs.
+- tag_uri: tag:stsci.edu:asdf/transform/affine-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/affine-1.1.0
+  title: An affine transform.
+  description: |-
+    Invertibility: All ASDF tools are required to be able to compute the
+    analytic inverse of this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/airy-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/airy-1.1.0
+  title: The Airy projection.
+  description: |-
+    Corresponds to the `AIR` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+- tag_uri: tag:stsci.edu:asdf/transform/bonne_equal_area-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/bonne_equal_area-1.1.0
+  title: Bonne's equal area pseudoconic projection.
+  description: |-
+    Corresponds to the `BON` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \frac{\pi}{180^\circ} A_\phi R_\theta / \cos \theta \\
+      \theta &= Y_0 - R_\theta$$
+
+    where:
+
+    $$R_\theta &= \mathrm{sign} \theta_1 \sqrt{x^2 + (Y_0 - y)^2} \\
+      A_\phi &= \arg\left(\frac{Y_0 - y}{R_\theta}, \frac{x}{R_\theta}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= R_\theta \sin A_\phi \\
+      y &= -R_\theta \cos A_\phi + Y_0$$
+
+    where:
+
+    $$A_\phi &= \frac{180^\circ}{\pi R_\theta} \phi \cos \theta \\
+      R_\theta &= Y_0 - \theta \\
+      Y_0 &= \frac{180^\circ}{\pi} \cot \theta_1 + \theta_1$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/cobe_quad_spherical_cube-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/cobe_quad_spherical_cube-1.1.0
+  title: COBE quadrilateralized spherical cube projection.
+  description: |-
+    Corresponds to the `CSC` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/compose-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/compose-1.1.0
+  title: Perform a list of subtransforms in series.
+  description: |-
+    The output of each subtransform is fed into the input of the next
+    subtransform.
+
+    The number of output dimensions of each subtransform must be equal
+    to the number of input dimensions of the next subtransform in list.
+    To reorder or add/drop axes, insert `remap_axes` transforms in the
+    subtransform list.
+
+    Invertibility: All ASDF tools are required to be able to compute the
+    analytic inverse of this transform, by reversing the list of
+    transforms and applying the inverse of each.
+- tag_uri: tag:stsci.edu:asdf/transform/concatenate-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/concatenate-1.1.0
+  title: Send axes to different subtransforms.
+  description: |-
+    Transforms a set of separable inputs by splitting the axes apart,
+    sending them through the given subtransforms in parallel, and
+    finally concatenating the subtransform output axes back together.
+
+    The input axes are assigned to each subtransform in order.  If the
+    number of input axes is unequal to the sum of the number of input
+    axes of all of the subtransforms, that is considered an error case.
+
+    The output axes from each subtransform are appended together to make
+    up the resulting output axes.
+
+    For example, given 5 input axes, and 3 subtransforms with the
+    following orders:
+
+    1. transform A: 2 in -> 2 out
+    1. transform B: 1 in -> 2 out
+    1. transform C: 2 in -> 1 out
+
+    The transform is performed as follows:
+
+    ```
+      :    i0    i1       i2       i3    i4
+      :    |     |        |        |     |
+      :  +---------+ +---------+ +----------+
+      :  |    A    | |    B    | |    C     |
+      :  +---------+ +---------+ +----------+
+      :    |     |     |     |        |
+      :    o0    o1    o2    o3       o4
+    ```
+
+    If reordering of the input or output axes is required, use in series
+    with the `remap_axes` transform.
+
+    Invertibility: All ASDF tools are required to be able to compute the
+    analytic inverse of this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/conic_equal_area-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/conic_equal_area-1.1.0
+  title: Alber's conic equal area projection.
+  description: |-
+    Corresponds to the `COE` projection in the FITS WCS standard.
+
+    See
+    [conic](ref:http://stsci.edu/schemas/asdf/transform/conic-1.1.0)
+    for the definition of the full transformation.
+
+    The transformation is defined as:
+
+    $$C &= \gamma / 2 \\
+      R_\theta &= \frac{180^\circ}{\pi} \frac{2}{\gamma} \sqrt{1 + \sin \theta_1 \sin \theta_2 - \gamma \sin \theta} \\
+      Y_0 &= \frac{180^\circ}{\pi} \frac{2}{\gamma} \sqrt{1 + \sin \theta_1 \sin \theta_2 - \gamma \sin((\theta_1 + \theta_2)/2)}$$
+
+    where:
+
+    $$\gamma = \sin \theta_1 + \sin \theta_2$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/conic_equidistant-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/conic_equidistant-1.1.0
+  title: Conic equidistant projection.
+  description: |-
+    Corresponds to the `COD` projection in the FITS WCS standard.
+
+    See
+    [conic](ref:http://stsci.edu/schemas/asdf/transform/conic-1.1.0)
+    for the definition of the full transformation.
+
+    The transformation is defined as:
+
+    $$C &= \frac{180^\circ}{\pi} \frac{\sin\theta_a\sin\eta}{\eta} \\
+      R_\theta &= \theta_a - \theta + \eta\cot\eta\cot\theta_a \\
+      Y_0 = \eta\cot\eta\cot\theta_a$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/conic_orthomorphic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/conic_orthomorphic-1.1.0
+  title: Conic orthomorphic projection.
+  description: |-
+    Corresponds to the `COO` projection in the FITS WCS standard.
+
+    See
+    [conic](ref:http://stsci.edu/schemas/asdf/transform/conic-1.1.0)
+    for the definition of the full transformation.
+
+    The transformation is defined as:
+
+    $$C &= \frac{\ln \left( \frac{\cos\theta_2}{\cos\theta_1} \right)}
+                {\ln \left[ \frac{\tan\left(\frac{90^\circ-\theta_2}{2}\right)}
+                                 {\tan\left(\frac{90^\circ-\theta_1}{2}\right)} \right] } \\
+      R_\theta &= \psi \left[ \tan \left( \frac{90^\circ - \theta}{2} \right) \right]^C \\
+      Y_0 &= \psi \left[ \tan \left( \frac{90^\circ - \theta_a}{2} \right) \right]^C$$
+
+    where:
+
+    $$\psi = \frac{180^\circ}{\pi} \frac{\cos \theta}
+             {C\left[\tan\left(\frac{90^\circ-\theta}{2}\right)\right]^C}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/conic_perspective-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/conic_perspective-1.1.0
+  title: Colles' conic perspecitve projection.
+  description: |-
+    Corresponds to the `COP` projection in the FITS WCS standard.
+
+    See
+    [conic](ref:http://stsci.edu/schemas/asdf/transform/conic-1.1.0)
+    for the definition of the full transformation.
+
+    The transformation is defined as:
+
+    $$C &= \sin \theta_a \\
+      R_\theta &= \frac{180^\circ}{\pi} \cos \eta [ \cot \theta_a - \tan(\theta - \theta_a)] \\
+      Y_0 &= \frac{180^\circ}{\pi} \cos \eta \cot \theta_a$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/constant-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/constant-1.1.0
+  title: A transform that takes no inputs and always outputs a constant value.
+  description: |-
+    Invertibility: All ASDF tools are required to be able to compute the
+    analytic inverse of this transform, which always outputs zero values.
+- tag_uri: tag:stsci.edu:asdf/transform/cylindrical_equal_area-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/cylindrical_equal_area-1.1.0
+  title: The cylindrical equal area projection.
+  description: |-
+    Corresponds to the `CEA` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= x \\
+    \theta &= \sin^{-1}\left(\frac{\pi}{180^{\circ}}\lambda y\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \phi \\
+    y &= \frac{180^{\circ}}{\pi}\frac{\sin \theta}{\lambda}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/cylindrical_perspective-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/cylindrical_perspective-1.1.0
+  title: The cylindrical perspective projection.
+  description: |-
+    Corresponds to the `CYP` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \frac{x}{\lambda} \\
+    \theta &= \arg(1, \eta) + \sin{-1}\left(\frac{\eta \mu}{\sqrt{\eta^2 + 1}}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \lambda \phi \\
+    y &= \frac{180^{\circ}}{\pi}\left(\frac{\mu + \lambda}{\mu + \cos \theta}\right)\sin \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/divide-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/divide-1.1.0
+  title: Perform a list of subtransforms in parallel and then divide their results.
+  description: |-
+    Each of the subtransforms must have the same number of inputs and
+    outputs.
+
+    Invertibility: This transform is not automatically invertible.
+- tag_uri: tag:stsci.edu:asdf/transform/gnomonic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/gnomonic-1.1.0
+  title: The gnomonic projection.
+  description: |-
+    Corresponds to the `TAN` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = \tan^{-1}\left(\frac{180^{\circ}}{\pi R_\theta}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta = \frac{180^{\circ}}{\pi}\cot \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/hammer_aitoff-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/hammer_aitoff-1.1.0
+  title: Hammer-Aitoff projection.
+  description: |-
+    Corresponds to the `AIT` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= 2 \arg \left(2Z^2 - 1, \frac{\pi}{180^\circ} \frac{Z}{2}x\right) \\
+      \theta &= \sin^{-1}\left(\frac{\pi}{180^\circ}yZ\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= 2 \gamma \cos \theta \sin \frac{\phi}{2} \\
+      y &= \gamma \sin \theta$$
+
+    where:
+
+    $$\gamma = \frac{180^\circ}{\pi} \sqrt{\frac{2}{1 + \cos \theta \cos(\phi / 2)}}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/healpix-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/healpix-1.1.0
+  title: HEALPix projection.
+  description: |-
+    Corresponds to the `HPX` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/healpix_polar-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/healpix_polar-1.1.0
+  title: HEALPix polar, aka "butterfly", projection.
+  description: |-
+    Corresponds to the `XPH` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/identity-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/identity-1.1.0
+  title: The identity transform.
+  description: |-
+    Invertibility: The inverse of this transform is also the identity transform.
+- tag_uri: tag:stsci.edu:asdf/transform/label_mapper-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/label_mapper-1.1.0
+  title: Represents a mapping from a coordinate value to a label.
+  description: |-
+    A label mapper instance maps inputs to a label.  It is used together
+    with
+    [regions_selector](ref:transform/regions_selector-1.1.0). The
+    [label_mapper](ref:transform/label_mapper-1.1.0)
+    returns the label corresponding to given inputs. The
+    [regions_selector](ref:transform/regions_selector-1.1.0)
+    returns the transform corresponding to this label. This maps inputs
+    (e.g. pixels on a detector) to transforms uniquely.
+- tag_uri: tag:stsci.edu:asdf/transform/mercator-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/mercator-1.1.0
+  title: The Mercator projection.
+  description: |-
+    Corresponds to the `MER` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= x \\
+    \theta &= 2 \tan^{-1}\left(e^{y \pi / 180^{\circ}}\right)-90^{\circ}$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \phi \\
+    y &= \frac{180^{\circ}}{\pi}\ln \tan \left(\frac{90^{\circ} + \theta}{2}\right)$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/molleweide-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/molleweide-1.1.0
+  title: Molleweide's projection.
+  description: |-
+    Corresponds to the `MOL` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \frac{\pi x}{2 \sqrt{2 - \left(\frac{\pi}{180^\circ}y\right)^2}} \\
+      \theta &= \sin^{-1}\left(\frac{1}{90^\circ}\sin^{-1}\left(\frac{\pi}{180^\circ}\frac{y}{\sqrt{2}}\right) + \frac{y}{180^\circ}\sqrt{2 - \left(\frac{\pi}{180^\circ}y\right)^2}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \frac{2 \sqrt{2}}{\pi} \phi \cos \gamma \\
+      y &= \sqrt{2} \frac{180^\circ}{\pi} \sin \gamma$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/multiply-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/multiply-1.1.0
+  title: Perform a list of subtransforms in parallel and then multiply their results.
+  description: |-
+    Each of the subtransforms must have the same number of inputs and
+    outputs.
+
+    Invertibility: This transform is not automatically invertible.
+- tag_uri: tag:stsci.edu:asdf/transform/parabolic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/parabolic-1.1.0
+  title: Parabolic projection.
+  description: |-
+    Corresponds to the `PAR` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \frac{180^\circ}{\pi} \frac{x}{1 - 4(y / 180^\circ)^2} \\
+      \theta &= 3 \sin^{-1}\left(\frac{y}{180^\circ}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \phi \left(2\cos\frac{2\theta}{3} - 1\right) \\
+      y &= 180^\circ \sin \frac{\theta}{3}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/plate_carree-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/plate_carree-1.1.0
+  title: "The plate carr\xE9e projection."
+  description: |-
+    Corresponds to the `CAR` projection in the FITS WCS standard.
+
+    The main virtue of this transformation is its simplicity.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= x \\
+    \theta &= y$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \phi \\
+    y &= \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/polyconic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/polyconic-1.1.0
+  title: Polyconic projection.
+  description: |-
+    Corresponds to the `PCO` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/polynomial-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/polynomial-1.1.0
+  title: A Polynomial model.
+  description: |-
+    A polynomial model represented by its coefficients stored in
+    an ndarray of shape $(n+1)$ for univariate polynomials or $(n+1, n+1)$
+    for polynomials with 2 variables, where $n$ is the highest total degree
+    of the polynomial.
+
+    $$P = \sum_{i, j=0}^{i+j=n}c_{ij} * x^{i} * y^{j}$$
+
+    Invertibility: This transform is not automatically invertible.
+- tag_uri: tag:stsci.edu:asdf/transform/power-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/power-1.1.0
+  title: Perform a list of subtransforms in parallel and then raise each result to
+    the power of the next.
+  description: |-
+    Each of the subtransforms must have the same number of inputs and
+    outputs.
+
+    Invertibility: This transform is not automatically invertible.
+- tag_uri: tag:stsci.edu:asdf/transform/quad_spherical_cube-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/quad_spherical_cube-1.1.0
+  title: Quadrilateralized spherical cube projection.
+  description: |-
+    Corresponds to the `QSC` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/regions_selector-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/regions_selector-1.1.0
+  title: Represents a discontinuous transform.
+  description: |-
+    Maps regions to transgorms and evaluates the transforms with the corresponding inputs.
+- tag_uri: tag:stsci.edu:asdf/transform/remap_axes-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/remap_axes-1.1.0
+  title: Reorder, add and drop axes.
+  description: |-
+    This transform allows the order of the input axes to be shuffled and
+    returned as the output axes.
+
+    It is a list made up of integers or "constant markers".  Each item
+    in the list corresponds to an output axis.  For each item:
+
+    - If an integer, it is the index of the input axis to send to the
+      output axis.
+
+    - If a constant, it must be a single item which is a constant value
+      to send to the output axis.
+
+    If only a list is provided, the number of input axes is
+    automatically determined from the maximum index in the list.  If an
+    object with `mapping` and `n_inputs` properties is provided, the
+    number of input axes is explicitly set by the `n_inputs` value.
+
+    Invertibility: TBD
+- tag_uri: tag:stsci.edu:asdf/transform/rotate2d-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/rotate2d-1.1.0
+  title: A 2D rotation.
+  description: |-
+    A 2D rotation around the origin, in degrees.
+    Invertibility: All ASDF tools are required to be able to compute the analytic inverse of this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/rotate3d-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/rotate3d-1.1.0
+  title: Rotation in 3D space.
+  description: |-
+    Euler angle rotation around 3 axes.
+
+    Invertibility: All ASDF tools are required to be able to compute the
+    analytic inverse of this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/sanson_flamsteed-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/sanson_flamsteed-1.1.0
+  title: The Sanson-Flamsteed projection.
+  description: |-
+    Corresponds to the `SFL` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \frac{x}{\cos y} \\
+      \theta &= y$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= \phi \cos \theta \\
+      y &= \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/scale-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/scale-1.1.0
+  title: A Scale model.
+  description: |-
+    Multiply the input by a factor.
+- tag_uri: tag:stsci.edu:asdf/transform/shift-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/shift-1.1.0
+  title: A Shift opeartion.
+  description: |-
+    Apply an offset in one direction.
+- tag_uri: tag:stsci.edu:asdf/transform/slant_orthographic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/slant_orthographic-1.1.0
+  title: The slant orthographic projection.
+  description: |-
+    Corresponds to the `SIN` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = \cos^{-1}\left(\frac{\pi}{180^{\circ}}R_\theta\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta = \frac{180^{\circ}}{\pi}\cos \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/slant_zenithal_perspective-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/slant_zenithal_perspective-1.1.0
+  title: The slant zenithal perspective projection.
+  description: |-
+    Corresponds to the `SZP` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:http://stsci.edu/schemas/asdf/transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = \tan^{-1}\left(\frac{180^{\circ}}{\pi R_\theta}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta = \frac{180^{\circ}}{\pi}\cot \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/stereographic-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/stereographic-1.1.0
+  title: The stereographic projection.
+  description: |-
+    Corresponds to the `STG` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = 90^{\circ} - 2 \tan^{-1}\left(\frac{\pi R_\theta}{360^{\circ}}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta = \frac{180^{\circ}}{\pi}\frac{2 \cos \theta}{1 + \sin \theta}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/subtract-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/subtract-1.1.0
+  title: Perform a list of subtransforms in parallel and then subtract their results.
+  description: |-
+    Each of the subtransforms must have the same number of inputs and
+    outputs.
+
+    Invertibility: This transform is not automatically invertible.
+- tag_uri: tag:stsci.edu:asdf/transform/tabular-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/tabular-1.1.0
+  title: A Tabular model.
+  description: |-
+    Tabular represents a lookup table with values corresponding to
+    some grid points.
+    It computes the interpolated values corresponding to the given
+    inputs. Three methods of interpolation are supported -
+    "linear", "nearest" and "splinef2d". It supports extrapolation.
+- tag_uri: tag:stsci.edu:asdf/transform/tangential_spherical_cube-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/tangential_spherical_cube-1.1.0
+  title: Tangential spherical cube projection.
+  description: |-
+    Corresponds to the `TSC` projection in the FITS WCS standard.
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/zenithal_equal_area-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/zenithal_equal_area-1.1.0
+  title: The zenithal equal area projection.
+  description: |-
+    Corresponds to the `ZEA` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = 90^\circ - 2 \sin^{-1} \left(\frac{\pi R_\theta}{360^\circ}\right)$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta &= \frac{180^\circ}{\pi} \sqrt{2(1 - \sin\theta)} \\
+               &= \frac{360^\circ}{\pi} \sin\left(\frac{90^\circ - \theta}{2}\right)$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/zenithal_equidistant-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/zenithal_equidistant-1.1.0
+  title: The zenithal equidistant projection.
+  description: |-
+    Corresponds to the `ARC` projection in the FITS WCS standard.
+
+    See
+    [zenithal](ref:transform/zenithal-1.1.0)
+    for the definition of the full transformation.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\theta = 90^\circ - R_\theta$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$R_\theta = 90^\circ - \theta$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.
+- tag_uri: tag:stsci.edu:asdf/transform/zenithal_perspective-1.1.0
+  schema_uri: http://stsci.edu/schemas/asdf/transform/zenithal_perspective-1.1.0
+  title: The zenithal perspective projection.
+  description: |-
+    Corresponds to the `AZP` projection in the FITS WCS standard.
+
+    The pixel-to-sky transformation is defined as:
+
+    $$\phi &= \arg(-y \cos \gamma, x) \\
+    \theta &= \left\{\genfrac{}{}{0pt}{}{\psi - \omega}{\psi + \omega + 180^{\circ}}\right.$$
+
+    where:
+
+    $$\psi &= \arg(\rho, 1) \\
+    \omega &= \sin^{-1}\left(\frac{\rho \mu}{\sqrt{\rho^2 + 1}}\right) \\
+    \rho &= \frac{R}{\frac{180^{\circ}}{\pi}(\mu + 1) + y \sin \gamma} \\
+    R &= \sqrt{x^2 + y^2 \cos^2 \gamma}$$
+
+    And the sky-to-pixel transformation is defined as:
+
+    $$x &= R \sin \phi \\
+    y &= -R \sec \gamma \cos \theta$$
+
+    where:
+
+    $$R = \frac{180^{\circ}}{\pi} \frac{(\mu + 1) \cos \theta}{(\mu + \sin \theta) + \cos \theta \cos \phi \tan \gamma}$$
+
+    Invertibility: All ASDF tools are required to provide the inverse of
+    this transform.

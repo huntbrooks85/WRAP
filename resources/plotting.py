@@ -85,7 +85,7 @@ def image_plot(ra, dec, radius, catalog_info, table, images, w):
       norm1_total = matplotlib.colors.Normalize(vmin=np.nanpercentile(total_data.data, init_bot), vmax=np.nanpercentile(total_data.data, init_top))
       ax.imshow(total_data.data, cmap='Greys', norm=norm1_total)
       
-      if catalog_info['name'] == 'VISTA': 
+      if catalog_info['name'] == 'VHS': 
         plt.xlim(0, max_shape), plt.ylim(max_shape, 0) 
       elif catalog_info['name'] == 'NSC': 
         plt.xlim(max_shape, 0), plt.ylim(0, max_shape) 

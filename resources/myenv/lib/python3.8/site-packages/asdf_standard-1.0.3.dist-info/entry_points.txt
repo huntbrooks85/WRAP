@@ -1,0 +1,2 @@
+[asdf.resource_mappings]
+asdf_standard = asdf_standard.integration:get_resource_mappings

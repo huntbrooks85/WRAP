@@ -1,0 +1,40 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: "http://stsci.edu/schemas/asdf/transform/schechter1d-1.0.0"
+title: >
+  Schechter luminosity function
+description: >
+    Schechter luminosity function ([Schechter 1976](https://ui.adsabs.harvard.edu/abs/1976ApJ...203..297S/abstract)),
+    parameterized in terms of magnitudes.
+examples:
+  -
+    - $$n(M) \ dM = (0.4 \ln 10) \ \phi^{*} \
+            [{10^{0.4 (M^{*} - M)}}]^{\alpha + 1} \
+            \exp{[-10^{0.4 (M^{*} - M)}]} \ dM$$
+    - |
+      !transform/schechter1d-1.0.0 {phi_star: 1.0, m_star: -20.0, alpha: -1.0}
+
+allOf:
+  - $ref: "transform-1.2.0"
+  - type: object
+    properties:
+      phi_star:
+        anyOf:
+          - tag: tag:stsci.edu:asdf/unit/quantity-1.1.0
+          - type: number
+        description: >
+          The normalization factor in units of number density.
+      m_star:
+        type: number
+        description: >
+          The characteristic magnitude where the power-law form of the function
+          cuts off into the exponential form.
+      alpha:
+        anyOf:
+          - tag: tag:stsci.edu:asdf/unit/quantity-1.1.0
+          - type: number
+        description: >
+          The power-law index, defining the faint-end slope of the luminosity function
+    required: ['phi_star', 'm_star', 'alpha']
+...

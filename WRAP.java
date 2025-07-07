@@ -331,7 +331,7 @@ public class WRAP {
 
                         // Use a relative path from the location of the JAR
                         File scriptFile = new File(appDir, "/resources/WRAP.py");
-                        File pythonExec = new File(appDir, "/resources/wrapenv/bin/python3.8");
+                        File pythonExec = new File(appDir, "/resources/myenv/bin/python3.8");
 
                         // Add the command and needed information for "WRAP.py"
                         List<String> command = new ArrayList<>();
@@ -491,13 +491,13 @@ public class WRAP {
         public void loadJsonData(String jsonString, String tableName, Boolean multivar, String csvpath) {
             Map<String, String> tableMap = new LinkedHashMap<>();
             jsonString = jsonString.trim();
-        
+
             // Find the start of the actual data
             int startIndex = jsonString.indexOf("input_ra");
-            if (startIndex == -1) {
-                JOptionPane.showMessageDialog(this, "Error: Unable to find 'input_ra' in the data.", "Load Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            // if (startIndex == -1) {
+            //     JOptionPane.showMessageDialog(this, "No Data Available \n (e.g. Servers Are Currently Down)", "Load Error", JOptionPane.ERROR_MESSAGE);
+            //     return;
+            // }
         
             // Trim off any log junk before 'input_ra'
             jsonString = jsonString.substring(startIndex);
@@ -535,7 +535,7 @@ public class WRAP {
             // Loop through the remaining rows and fill in values
             for (int row = 1; row < rowCount; row++) {
                 for (int col = 0; col < columns; col++) {
-                    String key = keys[col] + "_row" + (row - 1);  // e.g., input_ra_row0
+                    String key = keys[col] + "_row" + (row - 1);
                     String value = parts[row * columns + col].trim();
                     tableMap.put(key, value);
                 }

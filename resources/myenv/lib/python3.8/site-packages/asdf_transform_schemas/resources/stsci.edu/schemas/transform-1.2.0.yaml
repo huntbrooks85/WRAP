@@ -1,0 +1,184 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: "http://stsci.edu/schemas/asdf/transform/transform-1.2.0"
+title: >
+  A generic type used to mark where other transforms are accepted.
+
+description: >
+  These objects are designed to be nested in arbitrary ways to build up
+  transformation pipelines out of a number of low-level pieces.
+
+examples:
+  -
+    - A transform with no bounding_box or compound_bounding_box
+    - |
+      !transform/transform-1.2.0
+        name: test
+        inputs: ['x', 'y']
+        outputs: ['z']
+        fixed:
+          a: True
+          b: False
+        bounds:
+          c: [-1, 2]
+          d: [-3, null]
+  -
+    - A transform with old-style 1D bounding_box
+    - |
+      !transform/transform-1.2.0
+        name: test
+        inputs: ['x']
+        outputs: ['y']
+        bounding_box: [1.0, 2.0]
+  -
+    - A transform with new-style 1D bounding_box
+    - |
+      !transform/constant-1.4.0
+        name: test
+        value: 1
+        dimensions: 1
+        inputs: ['x']
+        outputs: ['y']
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x: [1.0, 2.0]
+  -
+    - A transform with old-style 2D bounding_box
+    - |
+      !transform/transform-1.2.0
+        name: test
+        inputs: ['x', 'y']
+        outputs: ['z']
+        bounding_box:
+          - [1.0, 2.0]
+          - [3.0, 4.0]
+  -
+    - A transform with new-style 2D bounding_box
+    - |
+      !transform/constant-1.4.0
+        name: test
+        value: 1
+        dimensions: 2
+        inputs: ['x', 'y']
+        outputs: ['z']
+        bounding_box: !transform/property/bounding_box-1.0.0
+          intervals:
+            x: [1.0, 2.0]
+            y: [3.0, 4.0]
+  -
+    - A transform with compound_bounding_box
+    - |
+      !transform/concatenate-1.2.0
+        name: test
+        forward:
+          - !transform/concatenate-1.2.0
+            forward:
+              - !transform/shift-1.2.0
+                offset: 1.0
+              - !transform/shift-1.2.0
+                offset: 2.0
+          - !transform/concatenate-1.2.0
+            forward:
+              - !transform/shift-1.2.0
+                offset: 3.0
+              - !transform/shift-1.2.0
+                offset: 4.0
+        inputs: ['x', 'y', 'a', 'b']
+        bounding_box: !transform/property/compound_bounding_box-1.0.0
+          selector_args:
+            - argument: x
+              ignore: true
+            - argument: y
+              ignore: true
+          cbbox:
+            - key: [0, 1]
+              bbox: !transform/property/bounding_box-1.0.0
+                intervals:
+                  a: [2.0, 3.0]
+                  b: [4.0, 5.0]
+            - key: [6, 7]
+              bbox: !transform/property/bounding_box-1.0.0
+                intervals:
+                  a: [8.0, 9.0]
+                  b: [10.0, 11.0]
+
+definitions:
+  bound:
+    anyOf:
+      - type: number
+      - type: "null"
+
+type: object
+properties:
+  name:
+    description: |
+      A user-friendly name for the transform, to give it extra
+      meaning.
+    type: string
+
+  inverse:
+    description: |
+      Explicitly sets the inverse transform of this transform.
+
+      If the transform has a direct analytic inverse, this
+      property is usually not necessary, as the ASDF-reading tool
+      can provide it automatically.
+
+    $ref: "transform-1.2.0"
+
+  inputs:
+    description: |
+      The names of the model's evaluation input variables.
+    type: array
+    items:
+      type: string
+
+  outputs:
+    description: |
+      The names of the model's evaluation output variables.
+    type: array
+    items:
+      type: string
+
+  bounding_box:
+    description: |
+      Bounding box for model the transform
+
+    oneOf:
+      - $ref: "property/bounding_box-1.0.0#/definitions/interval"
+      - type: array
+        minItems: 2
+        items:
+          $ref: "property/bounding_box-1.0.0#/definitions/interval"
+      - tag: tag:stsci.edu:asdf/transform/property/bounding_box-1.0.0
+      - tag: tag:stsci.edu:asdf/transform/property/compound_bounding_box-1.0.0
+
+  fixed:
+    description: |
+      The parameters which are fixed when fitting the transform to data.
+    type: object
+    additionalProperties:
+      type: boolean
+
+  bounds:
+    description: |
+      The parameters which are bounded when fitting the transform to data.
+    type:
+      object
+    additionalProperties:
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        - $ref: "#/definitions/bound"
+        - $ref: "#/definitions/bound"
+
+  input_units_equivalencies:
+    description: |
+      The units that are accepted for inputs to be converted into.
+    type: object
+    additionalProperties:
+      tag: tag:astropy.org:astropy/units/equivalency-1.0.0
+additionalProperties: true
+...

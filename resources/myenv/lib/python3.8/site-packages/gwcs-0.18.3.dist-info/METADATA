@@ -1,0 +1,33 @@
+Metadata-Version: 2.1
+Name: gwcs
+Version: 0.18.3
+Summary: Generalized World Coordinate System
+Home-page: https://github.com/spacetelescope/gwcs
+Author: gwcs developers
+Author-email: help@stsci.edu
+License: BSD
+Project-URL: Tracker, https://github.com/spacetelescope/gwcs/issues
+Project-URL: Documentation, https://gwcs.readthedocs.io/en/stable/
+Project-URL: Source Code, https://github.com/spacetelescope/jwst
+Requires-Python: >=3.8
+Description-Content-Type: text/x-rst
+Requires-Dist: asdf (>=2.8.1)
+Requires-Dist: astropy (>=5.1)
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: asdf-wcs-schemas
+Requires-Dist: asdf-astropy (>=0.2.0)
+Provides-Extra: docs
+Requires-Dist: sphinx ; extra == 'docs'
+Requires-Dist: sphinx-automodapi ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme ; extra == 'docs'
+Requires-Dist: stsci-rtd-theme ; extra == 'docs'
+Requires-Dist: sphinx-astropy ; extra == 'docs'
+Requires-Dist: sphinx-asdf ; extra == 'docs'
+Provides-Extra: test
+Requires-Dist: ci-watson (>=0.3.0) ; extra == 'test'
+Requires-Dist: pytest (>=4.6.0) ; extra == 'test'
+Requires-Dist: pytest-astropy ; extra == 'test'
+Requires-Dist: codecov ; extra == 'test'
+
+Tools for managing the WCS of astronomical observations in a general (non-FITS) way
