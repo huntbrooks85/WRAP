@@ -1,0 +1,176 @@
+#!/Users/hunter_brooks8/Documents/GitHub/WRAP/resources/myenv/bin/python3.8
+#
+# DATALAB -- A Data Lab command-line client
+#
+
+
+
+from __future__ import print_function
+
+__authors__ = 'Matthew Graham <mjg@caltech.edu>, Mike Fitzpatrick <mike.fitzpatrick@noirlab.edu>, Data Lab <datalab@noirlab.edu>'
+__version__ = '20220218'  # yyyymmdd
+
+
+""" 
+    Command-line task for the Astro Data Lab
+"""
+
+from dl import dltasks as dl
+from dl import __version__ as dlver
+import sys
+
+# raw_input() was renamed input() in python3
+try:
+    _raw_input = raw_input
+except NameError:
+    raw_input = input
+
+
+
+def parseArgs (task, args):
+    ''' Parse task parameters. 
+    '''
+    params = []
+
+    if any(x in args for x in ['--help', '--h', '-h', 'help', '-help']):
+        # Print task help and exist
+        print ("\nThe '%s' task takes the following parameters:\n" % task.tname)
+        for par in task.params:
+            opt = getattr (task, par)
+            name = opt.display and opt.display or par
+            if opt.required:
+                print ("  %12s - %s [required]" % (name, opt.description))
+            else:
+                if name == ' ':
+                    print ("  ")
+                else:
+                    print ("  %12s - %s [optional]" % (name, opt.description))
+        print (" ")
+        sys.exit (0)
+
+    else:
+        # Set task parameters from the command-line arguments.
+        param_err = False
+        for i in range(2, len(args)):
+            parts = args[i].strip().split("=")
+            name = parts[0][0] == "-" and parts[0][2:] or parts[0]
+            params.append (name)
+            if hasattr (task, name):
+                opt = getattr (task, name)
+                opt.value = '='.join(parts[1:])
+            else:
+                # Print all param errors and exit after processing.
+                print ("Parameter '%s' is not supported by this task" % name)
+                param_err = True
+
+        if param_err:
+            sys.exit (1)
+        else:
+            task.setLogger() 		# set task logger
+
+        # Check that required parameters are not missing, prompt if necessary.
+        for par in task.params:
+            if getattr(task, par).required and par not in params:
+                opt = getattr(task, par)
+                disp = opt.display and opt.display or par
+                var = raw_input("%s (default: %s): " % (disp, opt.default))
+                if var == "":
+                    opt.value = opt.default
+                else:
+                    opt.value = var
+
+
+# #######################
+#   Task Main
+# #######################
+if __name__ == "__main__":
+
+    # Initialize the 'datalab' object.
+    datalab = None
+
+    #print ('DEV DATALAB')
+
+    # Supported sub-tasks. Method to call is a Class defined in 'dl/dltasks.py'
+    tasks = {    # User Commands \
+                'login' : dl.Login,             # login to DL / switch user
+               'logout' : dl.Logout,            # logout of DL
+               'whoami' : dl.WhoAmI,            # print default user
+               'status' : dl.Status,            # summarize login status
+             'profiles' : dl.QueryProfiles,	# list query profiles
+             'svc_urls' : dl.SvcURLs,		# list service URLs
+              'version' : dl.Version,		# print task version
+             'services' : dl.Services,		# list data services
+#                'init' : dl.Init,              # initialize config file
+#               'reset' : dl.Reset,             # reset user record field
+#          'userRecord' : dl.UserRecord,        # print user record
+#               'stats' : dl.Stats,             # print usage statistics
+#         'set_default' : dl.SetDefault,        # set config file default
+#         'get_default' : dl.GetDefault,        # get config file default
+#                'ping' : dl.Ping,              # ping a DL service
+\
+ 		 # Query Commands \
+               'schema' : dl.Schema,            # print table schema
+                'query' : dl.Query2,            # query the database
+              'qstatus' : dl.QueryStatus,       # get ASync query status
+             'qresults' : dl.QueryResults,      # get ASync query results
+#               'qabort' : dl.QueryAbort,        # abort ASync query job*
+#           'coneSearch' : dl.ConeSearch,        # Catalog Cone Search*
+#          'imageSearch' : dl.ImageSearch,       # Image Search*
+\
+ 		  # MyDB commands \
+               'listdb' : dl.ListMyDB,
+               'dropdb' : dl.DropMyDB,
+            'mydb_list' : dl.MyDB_List,         # list MyDB table schema*
+            'mydb_drop' : dl.MyDB_Drop,         # drop MyDB table*
+          'mydb_create' : dl.MyDB_Create,       # create MyDB table from file*
+          'mydb_insert' : dl.MyDB_Insert,       # insert into MyDB table*
+          'mydb_import' : dl.MyDB_Import,       # import data into MyDB table*
+        'mydb_truncate' : dl.MyDB_Truncate,     # truncate MyDB table*
+           'mydb_index' : dl.MyDB_Index,        # index MyDB table column*
+          'mydb_rename' : dl.MyDB_Rename,       # rename a MyDB table*
+            'mydb_copy' : dl.MyDB_Copy,         # copy a MyDB table*
+\
+ 		 # Storage commands \
+#               'mount' : dl.Mount,             # mount a VOSpace*
+#             'unmount' : dl.Unmount,           # unmount a VOSpace*
+#          'capability' : dl.Capability,        # add/remove/list capability*
+#            'property' : dl.Property,          # add/del container property*
+#                'pull' : dl.Pull,              # pull remote URL to VOSpace*
+                  'get' : dl.Get,               # get a file from VOSpace
+                  'put' : dl.Put,               # put a file in VOSpace
+                   'mv' : dl.Move,              # move/rename a VOSpace file/dir
+                   'cp' : dl.Copy,              # copy a VOSpace file/dir
+                   'rm' : dl.Delete,            # delete a VOSpace file
+                   'ln' : dl.Link,              # create a VOSpace link
+                   'ls' : dl.List,              # list contents of VOSpace
+                  'tag' : dl.Tag,               # tag (annotate) a VOSpace node
+                'mkdir' : dl.MkDir,             # create a VOSpace container
+                'rmdir' : dl.RmDir              # remove a VOSpace container
+             }
+
+    help_opts = ['--help', '--h', '-h', 'help', '-help']
+
+    # List tasks
+    if len(sys.argv) == 1 or sys.argv[1] in help_opts:
+        print ("\nUsage:\n\n    % datalab <task> [task_options]\n")
+        print ("where <task> is one of:\n")
+        for task in sorted(tasks):
+            print ('    %15s - %s' % (task, tasks[task](datalab).description))
+        print (' ')
+
+    elif sys.argv[1] in ['--version', '-version', '-v']:
+        print ("Task Version:  " + dlver.__version__)
+
+    # Parse arguments
+    elif sys.argv[1] in tasks:
+        datalab = dl.DataLab()
+        task = tasks[sys.argv[1]](datalab)
+        opt = parseArgs (task, sys.argv)
+        resp = task.run()
+        if resp is not None:
+            print (resp)
+    else:
+        print ("Unknown command: '%s'" % sys.argv[1])
+
+    sys.exit(0)
+

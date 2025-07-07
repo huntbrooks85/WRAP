@@ -1,0 +1,38 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: "http://stsci.edu/schemas/asdf/transform/cosine1d-1.0.0"
+title: >
+  One dimensional cosine model.
+
+description: >
+  One dimensional cosine.
+
+examples:
+  -
+    - $$f(x)=10.0cos(2\pi *0.5x+2\pi*1.0)$$
+    - |
+      !transform/cosine1d-1.0.0 {amplitude: 10.0, frequency: 0.5, phase: 1.0}
+
+allOf:
+  - $ref: "transform-1.2.0"
+  - type: object
+    properties:
+      amplitude:
+        anyOf:
+          - $ref: "../unit/quantity-1.1.0"
+          - type: number
+        description: Oscillation amplitude.
+      frequency:
+        anyOf:
+          - $ref: "../unit/quantity-1.1.0"
+          - type: number
+        description: Oscillation frequency.
+      phase:
+        anyOf:
+          - $ref: "../unit/quantity-1.1.0"
+          - type: number
+        description: Oscillation phase.
+
+    required: ['amplitude', 'frequency', 'phase']
+...

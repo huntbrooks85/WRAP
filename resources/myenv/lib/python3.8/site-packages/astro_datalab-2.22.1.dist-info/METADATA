@@ -1,0 +1,37 @@
+Metadata-Version: 2.1
+Name: astro-datalab
+Version: 2.22.1
+Summary: Tools for interacting with NOIRLab's Astro Data Lab.
+Home-page: https://github.com/astro-datalab/datalab/
+Author: M.J. Graham, M.J. Fitzpatrick, D.L. Nidever, R. Nikutta
+Author-email: mjg@caltech.edu, mike.fitzpatrick@noirlab.edu, robert.nikutta@noirlab.edu
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering :: Astronomy
+Requires: requests (>=2.7)
+Requires: httplib2
+Requires: numpy (>=1.13)
+Requires: astropy
+Requires: pyvo
+Requires: matplotlib
+Requires: pandas
+Requires: pycurl_requests
+Requires: specutils
+License-File: LICENSE
+Requires-Dist: requests >=2.7
+Requires-Dist: httplib2
+Requires-Dist: numpy >=1.13
+Requires-Dist: astropy
+Requires-Dist: pyvo
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: pycurl-requests
+Requires-Dist: specutils
+
+Tools for interacting with NOIRLab's Astro Data Lab services

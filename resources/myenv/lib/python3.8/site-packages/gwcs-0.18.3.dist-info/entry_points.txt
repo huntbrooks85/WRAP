@@ -1,0 +1,2 @@
+[asdf.extensions]
+gwcs = gwcs.extension:get_extensions

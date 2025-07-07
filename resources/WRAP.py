@@ -54,6 +54,7 @@ def wrap(ra, dec, radius, multivar, wisevar, catalog_list):
         {"name": "GALEX"    , "table_id": "II/312/ais"    , 'table_data': ['RAJ2000', 'DEJ2000', 'FUV', 'NUV', 'e_FUV', 'e_NUV']                                                                                                                                     , 'image_id': ['GALEX Near UV', 'GALEX Far UV']               , 'image_selection': [True, True]                     , 'image_names': ['NUV', 'FUV']           , 'table_header': ['GALEX_RA', 'GALEX_DEC', 'GALEX_FUV', 'GALEX_NUV', 'GALEX_FUV_E', 'GALEX_NUV_E', 'GALEX_NOTES']}
     ]
     
+    # try: 
     # Runs WiseView if selected
     if multivar == 'false':
         ra = float(ra)
@@ -71,8 +72,9 @@ def wrap(ra, dec, radius, multivar, wisevar, catalog_list):
         for q in range(len(catalog_info)): 
             if catalog_info[q]['name'] in catalog_list: 
                 table = table_query(ra, dec, radius, catalog_info[q]["table_id"]) # Table Query 
-                print(table)
+                # print(table)
                 images, w = image_query(ra, dec, radius, catalog_info[q]["image_id"]) # Image Query
+                # print(image_query)
                 click_data = image_plot(ra, dec, radius, catalog_info[q], table, images, w) # Plotting
                 
                 photometry.append(click_data)
@@ -136,6 +138,8 @@ def wrap(ra, dec, radius, multivar, wisevar, catalog_list):
         df = pd.DataFrame([], columns=total)
         df.to_csv(sys.stdout, index=False)
         return df
+    # except: 
+        # return "Python Crashed"
 # ------------------------------------------------------------- #   
 
 
