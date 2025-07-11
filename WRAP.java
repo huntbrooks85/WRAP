@@ -98,13 +98,13 @@ public class WRAP {
         // JPanel coordsPanel = new JPanel(new GridLayout(1, 3));
 
         // Creates RA Field with grey text in box
-        JTextField raField = new JTextField("R.A.", 20);
+        JTextField raField = new JTextField("R.A. (deg)", 20);
         raField.setForeground(Color.GRAY);
-        raField.setBounds(10, 20, 100, 20);
+        raField.setBounds(10, 20, 80, 20);
         raField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (raField.getText().equals("R.A.")) {
+                if (raField.getText().equals("R.A. (deg)")) {
                     raField.setText("");
                     raField.setForeground(Color.BLACK);
                 }
@@ -113,20 +113,20 @@ public class WRAP {
             @Override
             public void focusLost(FocusEvent e) {
                 if (raField.getText().isEmpty()) {
-                    raField.setText("R.A.");
+                    raField.setText("R.A. (deg)");
                     raField.setForeground(Color.GRAY);
                 }
             }
         });
 
         // Creates DEC Field with grey text in box
-        JTextField decField = new JTextField("Decl.", 20);
-        decField.setBounds(110, 20, 100, 20);
+        JTextField decField = new JTextField("Decl. (deg)", 20);
+        decField.setBounds(90, 20, 80, 20);
         decField.setForeground(Color.GRAY);
         decField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (decField.getText().equals("Decl.")) {
+                if (decField.getText().equals("Decl. (deg)")) {
                     decField.setText("");
                     decField.setForeground(Color.BLACK);
                 }
@@ -135,20 +135,20 @@ public class WRAP {
             @Override
             public void focusLost(FocusEvent e) {
                 if (decField.getText().isEmpty()) {
-                    decField.setText("Decl.");
+                    decField.setText("Decl. (deg)");
                     decField.setForeground(Color.GRAY);
                 }
             }
         });
 
         // Creates Radius Field with grey text in box
-        JTextField radiusField = new JTextField("Search Radius", 20);
+        JTextField radiusField = new JTextField("Search Radius (arcsec)", 20);
         radiusField.setForeground(Color.GRAY);
-        radiusField.setBounds(210, 20, 125, 20);
+        radiusField.setBounds(170, 20, 170, 20);
         radiusField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (radiusField.getText().equals("Search Radius")) {
+                if (radiusField.getText().equals("Search Radius (arcsec)")) {
                     radiusField.setText("");
                     radiusField.setForeground(Color.BLACK);
                 }
@@ -157,7 +157,7 @@ public class WRAP {
             @Override
             public void focusLost(FocusEvent e) {
                 if (radiusField.getText().isEmpty()) {
-                    radiusField.setText("Search Radius");
+                    radiusField.setText("Search Radius (arcsec)");
                     radiusField.setForeground(Color.GRAY);
                 }
             }
@@ -349,7 +349,7 @@ public class WRAP {
                                 command.add(String.valueOf(raFloat));
                                 command.add(String.valueOf(decFloat));
                             } else{
-                                JOptionPane.showMessageDialog(runbutton, "Input Correct RA/Decl/Radius", "Input Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(runbutton, "Input Correct RA (IN DEGREE)/Decl (IN DEGREE)/Radius (IN ARCSEC AND BETWEEN 50 -> 500)", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }
                         command.add(String.valueOf(radiusFloat));
