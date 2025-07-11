@@ -15,17 +15,23 @@
   <h2>⬇️ Installing WRAP ⬇️</h2>
 </div>
 
-1. **Download WRAP**  
+1.  **Download Python3.8.8**  
+   Visit the [Python3.8.8](https://www.python.org/downloads/release/python-388/) webpage and download Python3.8.8. 
+
+2.  **Download Java**  
+   Visit the [Java SE Development Kit](https://www.oracle.com/java/technologies/downloads/) webpage and download Java SE Development Kit.
+
+3. **Download WRAP**  
    Visit the [Releases](https://github.com/huntbrooks85/WRAP/releases) section on the right side of the GitHub page and download the latest version of WRAP.
 
-2. **Open Terminal and Navigate to the WRAP Directory**  
+4. **Open Terminal and Navigate to the WRAP Directory**  
    Use the terminal to move into the directory where WRAP was downloaded. For example:
 
    ```bash
    cd ~/Documents/GitHub/WRAP
    ```
 
-3. **Run the Build Script**  
+5. **Run the Build Script**  
    Execute the build script with the following command:
 
    ```bash
@@ -34,10 +40,10 @@
 
    > **Note:** During this process, you may be prompted to install dependencies such as Python 3.8 or Homebrew. Please follow the instructions provided in the terminal if prompted.
 
-4. **Install the WRAP Application**  
+6. **Install the WRAP Application**  
    After the script completes, a file named `WRAP-v2.1.0.pkg` will be created in the WRAP directory. Double-click this package to begin the installation process.
 
-5. **Launch WRAP**  
+7. **Launch WRAP**  
    Once installed, WRAP will appear in your **Applications** folder. You can now launch it like any standard macOS application.
 </p>
 

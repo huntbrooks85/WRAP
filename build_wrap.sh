@@ -4,25 +4,7 @@
 if command -v python3.8 &> /dev/null; then
     echo "✅ Python 3.8 is already installed: $(python3.8 --version)"
 else
-    echo "🔍 Python 3.8 not found. Installing with Homebrew..."
-    
-    # Check if Homebrew is installed
-    if ! command -v brew &> /dev/null; then
-        echo "❌ Homebrew is not installed. Please install Homebrew first: https://brew.sh/"
-        exit 1
-    fi
-
-    # Install Python 3.8 using brew
-    brew install python@3.8
-
-    # Add it to PATH (if not already linked)
-    if ! command -v python3.8 &> /dev/null; then
-        echo "🔧 Adding Python 3.8 to PATH..."
-        echo 'export PATH="/usr/local/opt/python@3.8/bin:$PATH"' >> ~/.bash_profile
-        export PATH="/usr/local/opt/python@3.8/bin:$PATH"
-    fi
-
-    echo "✅ Python 3.8 installed successfully: $(python3.8 --version)"
+    echo "🔍 Python 3.8 not found. Please install Python 3.8.8 at https://www.python.org/downloads/release/python-388/"
 fi
 
 set -e  # Exit on error
