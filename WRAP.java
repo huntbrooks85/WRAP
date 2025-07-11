@@ -349,7 +349,7 @@ public class WRAP {
                                 command.add(String.valueOf(raFloat));
                                 command.add(String.valueOf(decFloat));
                             } else{
-                                JOptionPane.showMessageDialog(runbutton, "Input Correct RA (IN DEGREE)/Decl (IN DEGREE)/Radius (IN ARCSEC AND BETWEEN 50 -> 500)", "Input Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(runbutton, "Input Correct RA (BETWEEN 0 AND 360)/Decl (BETWEEN -90 AND 90)/Radius (BETWEEN 50 AND 500)", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }
                         command.add(String.valueOf(radiusFloat));
