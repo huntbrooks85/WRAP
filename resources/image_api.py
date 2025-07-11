@@ -63,11 +63,12 @@ def image_query(ra, dec, radius, catalog):
       return 0, 0
 
   elif catalog == 'VHS':
-    try:
+    # try:
       position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
       size = u.Quantity([radius, radius], u.arcsec)
       
-      Vsa.clear_cache()
+      # Vsa.clear_cache()
+      Vsa.BASE_URL = 'http://vsa.roe.ac.uk:8080/vdfs/'
       url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR4')
       url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR4')
       url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR4')
@@ -100,8 +101,8 @@ def image_query(ra, dec, radius, catalog):
         cutout_ks = Cutout2D(data_vsa_K, position, size, wcs = w.celestial)
 
       return [cutout_j, cutout_h, cutout_ks], w
-    except: 
-      return 0, 0
+    # except: 
+      # return 0, 0
 
   elif catalog == 'PanSTARRS':
     try:
