@@ -11,7 +11,34 @@
 </div>
 
 <p align="center">
-  ⬇️ <b><a href="https://drive.google.com/file/d/1ZUG6K9R7Yh1QhpxYSCxJfU41HVpGNvZB/view?usp=sharing">DOWNLOAD WRAP</a></b> ⬇️
+<div align="center">
+  <h2>⬇️ Installing WRAP ⬇️</h2>
+</div>
+
+1. **Download WRAP**  
+   Visit the [Releases](https://github.com/huntbrooks85/WRAP/releases) section on the right side of the GitHub page and download the latest version of WRAP.
+
+2. **Open Terminal and Navigate to the WRAP Directory**  
+   Use the terminal to move into the directory where WRAP was downloaded. For example:
+
+   ```bash
+   cd ~/Documents/GitHub/WRAP
+   ```
+
+3. **Run the Build Script**  
+   Execute the build script with the following command:
+
+   ```bash
+   ./build_wrap.sh
+   ```
+
+   > **Note:** During this process, you may be prompted to install dependencies such as Python 3.8 or Homebrew. Please follow the instructions provided in the terminal if prompted.
+
+4. **Install the WRAP Application**  
+   After the script completes, a file named `WRAP-v2.1.0.pkg` will be created in the WRAP directory. Double-click this package to begin the installation process.
+
+5. **Launch WRAP**  
+   Once installed, WRAP will appear in your **Applications** folder. You can now launch it like any standard macOS application.
 </p>
 
 
@@ -29,28 +56,32 @@
   <p><b>Single-Query:</b></p>
 </div>
 
-1. Input the Right Ascension (R.A.) and Declination (Decl.) of the object being searched for in degrees.
-2. Input the search radius in arcseconds around the R.A. and Decl.
-4. Select the catalogs to be searched through.
-5. Click the "Run" button.
-6. Your standard web browser will open with WiseView to assist you in finding your object (If WiseView Button Selected).
-7. Click on your object when the image appears (if your object is not there, click the red "Object Not Found" button).
-8. Repeat these steps until every catalog image is shown.
-9. Your query will be save on the left "Table List" panel, click "Save" to save as a csv file
+1. Enter the **Right Ascension (R.A.)** and **Declination (Decl.)** of the object in **decimal degrees**.
+2. Specify the **search radius** in arcseconds around the R.A./Decl.
+3. Select the **catalogs** you wish to query.
+4. Click the **"Run"** button.
+5. If the **WiseView** option is selected, your default browser will open WiseView to assist in identifying the object.
+6. When the image appears, **click on your object**.  
+   If it’s not visible, click the **red "Object Not Found"** button.
+7. Repeat this process until all catalog images are reviewed.
+8. Your query results will appear in the **"Table List"** panel on the left.
+9. Click **"Save"** to export the results as a CSV file.
 
 <div align="left">
   <p><b>Multi-Query:</b></p>
 </div>
 
-1. Select the "Multi-Query" checkbox.
-2. Input csv file, R.A. column needs to be named "input_ra" and Decl. column needs to be named "input_dec", the file must be a csv.
-3. Input search radius in arcseconds
-4. Select the catalogs to be searched through.
-5. Click the "Run" button.
-6. Your standard web browser will open with WiseView to assist you in finding your object (If WiseView Button Selected).
-7. Click on your object when the image appears (if your object is not there, click the red "Object Not Found" button).
-8. Repeat these steps until every catalog image is shown.
-9. Your query will be save on the left "Table List" panel, click "Save" to save as a csv file   
+1. Check the **"Multi-Query"** checkbox.
+2. Upload a **CSV file**:
+   - R.A. column must be named `input_ra`
+   - Decl. column must be named `input_dec`
+3. Enter the **search radius** in arcseconds.
+4. Select the **catalogs** to search.
+5. Click the **"Run"** button.
+6. If the **WiseView** option is selected, your default browser will open it.
+7. When the image appears, **click on your object**, or use the **"Object Not Found"** button if it's missing.
+8. Repeat the process for each catalog image.
+9. Query results will be listed in the **"Table List"** panel. Click **"Save"** to export them as a CSV file.
 
 <div align="center">
   <p><b>⚠️ Significant Details ⚠️</b></p>
