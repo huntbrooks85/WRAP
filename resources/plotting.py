@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
-# WRAP.plotting v2.1.0
-# By Hunter Brooks, at NAU/UToledo, Flagstaff: April 23, 2025
+# WRAP.plotting v2.1.1
+# By Hunter Brooks, at NAU/UToledo, Flagstaff: March 4, 2026
 #-----------------------------------------------------------------------#
 
 

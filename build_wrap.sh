@@ -41,6 +41,6 @@ jpackage \
   --resource-dir resources \
   --type pkg \
   --icon Icons/WRAPLogo.icns \
-  --app-version 2.1.0
+  --app-version 2.1.1
 
 echo "✅ Build and package complete!"

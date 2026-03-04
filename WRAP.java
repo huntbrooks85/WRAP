@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------- //
-//  WRAP.java v2.1.0
-//  By Hunter Brooks, at NAU/UToledo, Flagstaff: April 23, 2025
+//  WRAP.java v2.1.1
+//  By Hunter Brooks, at NAU/UToledo, Flagstaff: March 4, 2026
 // ----------------------------------------------------------------------- //
 
 
@@ -49,8 +49,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-// ------------------------------------------------------------- //
-
 
 
 // Makes Main GUI Class
@@ -64,6 +62,19 @@ public class WRAP {
         frame.setSize(520, 255);
         frame.setLayout(null);
         frame.setResizable(false);
+
+        // UNCOMMENT FOR PYTHON CONSOLE
+        // ---------------- Python Console ---------------- //
+        // JTextArea consoleArea = new JTextArea();
+        // consoleArea.setEditable(false);
+        // consoleArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
+
+        // JScrollPane consoleScroll = new JScrollPane(consoleArea);
+        // consoleScroll.setBounds(10, 215, 500, 150);
+        // frame.add(consoleScroll);
+
+        // // Make window taller
+        // frame.setSize(520, 400);
 
         // Finds Path of File
         String jarPath = "";
@@ -172,12 +183,12 @@ public class WRAP {
         // Listener to swap components
         JTextField fileField = new JTextField("path/to/file.csv");
         fileField.setForeground(Color.GRAY);
-        fileField.setBounds(10, 20, 150, 20);
+        fileField.setBounds(10, 20, 110, 20);
         fileField.setEditable(false);
         fileField.setVisible(false);
         
         JButton browseButton = new JButton("Browse");
-        browseButton.setBounds(160, 20, 50, 20);
+        browseButton.setBounds(120, 20, 50, 20);
         browseButton.setVisible(false);
         
         browseButton.addActionListener(e -> {
@@ -215,16 +226,16 @@ public class WRAP {
         JCheckBox checkBox1 = new JCheckBox("CatWISE");
         JCheckBox checkBox2 = new JCheckBox("AllWISE");
         JCheckBox checkBox3 = new JCheckBox("Gaia");
-        JCheckBox checkBox4 = new JCheckBox("VHS");
+        // JCheckBox checkBox4 = new JCheckBox("VHS");
         JCheckBox checkBox5 = new JCheckBox("UKIDSS");
         JCheckBox checkBox6 = new JCheckBox("2MASS");
-        JCheckBox checkBox7 = new JCheckBox("SDSS");
+        // JCheckBox checkBox7 = new JCheckBox("SDSS");
         JCheckBox checkBox8 = new JCheckBox("PanSTARRS");
         JCheckBox checkBox9 = new JCheckBox("NSC");
         JCheckBox checkBox10 = new JCheckBox("GALEX");
 
         // Set horizontal alignment for the text in the checkboxes
-        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10};
+        JCheckBox[] checkboxes = {checkBox1, checkBox2, checkBox3, checkBox5, checkBox6, checkBox8, checkBox9, checkBox10};
         for (JCheckBox checkBox : checkboxes) {
             checkBox.setFont(new Font("Times New Roman", Font.PLAIN, 16));
             catalogPanel.add(checkBox);
@@ -250,8 +261,8 @@ public class WRAP {
 
         // Array or list to hold all catalog checkboxes
         JCheckBox[] catalogCheckboxes = {
-            checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
-            checkBox6, checkBox7, checkBox8, checkBox9, checkBox10
+            checkBox1, checkBox2, checkBox3, checkBox5,
+            checkBox6, checkBox8, checkBox9, checkBox10
         };
 
         // Select All listener
@@ -314,10 +325,10 @@ public class WRAP {
                     if (checkBox1.isSelected()) selectedCheckboxes.add("CatWISE");
                     if (checkBox2.isSelected()) selectedCheckboxes.add("AllWISE");
                     if (checkBox3.isSelected()) selectedCheckboxes.add("Gaia");
-                    if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
+                    // if (checkBox4.isSelected()) selectedCheckboxes.add("VHS");
                     if (checkBox5.isSelected()) selectedCheckboxes.add("UKIDSS");
                     if (checkBox6.isSelected()) selectedCheckboxes.add("2MASS");
-                    if (checkBox7.isSelected()) selectedCheckboxes.add("SDSS");
+                    // if (checkBox7.isSelected()) selectedCheckboxes.add("SDSS");
                     if (checkBox8.isSelected()) selectedCheckboxes.add("PanSTARRS");
                     if (checkBox9.isSelected()) selectedCheckboxes.add("NSC");
                     if (checkBox10.isSelected()) selectedCheckboxes.add("GALEX");
@@ -372,6 +383,26 @@ public class WRAP {
                         while ((line = reader.readLine()) != null) {
                             output.append(line);
                         }
+
+                        // UNCOMMENT FOR REAL-TIME OUTPUT IN PYTHON CONSOLE
+                        // BufferedReader reader = new BufferedReader(
+                        //         new InputStreamReader(process.getInputStream()));
+
+                        // StringBuilder output = new StringBuilder();
+                        // String line;
+
+                        // while ((line = reader.readLine()) != null) {
+
+                        //     String finalLine = line;  // Needed for lambda
+
+                        //     // Append to GUI safely
+                        //     SwingUtilities.invokeLater(() -> {
+                        //         consoleArea.append(finalLine + "\n");
+                        //         consoleArea.setCaretPosition(consoleArea.getDocument().getLength());
+                        //     });
+
+                        //     output.append(line).append("\n");
+                        // }
 
                         // Store the result in a variable
                         String resultJson = output.toString();

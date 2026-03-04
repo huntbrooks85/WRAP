@@ -1,6 +1,6 @@
 astro_datalab==2.20.1
 astropy==5.2.2
-astroquery==0.4.7
+astroquery==0.4.6
 beautifulsoup4==4.11.1
 matplotlib==3.5.0
 numpy==1.22.0

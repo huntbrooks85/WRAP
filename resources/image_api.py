@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
-# WRAP.image_api v2.1.0
-# By Hunter Brooks, at NAU/UToledo, Flagstaff: April 23, 2025
+# WRAP.image_api v2.1.1
+# By Hunter Brooks, at NAU/UToledo, Flagstaff: March 4, 2026
 #-----------------------------------------------------------------------#
 
 
@@ -42,13 +42,14 @@ if platform != 'win32':
 # WRAP QUERY FUNCTIONS
 # ------------------------------------------------------------- #
 def image_query(ra, dec, radius, catalog):
-  if catalog not in ['VHS', 'PanSTARRS', 'NSC']:  
-    try: 
+  if catalog not in ['PanSTARRS', 'NSC']:  
+    # try: 
       # Clear SkyView cache and query images for non-VHS, PanSTARRS, and NSC catalogs
-      SkyView.clear_cache()
       radius_deg = radius * u.arcsec # Convert radius to astropy units
       SkyView.URL = 'https://skyview.gsfc.nasa.gov/current/cgi/basicform.pl'
-      images = SkyView.get_images(position=f'{ra}d {dec}d', coordinates='J2000', survey=catalog, radius=radius_deg)
+      print(catalog)
+      images = SkyView.get_images(position=f'{ra}d {dec}d', coordinates='J2000', survey=catalog, radius=radius_deg, cache = False)
+      print(images)
       fits_header = images[0][0].header # Extract FITS header from the first image
       w = WCS(fits_header) # Create WCS object from the FITS header
       
@@ -59,50 +60,8 @@ def image_query(ra, dec, radius, catalog):
         image_cutout.append((Cutout2D(image[0].data, position, size, fill_value = np.nan, wcs = w.celestial)).data)
         wcs_cropped = (Cutout2D(image[0].data, position, size, fill_value = np.nan, wcs = w.celestial)).wcs  
       return image_cutout, wcs_cropped
-    except: 
-      return 0, 0
-
-  elif catalog == 'VHS':
-    try:
-      position = SkyCoord(ra*u.deg, dec*u.deg, frame = 'fk5')
-      size = u.Quantity([radius, radius], u.arcsec)
-      
-      Vsa.clear_cache()
-      Vsa.BASE_URL = 'http://vsa.roe.ac.uk:8080/vdfs/'
-      url_J = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='J', database='VHSDR4')
-      url_H = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='H', database='VHSDR4')
-      url_K = Vsa.get_image_list(SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs'), image_width=radius * u.arcsec, waveband='Ks', database='VHSDR4')
-
-      temp_J = url_J[0]
-      file_vsa_J = download_file(temp_J, cache = False)
-      data_vsa_J = fits.getdata(file_vsa_J)
-      
-      hdu_j = fits.open(file_vsa_J)[1]
-      w = WCS(hdu_j.header)
-      
-      cutout_j = (Cutout2D(data_vsa_J, position, size, wcs = w.celestial)).data
-      
-      if len(url_H) == 0: 
-        temp_H = ''
-        cutout_h = np.zeros_like(cutout_j)
-      else: 
-        temp_H = url_H[0]
-        file_vsa_H = download_file(temp_H, cache = False)
-        data_vsa_H = fits.getdata(file_vsa_H)
-        cutout_h = Cutout2D(data_vsa_H, position, size, wcs = w.celestial)
-        
-      if len(url_K) == 0: 
-        temp_K = ''
-        cutout_k = np.zeros_like(cutout_j)
-      else: 
-        temp_K = url_K[0]
-        file_vsa_K = download_file(temp_K, cache = False)
-        data_vsa_K = fits.getdata(file_vsa_K)
-        cutout_ks = Cutout2D(data_vsa_K, position, size, wcs = w.celestial)
-
-      return [cutout_j, cutout_h, cutout_ks], w
-    except: 
-      return 0, 0
+    # except: 
+    #   return 0, 0
 
   elif catalog == 'PanSTARRS':
     try:
